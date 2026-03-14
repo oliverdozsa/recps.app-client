@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import {Component, OnInit} from '@angular/core';
+import {NavigationEnd, Router, RouterOutlet} from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -7,6 +7,23 @@ import { RouterOutlet } from '@angular/router';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'recps.app-client';
+
+  constructor(private router: Router) {
+  }
+
+  ngOnInit(): void {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        setTimeout(() => {
+          if (typeof window !== 'undefined' && window.HSStaticMethods) {
+            window.HSStaticMethods.autoInit();
+          }
+        }, 100);
+      }
+    });
+  }
+
+
 }
