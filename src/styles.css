@@ -3,4 +3,33 @@
 @import "flyonui/src/vendor/notyf.css";
 
 @plugin "flyonui";
+@plugin "@iconify/tailwind4";
+@plugin "flyonui/theme" {
+  name: "recps-app-light";
+  default: true;
+  prefersdark: false;
+  color-scheme: light;
+
+  --color-base-100: #D9EAD3;
+  --color-base-200: #FFFFFF;
+  --color-base-300: oklch(95% 0 0);
+  --color-base-content: oklch(32.61% 0.0705 305.29);
+  --color-primary: #66BB6A;
+  --color-primary-content: oklch(27% 0.072 132.109);
+  --color-secondary: #FFB74D;
+  --color-secondary-content: oklch(27% 0.077 45.635);
+  --color-accent: #E0C7E8;
+  --color-accent-content: oklch(38% 0.176 304.987);
+  --color-info: #C1E1D2;
+  --color-info-content: oklch(29% 0.066 243.157);
+  --color-success: #66BB6A;
+  --color-success-content: oklch(26% 0.065 152.934);
+  --color-warning: #FFB74D;
+  --color-warning-content: oklch(41% 0.112 45.904);
+  --color-error: #E57373;
+  --color-error-content: oklch(27% 0.105 12.094);
+
+}
+
+
 @source "../node_modules/flyonui/flyonui.js";
