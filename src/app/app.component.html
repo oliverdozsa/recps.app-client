@@ -1,67 +1,64 @@
-<nav class="navbar rounded-box">
-  <div class="w-full md:flex md:items-center md:gap-2">
-    <div class="flex items-center justify-between">
-      <div class="navbar-start items-center justify-between max-md:w-full">
-        <a class="link text-base-content link-neutral text-3xl font-bold no-underline" href="#">
-          <span class="text-soft-peach-500">recps</span>
-          <span class="text-dry-sage-700">.app</span>
-        </a>
-        <div class="md:hidden">
-          <button type="button" class="collapse-toggle btn btn-outline btn-sm btn-square"
-                  data-collapse="#solid-bg-navbar-collapse" aria-controls="solid-bg-navbar-collapse"
-                  aria-label="Toggle navigation">
-            <span class="icon-[tabler--menu-2] collapse-open:hidden size-4"></span>
-            <span class="icon-[tabler--x] collapse-open:block hidden size-4"></span>
-          </button>
-        </div>
-      </div>
-    </div>
-    <div id="solid-bg-navbar-collapse"
-         class="md:navbar-end items-center collapse hidden grow basis-full overflow-hidden transition-[height] duration-300 max-md:w-full">
-      <ul class="menu md:menu-horizontal flex-nowrap text-base max-md:mt-2 gap-2 p-px">
-        <li><a href="#">Link 1</a></li>
-        <li><a href="#">Link 2</a></li>
-        <li><a href="#">Link 3</a></li>
-      </ul>
-      <button *ngIf="!authService.isLoggedIn" class="btn btn-square btn-primary" aria-label="Icon Button" (click)="authService.login()">
-        <span class="icon-[tabler--login] size-4.5 shrink-0"></span>
+<nav class="navbar rounded-box justify-between gap-4">
+  <div class="navbar-start">
+    <div class="dropdown relative inline-flex [--auto-close:inside] [--offset:9]">
+      <button id="dropdown-name" type="button" class="dropdown-toggle btn btn-text btn-circle dropdown-open:bg-base-content/10 dropdown-open:text-base-content" aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
+        <span class="icon-[tabler--menu-2] size-5"></span>
       </button>
-      <div *ngIf="authService.isLoggedIn"
-           class="dropdown relative inline-flex [--auto-close:inside] [--offset:8] [--placement:bottom-end]">
-        <button id="dropdown-scrollable" type="button" class="dropdown-toggle flex items-center" aria-haspopup="menu"
-                aria-expanded="false" aria-label="Dropdown">
+      <ul class="dropdown-menu dropdown-open:opacity-100 hidden" role="menu" aria-orientation="vertical" aria-labelledby="dropdown-name">
+        <li><a class="dropdown-item" href="#">Link 1</a></li>
+        <li><a class="dropdown-item" href="#">Link 2</a></li>
+        <li><a class="dropdown-item" href="#">Link 3</a></li>
+        <hr class="border-base-content/25 -mx-2" />
+        <li><a class="dropdown-item" href="#">Link 4</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="navbar-center flex items-center">
+    <a class="link text-base-content link-neutral text-3xl font-bold no-underline" href="#">
+      <span class="text-soft-peach-500">recps</span>
+      <span class="text-dry-sage-700">.app</span>
+    </a>
+  </div>
+  <div class="navbar-end items-center gap-4">
+    <button *ngIf="!authService.isLoggedIn" class="btn btn-square btn-primary" aria-label="Icon Button"
+            (click)="authService.login()">
+      <span class="icon-[tabler--login] size-4.5 shrink-0"></span>
+    </button>
+    <div *ngIf="authService.isLoggedIn"
+         class="dropdown relative inline-flex [--auto-close:inside] [--offset:8] [--placement:bottom-end]">
+      <button id="dropdown-scrollable" type="button" class="dropdown-toggle flex items-center" aria-haspopup="menu"
+              aria-expanded="false" aria-label="Dropdown">
+        <div class="avatar">
+          <div class="size-9.5 rounded-full">
+            <img [ngSrc]="picture" alt="avatar 1"/>
+          </div>
+        </div>
+      </button>
+      <ul class="dropdown-menu dropdown-open:opacity-100 hidden min-w-60" role="menu" aria-orientation="vertical"
+          aria-labelledby="dropdown-avatar">
+        <li class="dropdown-header gap-2">
           <div class="avatar">
-            <div class="size-9.5 rounded-full">
-              <img [ngSrc]="picture" alt="avatar 1"/>
+            <div class="w-10 rounded-full">
+              <img [ngSrc]="picture" alt="avatar"/>
             </div>
           </div>
-        </button>
-        <ul class="dropdown-menu dropdown-open:opacity-100 hidden min-w-60" role="menu" aria-orientation="vertical"
-            aria-labelledby="dropdown-avatar">
-          <li class="dropdown-header gap-2">
-            <div class="avatar">
-              <div class="w-10 rounded-full">
-                <img [ngSrc]="picture" alt="avatar"/>
-              </div>
-            </div>
-            <div>
-              <h6 class="text-base-content text-base font-semibold">{{name}}</h6>
-            </div>
-          </li>
-          <li>
-            <a class="dropdown-item" href="#">
-              <span class="icon-[tabler--user]"></span>
-              My Profile
-            </a>
-          </li>
-          <li class="dropdown-footer gap-2">
-            <button class="btn btn-error btn-soft btn-block" (click)="authService.logout()">
-              <span class="icon-[tabler--logout]"></span>
-              Sign out
-            </button>
-          </li>
-        </ul>
-      </div>
+          <div>
+            <h6 class="text-base-content text-base font-semibold">{{ name }}</h6>
+          </div>
+        </li>
+        <li>
+          <a class="dropdown-item" href="#">
+            <span class="icon-[tabler--user]"></span>
+            My Profile
+          </a>
+        </li>
+        <li class="dropdown-footer gap-2">
+          <button class="btn btn-error btn-soft btn-block" (click)="authService.logout()">
+            <span class="icon-[tabler--logout]"></span>
+            Sign out
+          </button>
+        </li>
+      </ul>
     </div>
   </div>
 </nav>
