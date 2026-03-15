@@ -10,25 +10,88 @@
   prefersdark: false;
   color-scheme: light;
 
-  --color-base-100: #D9EAD3;
-  --color-base-200: #FFFFFF;
+  --color-base-100: oklch(94.13% 0.020 109.87);
+  --color-base-200: oklch(98% 0 0);
   --color-base-300: oklch(95% 0 0);
-  --color-base-content: oklch(32.61% 0.0705 305.29);
-  --color-primary: #66BB6A;
-  --color-primary-content: oklch(27% 0.072 132.109);
-  --color-secondary: #FFB74D;
-  --color-secondary-content: oklch(27% 0.077 45.635);
-  --color-accent: #E0C7E8;
-  --color-accent-content: oklch(38% 0.176 304.987);
-  --color-info: #C1E1D2;
+  --color-base-content: oklch(21% 0.006 285.885);
+  --color-primary: #C9CBA3;
+  --color-primary-content: #472D30;
+  --color-secondary: #FFE1A8;
+  --color-secondary-content: #472D30;
+  --color-accent: #E26D5C;
+  --color-accent-content: oklch(98% 0.016 73.684);
+  --color-neutral: oklch(14% 0.005 285.823);
+  --color-neutral-content: oklch(92% 0.004 286.32);
+  --color-info: oklch(78% 0.154 211.53);
   --color-info-content: oklch(29% 0.066 243.157);
-  --color-success: #66BB6A;
-  --color-success-content: oklch(26% 0.065 152.934);
-  --color-warning: #FFB74D;
+  --color-success: oklch(76% 0.177 163.223);
+  --color-success-content: oklch(37% 0.077 168.94);
+  --color-warning: oklch(82% 0.189 84.429);
   --color-warning-content: oklch(41% 0.112 45.904);
-  --color-error: #E57373;
+  --color-error: oklch(71% 0.194 13.428);
   --color-error-content: oklch(27% 0.105 12.094);
+}
 
+@theme {
+  --color-dry-sage-50: oklch(97.05% 0.009 113.16);
+  --color-dry-sage-100: oklch(94.13% 0.020 109.87);
+  --color-dry-sage-200: oklch(88.02% 0.037 108.82);
+  --color-dry-sage-300: oklch(82.02% 0.058 109.81);
+  --color-dry-sage-400: oklch(75.98% 0.078 110.61);
+  --color-dry-sage-500: oklch(69.68% 0.094 110.71);
+  --color-dry-sage-600: oklch(59.36% 0.080 111.18);
+  --color-dry-sage-700: oklch(48.35% 0.063 110.84);
+  --color-dry-sage-800: oklch(36.66% 0.044 110.15);
+  --color-dry-sage-900: oklch(24.19% 0.027 111.46);
+  --color-dry-sage-950: oklch(20% 0.019 112.76);
+
+  --color-soft-peach-50: oklch(97.56% 0.024 83.42);
+  --color-soft-peach-100: oklch(95.21% 0.047 82.71);
+  --color-soft-peach-200: oklch(90.69% 0.092 82.18);
+  --color-soft-peach-300: oklch(86.49% 0.131 80.68);
+  --color-soft-peach-400: oklch(82.87% 0.159 77.82);
+  --color-soft-peach-500: oklch(79.45% 0.171 71.19);
+  --color-soft-peach-600: oklch(67.36% 0.144 71.91);
+  --color-soft-peach-700: oklch(54.50% 0.117 72.24);
+  --color-soft-peach-800: oklch(41.04% 0.087 74.06);
+  --color-soft-peach-900: oklch(26.35% 0.055 78.74);
+  --color-soft-peach-950: oklch(21.59% 0.045 81.08);
+
+  --color-vibrant-coral-50: oklch(95.41% 0.017 31.08);
+  --color-vibrant-coral-100: oklch(90.69% 0.035 26.54);
+  --color-vibrant-coral-200: oklch(81.83% 0.074 29.13);
+  --color-vibrant-coral-300: oklch(73.14% 0.116 29.32);
+  --color-vibrant-coral-400: oklch(65.41% 0.158 30.72);
+  --color-vibrant-coral-500: oklch(59.07% 0.196 31.68);
+  --color-vibrant-coral-600: oklch(50.17% 0.163 31.64);
+  --color-vibrant-coral-700: oklch(40.93% 0.130 31.46);
+  --color-vibrant-coral-800: oklch(31.28% 0.094 31.73);
+  --color-vibrant-coral-900: oklch(20.55% 0.053 29.91);
+  --color-vibrant-coral-950: oklch(17.31% 0.038 34.57);
+
+  --color-wine-plum-50: oklch(95.59% 0.009 0.13);
+  --color-wine-plum-100: oklch(91.32% 0.017 8.19);
+  --color-wine-plum-200: oklch(82.54% 0.035 6.53);
+  --color-wine-plum-300: oklch(73.64% 0.054 8.07);
+  --color-wine-plum-400: oklch(64.65% 0.079 7.87);
+  --color-wine-plum-500: oklch(55.80% 0.101 10.15);
+  --color-wine-plum-600: oklch(47.65% 0.085 9.50);
+  --color-wine-plum-700: oklch(39.13% 0.065 10.52);
+  --color-wine-plum-800: oklch(30.13% 0.046 9.44);
+  --color-wine-plum-900: oklch(20.37% 0.025 10.82);
+  --color-wine-plum-950: oklch(17.08% 0.019 7.38);
+
+  --color-deep-mocha-50: oklch(95.71% 0.007 5.63);
+  --color-deep-mocha-100: oklch(91.57% 0.012 11.01);
+  --color-deep-mocha-200: oklch(82.99% 0.025 11.39);
+  --color-deep-mocha-300: oklch(74.29% 0.039 9.85);
+  --color-deep-mocha-400: oklch(65.41% 0.055 11.09);
+  --color-deep-mocha-500: oklch(56.36% 0.074 11.72);
+  --color-deep-mocha-600: oklch(48.18% 0.060 12.10);
+  --color-deep-mocha-700: oklch(39.58% 0.047 11.47);
+  --color-deep-mocha-800: oklch(30.44% 0.033 13.22);
+  --color-deep-mocha-900: oklch(20.60% 0.018 12.72);
+  --color-deep-mocha-950: oklch(17.49% 0.014 10.23);
 }
 
 
