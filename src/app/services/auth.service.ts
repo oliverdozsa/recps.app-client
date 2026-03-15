@@ -1,6 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import {OAuthService} from 'angular-oauth2-oidc';
 import {Router} from '@angular/router';
+import {NotificationsService} from './notifications.service';
 
 @Injectable({
   providedIn: 'root'
@@ -8,6 +9,7 @@ import {Router} from '@angular/router';
 export class AuthService {
   private oauthService = inject(OAuthService);
   private router = inject(Router);
+  private notifications = inject(NotificationsService);
 
   get isLoggedIn() {
     return this.oauthService.hasValidIdToken();
@@ -44,12 +46,17 @@ export class AuthService {
 
   private onTryLoginComplete() {
     let stateUrl = this.oauthService.state!;
+
     if (stateUrl) {
       if (!stateUrl.startsWith('/')) {
         stateUrl = decodeURIComponent(stateUrl);
       }
 
-      setTimeout(() =>this.router.navigateByUrl(stateUrl));
+      setTimeout(() => this.router.navigateByUrl(stateUrl));
+    }
+
+    if (this.isLoggedIn) {
+      setTimeout(() => this.notifications.success("Hello!"));
     }
   }
 }
