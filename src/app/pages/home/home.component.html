@@ -1,1 +1,38 @@
-<p>home works!</p>
+<h2 class="text-2xl">search for recipes</h2>
+<input type="text" class="input w-full" aria-label="input" placeholder="recipe name..." />
+<h2 class="text-2xl">by ingredients</h2>
+<app-tags-input [options]="['apple', 'peach']"></app-tags-input>
+
+<div id="example-content-layout" class="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-4 mt-4">
+
+  <!-- Filter column -->
+  <div class="card bg-base-100 p-4 h-fit">
+    <h3 class="text-lg font-semibold mb-3">Advanced Filters</h3>
+    <div class="space-y-3">
+      <div>
+        <label class="label text-sm">Category</label>
+        <select class="select w-full"><option>All</option></select>
+      </div>
+      <div>
+        <label class="label text-sm">Cuisine</label>
+        <select class="select w-full"><option>Any</option></select>
+      </div>
+      <div>
+        <label class="label text-sm">Prep time</label>
+        <input type="range" class="range w-full" />
+      </div>
+      <button class="btn btn-primary w-full">Apply</button>
+    </div>
+  </div>
+
+  <!-- Results sub-grid -->
+  <div class="grid grid-cols-[repeat(auto-fill,minmax(270px,1fr))] gap-4 content-start">
+    <div class="card bg-base-100 p-4 h-32"></div>
+    <div class="card bg-base-100 p-4 h-32"></div>
+    <div class="card bg-base-100 p-4 h-32"></div>
+    <div class="card bg-base-100 p-4 h-32"></div>
+    <div class="card bg-base-100 p-4 h-32"></div>
+    <div class="card bg-base-100 p-4 h-32"></div>
+  </div>
+
+</div>

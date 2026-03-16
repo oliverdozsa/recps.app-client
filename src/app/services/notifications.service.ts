@@ -8,7 +8,7 @@ export class NotificationsService {
   private notyf = new Notyf();
 
   success(message: string) {
-    this.notyf.success(message);
+    this.notyf.success({message: message, background: "var(--color-success)"});
   }
 
   info(message: string) {
