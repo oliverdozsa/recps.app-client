@@ -2,10 +2,11 @@ import {Component, inject, OnInit} from '@angular/core';
 import {NavigationEnd, Router, RouterOutlet} from '@angular/router';
 import {AuthService} from './services/auth.service';
 import {NgIf, NgOptimizedImage} from '@angular/common';
+import {LoginComponent} from './components/login/login.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, NgIf],
+  imports: [RouterOutlet, NgIf, LoginComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -27,13 +28,5 @@ export class AppComponent implements OnInit {
         }, 100);
       }
     });
-  }
-
-  get picture() {
-    return this.authService.getProfile()["picture"];
-  }
-
-  get name() {
-    return this.authService.getProfile()["name"];
   }
 }

@@ -1,0 +1,40 @@
+<button *ngIf="!authService.isLoggedIn" class="btn btn-circle btn-text" aria-label="Icon Button"
+        (click)="authService.login()">
+  <span class="icon-[tabler--login] size-4.5 shrink-0"></span>
+</button>
+<div *ngIf="authService.isLoggedIn"
+     class="dropdown relative inline-flex [--auto-close:inside] [--offset:8] [--placement:bottom-end]">
+  <button id="dropdown-scrollable" type="button" class="dropdown-toggle flex items-center" aria-haspopup="menu"
+          aria-expanded="false" aria-label="Dropdown">
+    <div class="avatar">
+      <div class="size-9.5 rounded-full">
+        <img [src]="picture" alt="avatar 1"/>
+      </div>
+    </div>
+  </button>
+  <ul class="dropdown-menu dropdown-open:opacity-100 hidden min-w-60" role="menu" aria-orientation="vertical"
+      aria-labelledby="dropdown-avatar">
+    <li class="dropdown-header gap-2">
+      <div class="avatar">
+        <div class="w-10 rounded-full">
+          <img [src]="picture" alt="avatar"/>
+        </div>
+      </div>
+      <div>
+        <h6 class="text-base-content text-base font-semibold">{{ name }}</h6>
+      </div>
+    </li>
+    <li>
+      <a class="dropdown-item" href="#">
+        <span class="icon-[tabler--user]"></span>
+        My Profile
+      </a>
+    </li>
+    <li class="dropdown-footer gap-2">
+      <button class="btn btn-error btn-soft btn-block" (click)="authService.logout()">
+        <span class="icon-[tabler--logout]"></span>
+        Sign out
+      </button>
+    </li>
+  </ul>
+</div>
