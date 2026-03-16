@@ -1,8 +1,10 @@
 @import "tailwindcss";
-@import "flyonui/variants.css";
-@plugin "flyonui";
-
 @plugin "@iconify/tailwind4";
+@plugin "flyonui";
+@import "flyonui/variants.css";
+@source "../node_modules/flyonui/flyonui.js";
+
+
 @plugin "flyonui/theme" {
   name: "recps-app-light";
   default: true;
@@ -92,8 +94,6 @@
   --color-deep-mocha-900: oklch(20.60% 0.018 12.72);
   --color-deep-mocha-950: oklch(17.49% 0.014 10.23);
 }
-
-@source "../node_modules/flyonui/flyonui.js";
 
 @layer utilities {
   .dropdown-menu {

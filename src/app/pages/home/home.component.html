@@ -1,8 +1,7 @@
-<h2 class="text-2xl">search for recipes</h2>
-<input type="text" class="input w-full" aria-label="input" placeholder="recipe name..." />
-<h2 class="text-2xl">by ingredients</h2>
+<h2 class="text-lg font-semibold">search for recipes</h2>
+<input type="text" class="input w-full mb-3" aria-label="input" placeholder="recipe name..." />
+<h2 class="text-lg font-semibold">by ingredients</h2>
 <app-tags-input [options]="['apple', 'peach']"></app-tags-input>
-
 <div id="example-content-layout" class="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-4 mt-4">
 
   <!-- Filter column -->
@@ -19,7 +18,7 @@
       </div>
       <div>
         <label class="label text-sm">Prep time</label>
-        <input type="range" class="range w-full" />
+        <input type="range" class="range" aria-label="range" />
       </div>
       <button class="btn btn-primary w-full">Apply</button>
     </div>
