@@ -1,7 +1,7 @@
 <h2 class="text-lg font-semibold">search for recipes</h2>
 <input type="text" class="input w-full mb-3" aria-label="input" placeholder="recipe name..." />
 
-<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-3">
   <div class="md:col-span-2">
     <h2 class="text-lg font-semibold">by ingredients</h2>
     <app-tags-input [options]="['apple', 'peach']"></app-tags-input>
@@ -11,7 +11,10 @@
     <h2 class="text-lg font-semibold">do not use</h2>
     <app-tags-input [options]="['apple', 'peach']"></app-tags-input>
   </div>
+</div>
 
+<div class="w-full md:w-96 md:mx-auto">
+  <button class="btn btn-primary w-full">search recipes</button>
 </div>
 
 <div class="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-4 mt-4">
