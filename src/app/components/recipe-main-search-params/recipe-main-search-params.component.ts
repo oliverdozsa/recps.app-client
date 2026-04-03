@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, model } from '@angular/core';
 import {TagsInputComponent} from "../tags-input/tags-input.component";
 
 @Component({
@@ -10,5 +10,5 @@ import {TagsInputComponent} from "../tags-input/tags-input.component";
   styleUrl: './recipe-main-search-params.component.css'
 })
 export class RecipeMainSearchParamsComponent {
-
+  filterByName = model('');
 }

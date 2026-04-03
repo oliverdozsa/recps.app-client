@@ -1,1 +1,9 @@
-<div class="card bg-base-100 p-4 h-32 w-72"></div>
+<div class="card bg-base-100 p-4 w-72">
+  @if (recipe().imageUrl) {
+    <img [src]="recipe().imageUrl" [alt]="recipe().name" class="my-2 rounded w-full object-cover h-40" />
+  }
+  <div class="font-semibold truncate">{{ recipe().name }}</div>
+  @if (recipe().cookingTime) {
+    <div class="text-sm text-base-content/60 mt-1">{{ recipe().cookingTime }} min</div>
+  }
+</div>

@@ -1,5 +1,6 @@
 <h2 class="text-lg font-semibold">search for recipes</h2>
-<input type="text" class="input w-full mb-3" aria-label="input" placeholder="recipe name..." />
+<input type="text" class="input w-full mb-3" aria-label="input" placeholder="recipe name..."
+       [value]="filterByName()" (input)="filterByName.set($any($event.target).value)" />
 
 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-3">
   <div class="md:col-span-2">

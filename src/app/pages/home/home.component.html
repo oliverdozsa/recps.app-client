@@ -1,7 +1,7 @@
-<app-recipe-main-search-params></app-recipe-main-search-params>
+<app-recipe-main-search-params [(filterByName)]="filterByName"></app-recipe-main-search-params>
 
 <div class="w-full md:w-96 md:mx-auto">
-  <button class="btn btn-primary w-full">search recipes</button>
+  <button class="btn btn-primary w-full" (click)="search()">search recipes</button>
 </div>
 
 <div class="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-4 mt-4">
@@ -9,5 +9,5 @@
   <app-recipe-advanced-search-params></app-recipe-advanced-search-params>
 
   <!-- Results sub-grid -->
-  <app-recipe-search-result-display></app-recipe-search-result-display>
+  <app-recipe-search-result-display [recipes]="recipes()"></app-recipe-search-result-display>
 </div>

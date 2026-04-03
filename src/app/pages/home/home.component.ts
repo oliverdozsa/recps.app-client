@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import {TagsInputComponent} from '../../components/tags-input/tags-input.component';
 import {
   RecipeSearchResultDisplayComponent
@@ -9,11 +9,12 @@ import {
 import {
   RecipeMainSearchParamsComponent
 } from '../../components/recipe-main-search-params/recipe-main-search-params.component';
+import {RecipeService} from '../../services/recipe.service';
+import {RecipeSearchResponse} from '../../services/responses';
 
 @Component({
   selector: 'app-home',
   imports: [
-    TagsInputComponent,
     RecipeSearchResultDisplayComponent,
     RecipeAdvancedSearchParamsComponent,
     RecipeMainSearchParamsComponent
@@ -22,5 +23,14 @@ import {
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
+  private recipeService = inject(RecipeService);
 
+  filterByName = signal('');
+  recipes = signal<RecipeSearchResponse[]>([]);
+
+  search(): void {
+    this.recipeService.search({ filterByName: this.filterByName() }).subscribe(response => {
+      this.recipes.set(response.items ?? []);
+    });
+  }
 }

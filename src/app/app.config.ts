@@ -4,7 +4,7 @@ import {provideRouter} from '@angular/router';
 import {routes} from './app.routes';
 import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 import {OAuthStorage, provideOAuthClient} from 'angular-oauth2-oidc';
-import {environment} from '../environments/environment';
+import {environmentProd} from '../environments/environment.prod';
 
 export function storageFactory(): OAuthStorage {
   return localStorage
@@ -15,7 +15,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({eventCoalescing: true}),
     provideRouter(routes),
     provideHttpClient(withInterceptorsFromDi()),
-    provideOAuthClient({resourceServer: {allowedUrls: [environment.apiUrl, "localhost"], sendAccessToken: true}}),
+    provideOAuthClient({resourceServer: {allowedUrls: [environmentProd.apiUrl, "localhost"], sendAccessToken: true}}),
     {provide: OAuthStorage, useFactory: storageFactory},
   ]
 };
