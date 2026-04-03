@@ -1,35 +1,37 @@
-<nav class="navbar rounded-box justify-between gap-4">
-  <div class="navbar-start">
-    <div class="dropdown relative inline-flex [--auto-close:inside] [--offset:9]">
-      <button id="dropdown-name" type="button" class="dropdown-toggle btn btn-text btn-circle dropdown-open:bg-base-content/10 dropdown-open:text-base-content" aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
-        <span class="icon-[tabler--menu-2] size-5"></span>
-      </button>
-      <ul class="dropdown-menu dropdown-open:opacity-100 hidden bg-yellow-green-100" role="menu" aria-orientation="vertical" aria-labelledby="dropdown-name">
-        <li><a class="dropdown-item" href="#">Link 1</a></li>
-        <li><a class="dropdown-item" href="#">Link 2</a></li>
-        <li><a class="dropdown-item" href="#">Link 3</a></li>
-        <hr class="border-base-content/25 -mx-2" />
-        <li><a class="dropdown-item" href="#">Link 4</a></li>
-      </ul>
+<div class="bg-base-200 h-full">
+  <nav class="navbar bg-base-200 justify-between gap-4">
+    <div class="navbar-start">
+      <div class="dropdown relative inline-flex [--auto-close:inside] [--offset:9]">
+        <button id="dropdown-name" type="button" class="dropdown-toggle btn btn-text btn-circle dropdown-open:bg-base-content/10 dropdown-open:text-base-content" aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
+          <span class="icon-[tabler--menu-2] size-5"></span>
+        </button>
+        <ul class="dropdown-menu dropdown-open:opacity-100 hidden" role="menu" aria-orientation="vertical" aria-labelledby="dropdown-name">
+          <li><a class="dropdown-item" href="#">Link 1</a></li>
+          <li><a class="dropdown-item" href="#">Link 2</a></li>
+          <li><a class="dropdown-item" href="#">Link 3</a></li>
+          <hr class="border-base-content/25 -mx-2" />
+          <li><a class="dropdown-item" href="#">Link 4</a></li>
+        </ul>
+      </div>
     </div>
-  </div>
-  <div class="navbar-center flex items-center">
-    <div class="text-base-content text-3xl font-bold">
-      <span class="text-blushed-brick-500">recps</span>
-      <span class="text-hunter-green-600">.app</span>
+    <div class="navbar-center flex items-center">
+      <div class="text-base-content text-3xl font-bold">
+        <span class="text-blushed-brick-500">recps</span>
+        <span class="text-hunter-green-600">.app</span>
+      </div>
     </div>
-  </div>
-  <div class="navbar-end items-center gap-4">
-    <app-login></app-login>
-  </div>
-</nav>
+    <div class="navbar-end items-center gap-4">
+      <app-login></app-login>
+    </div>
+  </nav>
 
-<div>
-  <div class="grid grid-cols-12">
-    <div class="col-span-1"></div>
-    <div class="col-span-10">
-      <router-outlet></router-outlet>
+  <div>
+    <div class="grid grid-cols-12">
+      <div class="col-span-1"></div>
+      <div class="col-span-10">
+        <router-outlet></router-outlet>
+      </div>
+      <div class="col-span-1"></div>
     </div>
-    <div class="col-span-1"></div>
   </div>
 </div>

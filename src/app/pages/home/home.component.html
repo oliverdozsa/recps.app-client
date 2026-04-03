@@ -1,17 +1,4 @@
-<h2 class="text-lg font-semibold">search for recipes</h2>
-<input type="text" class="input w-full mb-3" aria-label="input" placeholder="recipe name..." />
-
-<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-3">
-  <div class="md:col-span-2">
-    <h2 class="text-lg font-semibold">by ingredients</h2>
-    <app-tags-input [options]="['apple', 'peach']"></app-tags-input>
-  </div>
-
-  <div class="md:col-span-1">
-    <h2 class="text-lg font-semibold">exclude</h2>
-    <app-tags-input [options]="['apple', 'peach']"></app-tags-input>
-  </div>
-</div>
+<app-recipe-main-search-params></app-recipe-main-search-params>
 
 <div class="w-full md:w-96 md:mx-auto">
   <button class="btn btn-primary w-full">search recipes</button>
@@ -19,24 +6,7 @@
 
 <div class="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-4 mt-4">
   <!-- Filter column -->
-  <div class="card bg-base-100 p-4 h-fit">
-    <h3 class="text-lg font-semibold mb-3">Advanced Filters</h3>
-    <div class="space-y-3">
-      <div>
-        <label class="label text-sm">Category</label>
-        <select class="select w-full"><option>All</option></select>
-      </div>
-      <div>
-        <label class="label text-sm">Cuisine</label>
-        <select class="select w-full"><option>Any</option></select>
-      </div>
-      <div>
-        <label class="label text-sm">Prep time</label>
-        <input type="range" class="range" aria-label="range" />
-      </div>
-      <button class="btn btn-primary w-full">Apply</button>
-    </div>
-  </div>
+  <app-recipe-advanced-search-params></app-recipe-advanced-search-params>
 
   <!-- Results sub-grid -->
   <app-recipe-search-result-display></app-recipe-search-result-display>
