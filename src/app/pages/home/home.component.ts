@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import {Component, inject, OnInit, signal} from '@angular/core';
 import {TagsInputComponent} from '../../components/tags-input/tags-input.component';
 import {
   RecipeSearchResultDisplayComponent
@@ -22,7 +22,7 @@ import {RecipeSearchResponse} from '../../services/responses';
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit{
   private recipeService = inject(RecipeService);
 
   filterByName = signal('');
@@ -33,4 +33,9 @@ export class HomeComponent {
       this.recipes.set(response.items ?? []);
     });
   }
+
+  ngOnInit(): void {
+    this.search();
+  }
+
 }
