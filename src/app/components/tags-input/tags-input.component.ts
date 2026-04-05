@@ -9,8 +9,10 @@ import { NgFor, NgIf } from '@angular/common';
 })
 export class TagsInputComponent {
   @Input() options: string[] = [];
+  @Input() externalOptions: string[] | null = null;
   @Input() placeholder = 'Add tags...';
   @Output() tagsChange = new EventEmitter<string[]>();
+  @Output() queryChange = new EventEmitter<string>();
 
   @ViewChild('tagInput') tagInput!: ElementRef<HTMLInputElement>;
 
@@ -20,6 +22,9 @@ export class TagsInputComponent {
   activeIndex = -1;
 
   get filteredOptions(): string[] {
+    if (this.externalOptions !== null) {
+      return this.externalOptions.filter(opt => !this.tags.includes(opt));
+    }
     if (!this.inputValue.trim()) return [];
     const lower = this.inputValue.toLowerCase();
     return this.options.filter(
@@ -49,6 +54,7 @@ export class TagsInputComponent {
 
   onInput(): void {
     this.activeIndex = -1;
+    this.queryChange.emit(this.inputValue);
     this.showDropdown = this.filteredOptions.length > 0;
   }
 
