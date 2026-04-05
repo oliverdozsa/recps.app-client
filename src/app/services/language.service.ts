@@ -13,10 +13,16 @@ export class LanguageService {
   private baseUrl = environment.apiUrl;
 
   languages = signal<LanguageResponse[]>([]);
+  selectedLanguage = signal<LanguageResponse | null>(null);
 
   getAll(): Observable<LanguageResponse[]> {
     return this.http.get<LanguageResponse[]>(`${this.baseUrl}/languages`).pipe(
-      tap(langs => this.languages.set(langs))
+      tap(langs => {
+        this.languages.set(langs);
+        if (langs.length > 0 && !this.selectedLanguage()) {
+          this.selectedLanguage.set(langs[0]);
+        }
+      })
     );
   }
 }

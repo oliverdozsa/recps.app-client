@@ -32,8 +32,10 @@ export class HomeComponent implements OnInit {
   loading = signal(false);
 
   search(): void {
-    this.recipeService.search({filterByName: this.filterByName()}).subscribe(response => {
-      this.recipes.set(response.items ?? []);
+    this.loading.set(true);
+    this.recipeService.search({filterByName: this.filterByName()}).subscribe({
+      next: response => this.recipes.set(response.items ?? []),
+      complete: () => this.loading.set(false)
     });
   }
 

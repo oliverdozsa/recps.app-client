@@ -1,0 +1,15 @@
+<div class="dropdown relative inline-flex [--offset:8] [--placement:bottom-end]">
+  <button type="button" class="dropdown-toggle btn btn-text btn-circle dropdown-open:bg-base-content/10" aria-haspopup="menu" aria-expanded="false" aria-label="Language">
+    <span class="text-xl">{{ flagFor(languageService.selectedLanguage()?.isoName) }}</span>
+  </button>
+  <ul class="dropdown-menu dropdown-open:opacity-100 hidden min-w-32" role="menu" aria-orientation="vertical">
+    @for (lang of languageService.languages(); track lang.id) {
+      <li>
+        <button class="dropdown-item gap-2 w-full" [class.active]="lang.id === languageService.selectedLanguage()?.id" (click)="select(lang)">
+          <span class="text-lg">{{ flagFor(lang.isoName) }}</span>
+          <span class="uppercase">{{ lang.isoName }}</span>
+        </button>
+      </li>
+    }
+  </ul>
+</div>
