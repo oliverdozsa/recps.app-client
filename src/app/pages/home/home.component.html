@@ -4,12 +4,15 @@
   <button class="btn btn-primary w-full" (click)="search()">search recipes</button>
 </div>
 
-<div class="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-4 mt-4">
-  <!-- Filter column -->
-  <!--app-recipe-advanced-search-params></app-recipe-advanced-search-params-->
 
-  <!-- Results sub-grid -->
-  <!--app-recipe-search-result-display [recipes]="recipes()"></app-recipe-search-result-display-->
+<!-- Ignore this for now until advanced search gets implemented. -->
+<!--<div class="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-4 mt-4">-->
+<!--  &lt;!&ndash; Filter column &ndash;&gt;-->
+<!--  <app-recipe-advanced-search-params></app-recipe-advanced-search-params>-->
+
+<!--  &lt;!&ndash; Results sub-grid &ndash;&gt;-->
+<!--  <app-recipe-search-result-display [recipes]="recipes()"></app-recipe-search-result-display>-->
+<!--</div>-->
+<div class="mt-10">
+  <app-recipe-search-result-display [recipes]="recipes()"></app-recipe-search-result-display>
 </div>
-<app-recipe-search-result-display [recipes]="recipes()"></app-recipe-search-result-display>
-

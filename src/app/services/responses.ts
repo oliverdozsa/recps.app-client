@@ -13,3 +13,14 @@ export interface RecipeSearchResponse {
 export interface PageResponseRecipeSearchResponse {
   items?: RecipeSearchResponse[];
 }
+
+export interface LanguageResponse {
+  id?: number;
+  isoName?: string;
+}
+
+export interface IngredientSearchResponse {
+  ingredientId?: number;
+  name?: string;
+  alternatives?: string[];
+}
