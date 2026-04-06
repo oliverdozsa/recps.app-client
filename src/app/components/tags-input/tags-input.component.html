@@ -8,7 +8,7 @@
     @for (tag of tags; track $index) {
       <div class="badge badge-primary gap-1 select-none"
       >
-        {{ tag }}
+        {{ displayFunction(tag) }}
         <button
           type="button"
           class="cursor-pointer hover:opacity-70 transition-opacity flex items-center"
@@ -51,7 +51,7 @@
             [class.hover:bg-base-200]="i !== activeIndex"
             (mousedown)="addTag(option)"
           >
-            {{ option }}
+            {{ displayFunction(option) }}
           </button>
         </li>
       }

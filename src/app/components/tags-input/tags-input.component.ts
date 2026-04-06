@@ -1,45 +1,46 @@
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { NgFor, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-tags-input',
-  imports: [FormsModule, NgFor, NgIf],
+  imports: [FormsModule],
   templateUrl: './tags-input.component.html',
 })
 export class TagsInputComponent {
-  @Input() options: string[] = [];
+  @Input() options: any[] = [];
   @Input() placeholder = 'Add tags...';
-  @Output() tagsChange = new EventEmitter<string[]>();
+  @Input() displayFunction: (item: any) => string = () => "";
+  @Output() tagsChange = new EventEmitter<any[]>();
   @Output() queryChange = new EventEmitter<string>();
 
   @ViewChild('tagInput') tagInput!: ElementRef<HTMLInputElement>;
 
-  get externalOptions(): string[] | null {
+  get externalOptions(): any[] | null {
     return this._externalOptions
   }
 
   @Input()
-  set externalOptions(value: string[]) {
+  set externalOptions(value: any[]) {
     this._externalOptions = value;
-    this.showDropdown = this.filteredOptions.length > 0;
+    this.showDropdown = this.filteredOptions.length > 0 && this.focused;
   }
 
-  _externalOptions: string[] | null = null;
+  _externalOptions: any[] | null = null;
 
   inputValue = '';
-  tags: string[] = [];
+  tags: any[] = [];
   showDropdown = false;
   activeIndex = -1;
+  focused = false;
 
-  get filteredOptions(): string[] {
+  get filteredOptions(): any[] {
     if (this.externalOptions !== null) {
-      return this.externalOptions.filter(opt => !this.tags.includes(opt));
+      return this.externalOptions.filter(opt => this.isNotPresent(opt));
     }
     if (!this.inputValue.trim()) return [];
     const lower = this.inputValue.toLowerCase();
     return this.options.filter(
-      opt => opt.toLowerCase().includes(lower) && !this.tags.includes(opt)
+      opt => opt.toLowerCase().includes(lower) && this.isNotPresent(opt)
     );
   }
 
@@ -47,10 +48,11 @@ export class TagsInputComponent {
     this.tagInput.nativeElement.focus();
     this.activeIndex = -1;
     this.showDropdown = this.filteredOptions.length > 0;
+    this.focused = true;
   }
 
   addTag(option: string): void {
-    if (!this.tags.includes(option)) {
+    if (this.isNotPresent(option)) {
       this.tags = [...this.tags, option];
       this.tagsChange.emit(this.tags);
     }
@@ -61,7 +63,7 @@ export class TagsInputComponent {
   }
 
   removeTag(tag: string): void {
-    this.tags = this.tags.filter(t => t !== tag);
+    this.tags = this.tags.filter(t => this.displayFunction(t) !== this.displayFunction(tag));
     this.tagsChange.emit(this.tags);
   }
 
@@ -75,6 +77,7 @@ export class TagsInputComponent {
     setTimeout(() => {
       this.showDropdown = false;
       this.activeIndex = -1;
+      this.focused = false;
     }, 150);
   }
 
@@ -110,5 +113,12 @@ export class TagsInputComponent {
         }
         break;
     }
+  }
+
+  isNotPresent(option: any): boolean {
+    const tagsAsString = this.tags.map(tag => this.displayFunction(tag))
+    const optionAsString = this.displayFunction(option);
+
+    return !tagsAsString.includes(optionAsString);
   }
 }

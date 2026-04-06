@@ -4,6 +4,7 @@ import {IngredientsService} from '../../services/ingredients.service';
 import {LanguageService} from '../../services/language.service';
 import {Subject, debounceTime, switchMap, EMPTY} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
+import {IngredientSearchResponse} from '../../services/responses';
 
 @Component({
   selector: 'app-ingredients-input',
@@ -15,7 +16,7 @@ export class IngredientsInputComponent implements OnInit, OnDestroy {
   private ingredientsService = inject(IngredientsService);
   private languageService = inject(LanguageService);
 
-  options: string[] = [];
+  options: IngredientSearchResponse[] = [];
 
   private query$ = new Subject<string>();
   private destroy$ = new Subject<void>();
@@ -34,7 +35,7 @@ export class IngredientsInputComponent implements OnInit, OnDestroy {
       }),
       takeUntil(this.destroy$)
     ).subscribe(results => {
-      this.options = results.map(r => r.name ?? '').filter(Boolean);
+      this.options = results;
     });
   }
 
@@ -45,5 +46,9 @@ export class IngredientsInputComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  display(ingredient: IngredientSearchResponse): string {
+    return ingredient.name!;
   }
 }
