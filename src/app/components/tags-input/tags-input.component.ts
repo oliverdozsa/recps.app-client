@@ -9,12 +9,23 @@ import { NgFor, NgIf } from '@angular/common';
 })
 export class TagsInputComponent {
   @Input() options: string[] = [];
-  @Input() externalOptions: string[] | null = null;
   @Input() placeholder = 'Add tags...';
   @Output() tagsChange = new EventEmitter<string[]>();
   @Output() queryChange = new EventEmitter<string>();
 
   @ViewChild('tagInput') tagInput!: ElementRef<HTMLInputElement>;
+
+  get externalOptions(): string[] | null {
+    return this._externalOptions
+  }
+
+  @Input()
+  set externalOptions(value: string[]) {
+    this._externalOptions = value;
+    this.showDropdown = this.filteredOptions.length > 0;
+  }
+
+  _externalOptions: string[] | null = null;
 
   inputValue = '';
   tags: string[] = [];
@@ -34,6 +45,8 @@ export class TagsInputComponent {
 
   focusInput(): void {
     this.tagInput.nativeElement.focus();
+    this.activeIndex = -1;
+    this.showDropdown = this.filteredOptions.length > 0;
   }
 
   addTag(option: string): void {
