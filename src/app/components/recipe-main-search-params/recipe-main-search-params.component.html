@@ -5,11 +5,11 @@
 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-3">
   <div class="md:col-span-2">
     <h2 class="text-lg font-semibold">by ingredients</h2>
-    <app-ingredients-input></app-ingredients-input>
+    <app-ingredients-input (selectedIngredientsChange)="includedIngredients.set($event)"></app-ingredients-input>
   </div>
 
   <div class="md:col-span-1">
     <h2 class="text-lg font-semibold">exclude</h2>
-    <app-ingredients-input></app-ingredients-input>
+    <app-ingredients-input (selectedIngredientsChange)="excludedIngredients.set($event)"></app-ingredients-input>
   </div>
 </div>

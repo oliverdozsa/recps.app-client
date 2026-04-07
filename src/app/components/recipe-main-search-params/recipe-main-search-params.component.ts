@@ -1,6 +1,7 @@
 import { Component, model } from '@angular/core';
 import {TagsInputComponent} from "../tags-input/tags-input.component";
 import {IngredientsInputComponent} from '../ingredients-input/ingredients-input.component';
+import {IngredientSearchResponse} from '../../services/responses';
 
 @Component({
   selector: 'app-recipe-main-search-params',
@@ -13,4 +14,6 @@ import {IngredientsInputComponent} from '../ingredients-input/ingredients-input.
 })
 export class RecipeMainSearchParamsComponent {
   filterByName = model('');
+  includedIngredients = model<IngredientSearchResponse[]>([]);
+  excludedIngredients = model<IngredientSearchResponse[]>([]);
 }

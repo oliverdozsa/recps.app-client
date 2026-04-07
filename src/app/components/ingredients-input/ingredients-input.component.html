@@ -1,1 +1,1 @@
-<app-tags-input [externalOptions]="options" [displayFunction]="display" (queryChange)="onQueryChange($event)"></app-tags-input>
+<app-tags-input [externalOptions]="options" [displayFunction]="display" (queryChange)="onQueryChange($event)" (tagsChange)="selectedIngredientsChange.emit($event)"></app-tags-input>

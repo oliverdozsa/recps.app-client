@@ -10,7 +10,7 @@ import {
 } from '../../components/recipe-main-search-params/recipe-main-search-params.component';
 import {RecipeService} from '../../services/recipe.service';
 import {LanguageService} from '../../services/language.service';
-import {RecipeSearchResponse} from '../../services/responses';
+import {IngredientSearchResponse, RecipeSearchResponse} from '../../services/responses';
 import {forkJoin} from 'rxjs';
 
 @Component({
@@ -28,12 +28,30 @@ export class HomeComponent implements OnInit {
   private languageService = inject(LanguageService);
 
   filterByName = signal('');
+  includedIngredients = signal<IngredientSearchResponse[]>([]);
+  excludedIngredients = signal<IngredientSearchResponse[]>([]);
   recipes = signal<RecipeSearchResponse[]>([]);
   loading = signal(false);
 
+  private buildSearchRequest() {
+    const included = this.includedIngredients();
+    const excluded = this.excludedIngredients();
+    const minMatch = this.includedIngredients().length;
+
+    return {
+      filterByName: this.filterByName(),
+      includedIngredientGroups: included.length > 0
+        ? [{ group: { ids: included.map(i => i.ingredientId!), minMatch: minMatch }, relation: 'OR' as const }]
+        : undefined,
+      excludedIngredients: excluded.length > 0
+        ? excluded.map(i => i.ingredientId!)
+        : undefined
+    };
+  }
+
   search(): void {
     this.loading.set(true);
-    this.recipeService.search({filterByName: this.filterByName()}).subscribe({
+    this.recipeService.search(this.buildSearchRequest()).subscribe({
       next: response => this.recipes.set(response.items ?? []),
       complete: () => this.loading.set(false)
     });
