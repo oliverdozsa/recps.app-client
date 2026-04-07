@@ -12,6 +12,7 @@ import {RecipeService} from '../../services/recipe.service';
 import {LanguageService} from '../../services/language.service';
 import {IngredientSearchResponse, RecipeSearchResponse} from '../../services/responses';
 import {forkJoin} from 'rxjs';
+import {TriggerSearchService} from '../../services/trigger-search.service';
 
 @Component({
   selector: 'app-home',
@@ -26,12 +27,36 @@ import {forkJoin} from 'rxjs';
 export class HomeComponent implements OnInit {
   private recipeService = inject(RecipeService);
   private languageService = inject(LanguageService);
+  private triggerSearchService = inject(TriggerSearchService);
 
   filterByName = signal('');
   includedIngredients = signal<IngredientSearchResponse[]>([]);
   excludedIngredients = signal<IngredientSearchResponse[]>([]);
   recipes = signal<RecipeSearchResponse[]>([]);
   loading = signal(false);
+
+  ngOnInit(): void {
+    this.loading.set(true);
+    forkJoin([
+      this.recipeService.search({filterByName: this.filterByName()}),
+      this.languageService.getAll()
+    ]).subscribe({
+      next: ([recipesResponse]) => {
+        this.recipes.set(recipesResponse.items ?? []);
+      },
+      complete: () => this.loading.set(false)
+    });
+
+    this.triggerSearchService.trigger$.subscribe(trigger => this.search());
+  }
+
+  search(): void {
+    this.loading.set(true);
+    this.recipeService.search(this.buildSearchRequest()).subscribe({
+      next: response => this.recipes.set(response.items ?? []),
+      complete: () => this.loading.set(false)
+    });
+  }
 
   private buildSearchRequest() {
     const included = this.includedIngredients();
@@ -47,26 +72,5 @@ export class HomeComponent implements OnInit {
         ? excluded.map(i => i.ingredientId!)
         : undefined
     };
-  }
-
-  search(): void {
-    this.loading.set(true);
-    this.recipeService.search(this.buildSearchRequest()).subscribe({
-      next: response => this.recipes.set(response.items ?? []),
-      complete: () => this.loading.set(false)
-    });
-  }
-
-  ngOnInit(): void {
-    this.loading.set(true);
-    forkJoin([
-      this.recipeService.search({filterByName: this.filterByName()}),
-      this.languageService.getAll()
-    ]).subscribe({
-      next: ([recipesResponse]) => {
-        this.recipes.set(recipesResponse.items ?? []);
-      },
-      complete: () => this.loading.set(false)
-    });
   }
 }

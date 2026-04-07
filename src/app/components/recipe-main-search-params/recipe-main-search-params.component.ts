@@ -16,4 +16,6 @@ export class RecipeMainSearchParamsComponent {
   filterByName = model('');
   includedIngredients = model<IngredientSearchResponse[]>([]);
   excludedIngredients = model<IngredientSearchResponse[]>([]);
+
+
 }
