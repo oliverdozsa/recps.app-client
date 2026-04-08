@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import {Component, input} from '@angular/core';
 import {RecipeSearchResponse} from '../../services/responses';
 
 @Component({

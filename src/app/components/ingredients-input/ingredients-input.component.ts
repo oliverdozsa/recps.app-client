@@ -3,7 +3,7 @@ import {TagsInputComponent} from '../tags-input/tags-input.component';
 import {IngredientsService} from '../../services/ingredients.service';
 import {LanguageService} from '../../services/language.service';
 import {Subject, debounceTime, switchMap, EMPTY} from 'rxjs';
-import {IngredientSearchResponse as Ingredient} from '../../services/responses';
+import {IngredientSearchResponse} from '../../services/responses';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 @Component({
@@ -16,9 +16,9 @@ export class IngredientsInputComponent implements OnInit {
   private ingredientsService = inject(IngredientsService);
   private languageService = inject(LanguageService);
 
-  @Output() selectedIngredientsChange = new EventEmitter<Ingredient[]>();
+  @Output() selectedIngredientsChange = new EventEmitter<IngredientSearchResponse[]>();
 
-  options: Ingredient[] = [];
+  options: IngredientSearchResponse[] = [];
 
   private query$ = new Subject<string>();
   private destroyRef = inject(DestroyRef);
@@ -45,7 +45,7 @@ export class IngredientsInputComponent implements OnInit {
     this.query$.next(query);
   }
 
-  display(ingredient: Ingredient): string {
+  display(ingredient: IngredientSearchResponse): string {
     return ingredient.name!;
   }
 }

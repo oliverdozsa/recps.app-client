@@ -20,7 +20,7 @@ export interface LanguageResponse {
 }
 
 export interface IngredientSearchResponse {
-  ingredientId?: number;
-  name?: string;
+  ingredientId: number;
+  name: string;
   alternatives?: string[];
 }
