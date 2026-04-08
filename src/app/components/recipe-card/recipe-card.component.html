@@ -2,8 +2,20 @@
   @if (recipe().imageUrl) {
     <img [src]="recipe().imageUrl" [alt]="recipe().name" class="my-2 rounded w-full object-cover h-40" />
   }
-  <div class="font-semibold truncate">{{ recipe().name }}</div>
+  <div class="flex">
+    <div class="font-semibold grow">{{ recipe().name }}</div>
+    <div>
+      <a [href]="recipe().url" target="_blank"><span class="icon-[tabler--external-link] size-5"></span></a>
+    </div>
+  </div>
+
   @if (recipe().cookingTime) {
     <div class="text-sm text-base-content/60 mt-1">{{ recipe().cookingTime }} min</div>
   }
+
+  <div>
+    @for (ingredient of recipe().ingredients; track ingredient.id) {
+      <span class="badge badge-outline badge-primary mx-0.5 my-0.5">{{ingredient.names![0].name}}</span>
+    }
+  </div>
 </div>

@@ -11,7 +11,6 @@ import {IngredientGroup, IngredientGroupWithRelation} from '../../services/commo
 @Component({
   selector: 'app-recipe-main-search-params',
   imports: [
-    TagsInputComponent,
     IngredientsInputComponent
   ],
   templateUrl: './recipe-main-search-params.component.html',
