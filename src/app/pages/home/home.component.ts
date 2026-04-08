@@ -11,8 +11,8 @@ import {
 import {RecipeService} from '../../services/recipe.service';
 import {LanguageService} from '../../services/language.service';
 import {IngredientSearchResponse, RecipeSearchResponse} from '../../services/responses';
-import {forkJoin} from 'rxjs';
-import {TriggerSearchService} from '../../services/trigger-search.service';
+import {debounceTime, forkJoin, Subject} from 'rxjs';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-home',
@@ -25,20 +25,30 @@ import {TriggerSearchService} from '../../services/trigger-search.service';
   styleUrl: './home.component.css'
 })
 export class HomeComponent implements OnInit {
-  private recipeService = inject(RecipeService);
-  private languageService = inject(LanguageService);
-  private triggerSearchService = inject(TriggerSearchService);
-
   filterByName = signal('');
   includedIngredients = signal<IngredientSearchResponse[]>([]);
   excludedIngredients = signal<IngredientSearchResponse[]>([]);
   recipes = signal<RecipeSearchResponse[]>([]);
   loading = signal(false);
 
+  private recipeService = inject(RecipeService);
+  private languageService = inject(LanguageService);
+  private filterByNameChange$ = new Subject<string>();
+
+  constructor() {
+    this.filterByNameChange$.pipe(debounceTime(300), takeUntilDestroyed())
+      .subscribe(filterByName => {
+        if (filterByName.length >= 2 || filterByName.length == 0) {
+          this.filterByName.set(filterByName);
+          this.search()
+        }
+      })
+  }
+
   ngOnInit(): void {
     this.loading.set(true);
     forkJoin([
-      this.recipeService.search({filterByName: this.filterByName()}),
+      this.recipeService.search({}),
       this.languageService.getAll()
     ]).subscribe({
       next: ([recipesResponse]) => {
@@ -46,16 +56,19 @@ export class HomeComponent implements OnInit {
       },
       complete: () => this.loading.set(false)
     });
-
-    this.triggerSearchService.trigger$.subscribe(trigger => this.search());
   }
 
   search(): void {
     this.loading.set(true);
     this.recipeService.search(this.buildSearchRequest()).subscribe({
       next: response => this.recipes.set(response.items ?? []),
+      error: () => this.loading.set(false),
       complete: () => this.loading.set(false)
     });
+  }
+
+  filterByNameChange(value: string) {
+    this.filterByNameChange$.next(value);
   }
 
   private buildSearchRequest() {

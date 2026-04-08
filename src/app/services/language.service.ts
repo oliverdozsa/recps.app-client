@@ -20,6 +20,7 @@ export class LanguageService {
       tap(langs => {
         this.languages.set(langs);
         if (langs.length > 0 && !this.selectedLanguage()) {
+          // TODO: use user set values, or browser's language as default
           this.selectedLanguage.set(langs[0]);
         }
       })

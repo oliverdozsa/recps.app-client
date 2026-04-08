@@ -1,10 +1,10 @@
-import {Component, EventEmitter, inject, OnDestroy, OnInit, Output} from '@angular/core';
+import {Component, DestroyRef, EventEmitter, inject, OnInit, Output} from '@angular/core';
 import {TagsInputComponent} from '../tags-input/tags-input.component';
 import {IngredientsService} from '../../services/ingredients.service';
 import {LanguageService} from '../../services/language.service';
 import {Subject, debounceTime, switchMap, EMPTY} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
-import {IngredientSearchResponse} from '../../services/responses';
+import {IngredientSearchResponse as Ingredient} from '../../services/responses';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-ingredients-input',
@@ -12,16 +12,16 @@ import {IngredientSearchResponse} from '../../services/responses';
   templateUrl: './ingredients-input.component.html',
   styleUrl: './ingredients-input.component.css'
 })
-export class IngredientsInputComponent implements OnInit, OnDestroy {
+export class IngredientsInputComponent implements OnInit {
   private ingredientsService = inject(IngredientsService);
   private languageService = inject(LanguageService);
 
-  @Output() selectedIngredientsChange = new EventEmitter<IngredientSearchResponse[]>();
+  @Output() selectedIngredientsChange = new EventEmitter<Ingredient[]>();
 
-  options: IngredientSearchResponse[] = [];
+  options: Ingredient[] = [];
 
   private query$ = new Subject<string>();
-  private destroy$ = new Subject<void>();
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
     this.query$.pipe(
@@ -35,7 +35,7 @@ export class IngredientsInputComponent implements OnInit, OnDestroy {
         if (!langId) return EMPTY;
         return this.ingredientsService.search(langId, query);
       }),
-      takeUntil(this.destroy$)
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe(results => {
       this.options = results;
     });
@@ -45,12 +45,7 @@ export class IngredientsInputComponent implements OnInit, OnDestroy {
     this.query$.next(query);
   }
 
-  ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
-  display(ingredient: IngredientSearchResponse): string {
+  display(ingredient: Ingredient): string {
     return ingredient.name!;
   }
 }
