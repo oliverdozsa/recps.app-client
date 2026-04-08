@@ -12,6 +12,7 @@ export interface RecipeSearchResponse {
 
 export interface PageResponseRecipeSearchResponse {
   items?: RecipeSearchResponse[];
+  totalCount?: number;
 }
 
 export interface LanguageResponse {

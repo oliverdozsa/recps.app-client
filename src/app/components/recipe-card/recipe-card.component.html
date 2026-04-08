@@ -5,7 +5,7 @@
   <div class="flex">
     <div class="font-semibold grow">{{ recipe().name }}</div>
     <div>
-      <a [href]="recipe().url" target="_blank"><span class="icon-[tabler--external-link] size-5"></span></a>
+      <a [href]="recipe().url" target="_blank" class="link link-primary"><span class="icon-[tabler--external-link] size-5"></span></a>
     </div>
   </div>
 
@@ -13,7 +13,7 @@
     <div class="text-sm text-base-content/60 mt-1">{{ recipe().cookingTime }} min</div>
   }
 
-  <div>
+  <div class="overflow-y-auto max-h-32">
     @for (ingredient of recipe().ingredients; track ingredient.id) {
       <span class="badge badge-outline badge-primary mx-0.5 my-0.5">{{ingredient.names![0].name}}</span>
     }
