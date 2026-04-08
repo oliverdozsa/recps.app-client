@@ -5,9 +5,7 @@
 }
 
 <div [class.pointer-events-none]="loading()">
-  <app-recipe-main-search-params (filterByNameChange)="filterByNameChange($event)"
-                                 [(includedIngredients)]="includedIngredients" (includedIngredientsChange)="search()"
-                                 [(excludedIngredients)]="excludedIngredients" (excludedIngredientsChange)="search()"></app-recipe-main-search-params>
+  <app-recipe-main-search-params></app-recipe-main-search-params>
 
 <!--  <div class="w-full md:w-96 md:mx-auto">-->
 <!--    <button class="btn btn-primary w-full" (click)="search()">search recipes</button>-->

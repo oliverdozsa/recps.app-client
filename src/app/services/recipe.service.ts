@@ -16,7 +16,7 @@ export class RecipeService {
   private http = inject(HttpClient);
   private baseUrl = environment.apiUrl;
 
-  search(request: RecipeSearchRequest): Observable<PageResponseRecipeSearchResponse> {
-    return this.http.post<PageResponseRecipeSearchResponse>(`${this.baseUrl}/recipes/search`, request);
+  search(): Observable<PageResponseRecipeSearchResponse> {
+    return this.http.post<PageResponseRecipeSearchResponse>(`${this.baseUrl}/recipes/search`, this.queryParams);
   }
 }
