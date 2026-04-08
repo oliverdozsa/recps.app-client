@@ -11,7 +11,10 @@ import {environment} from '../../environments/environment';
 })
 export class RecipeService {
   queryParamsChanged$ = new Subject<void>();
-  queryParams: RecipeSearchRequest = {};
+  queryParams: RecipeSearchRequest = {
+    limit: 15,
+    page: 0
+  };
 
   private http = inject(HttpClient);
   private baseUrl = environment.apiUrl;

@@ -23,4 +23,8 @@
   <div class="mt-10">
     <app-recipe-search-result-display [recipes]="recipes()"></app-recipe-search-result-display>
   </div>
+
+  <div class="flex justify-center mt-6">
+    <app-pagination [pageSize]="limit" [totalCount]="totalCount()"></app-pagination>
+  </div>
 </div>

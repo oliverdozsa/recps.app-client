@@ -9,6 +9,6 @@ export interface RecipeSearchRequest {
   includedIngredientGroups?: IngredientGroupWithRelation[];
   excludedIngredients?: number[];
   filterByName?: string;
-  limit?: number;
+  limit: number;
   page?: number;
 }

@@ -27,7 +27,7 @@ export class RecipeMainSearchParamsComponent {
     this.queryParamsChanged$ = this.recipeService.queryParamsChanged$;
 
     this.filterByNameDebounced$
-      .pipe(debounceTime(300),takeUntilDestroyed())
+      .pipe(debounceTime(300), takeUntilDestroyed())
       .subscribe(value => this.filterByNameChange(value));
   }
 
@@ -36,7 +36,7 @@ export class RecipeMainSearchParamsComponent {
   }
 
   includedIngredientsChange(ingredients: IngredientSearchResponse[]) {
-    if(ingredients.length > 0){
+    if (ingredients.length > 0) {
       const ingredientGroup: IngredientGroup = {
         ids: ingredients.map(i => i.ingredientId),
         minMatch: ingredients.length
@@ -51,7 +51,9 @@ export class RecipeMainSearchParamsComponent {
       this.queryParams.includedIngredientGroups = undefined;
     }
 
-    this.recipeService.queryParamsChanged$.next();
+    this.queryParams.page = 0;
+
+    this.queryParamsChanged$.next();
   }
 
   excludedIngredientsChange(ingredients: IngredientSearchResponse[]) {
@@ -63,8 +65,9 @@ export class RecipeMainSearchParamsComponent {
   }
 
   private filterByNameChange(value: string) {
-    if(value.length >= 2 || value.length == 0) {
+    if (value.length >= 2 || value.length == 0) {
       this.queryParams.filterByName = value;
+      this.queryParams.page = 0;
       this.queryParamsChanged$.next();
     }
   }

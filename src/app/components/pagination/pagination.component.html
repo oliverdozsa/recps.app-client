@@ -1,0 +1,23 @@
+@if (totalPages() > 1) {
+  <nav class="flex items-center gap-x-1">
+    <button type="button" class="btn btn-text" [disabled]="currentPage() === 1" (click)="goToPage(currentPage() - 1)">
+      «
+    </button>
+    <div class="flex items-center gap-x-1">
+
+      @for (page of visiblePages(); track page) {
+        @if (page === -1) {
+          <button type="button" class="btn btn-disabled btn-text btn-square aria-[current='page']:text-bg-primary">…
+          </button>
+        } @else {
+          <button type="button" class="btn btn-text btn-square aria-[current='page']:text-bg-primary"
+                  [attr.aria-current]="page == currentPage() ? 'page': ''"  (click)="goToPage(page)"> {{ page }}
+          </button>
+        }
+      }
+    </div>
+    <button type="button" class="btn btn-text" [disabled]="currentPage() === totalPages()"
+            (click)="goToPage(currentPage() + 1)">»
+    </button>
+  </nav>
+}

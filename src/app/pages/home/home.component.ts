@@ -10,16 +10,18 @@ import {
 } from '../../components/recipe-main-search-params/recipe-main-search-params.component';
 import {RecipeService} from '../../services/recipe.service';
 import {LanguageService} from '../../services/language.service';
-import {RecipeSearchResponse} from '../../services/responses';
+import {PageResponseRecipeSearchResponse, RecipeSearchResponse} from '../../services/responses';
 import {forkJoin} from 'rxjs';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {PaginationComponent} from '../../components/pagination/pagination.component';
 
 @Component({
   selector: 'app-home',
   imports: [
     RecipeSearchResultDisplayComponent,
     RecipeAdvancedSearchParamsComponent,
-    RecipeMainSearchParamsComponent
+    RecipeMainSearchParamsComponent,
+    PaginationComponent
   ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
@@ -27,9 +29,14 @@ import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 export class HomeComponent implements OnInit {
   recipes = signal<RecipeSearchResponse[]>([]);
   loading = signal(false);
+  totalCount = signal(0);
 
   private recipeService = inject(RecipeService);
   private languageService = inject(LanguageService);
+
+  get limit() {
+    return this.recipeService.queryParams.limit;
+  }
 
   constructor() {
     this.recipeService.queryParamsChanged$
@@ -43,9 +50,7 @@ export class HomeComponent implements OnInit {
       this.recipeService.search(),
       this.languageService.getAll()
     ]).subscribe({
-      next: ([recipesResponse]) => {
-        this.recipes.set(recipesResponse.items ?? []);
-      },
+      next: ([recipesResponse]) => this.usePageResponse(recipesResponse),
       complete: () => this.loading.set(false),
       error: error => this.loading.set(false),
     });
@@ -54,9 +59,14 @@ export class HomeComponent implements OnInit {
   search(): void {
     this.loading.set(true);
     this.recipeService.search().subscribe({
-      next: response => this.recipes.set(response.items ?? []),
+      next: response => this.usePageResponse(response),
       error: () => this.loading.set(false),
       complete: () => this.loading.set(false)
     });
+  }
+
+  private usePageResponse(response: PageResponseRecipeSearchResponse) {
+    this.recipes.set(response.items ?? []);
+    this.totalCount.set(response.totalCount ?? 0);
   }
 }
