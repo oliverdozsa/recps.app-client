@@ -1,12 +1,12 @@
 import {Component, inject, OnInit} from '@angular/core';
-import {NavigationEnd, Router, RouterOutlet} from '@angular/router';
+import {NavigationEnd, Router, RouterLink, RouterOutlet} from '@angular/router';
 import {AuthService} from './services/auth.service';
 import {LoginComponent} from './components/login/login.component';
 import {LanguageSwitcherComponent} from './components/language-switcher/language-switcher.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, LoginComponent, LanguageSwitcherComponent],
+  imports: [RouterOutlet, LoginComponent, LanguageSwitcherComponent, RouterLink],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

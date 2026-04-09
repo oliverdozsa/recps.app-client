@@ -3,3 +3,9 @@
     <app-recipe-card [recipe]="recipe"></app-recipe-card>
   }
 </div>
+@if (recipes().length == 0) {
+  <div>no results</div>
+  @if (areConflictingIngredientsPresent) {
+    <div>conflicting ingredients!</div>
+  }
+}
