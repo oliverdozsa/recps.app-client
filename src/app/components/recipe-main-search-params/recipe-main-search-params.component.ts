@@ -1,5 +1,4 @@
 import {Component, inject} from '@angular/core';
-import {TagsInputComponent} from "../tags-input/tags-input.component";
 import {IngredientsInputComponent} from '../ingredients-input/ingredients-input.component';
 import {IngredientSearchResponse} from '../../services/responses';
 import {RecipeService} from '../../services/recipe.service';
@@ -51,6 +50,7 @@ export class RecipeMainSearchParamsComponent {
       this.queryParams.includedIngredientGroups = undefined;
     }
 
+    this.recipeService.determineConflictingIngredients();
     this.queryParams.page = 0;
     this.queryParamsChanged$.next();
   }
@@ -62,6 +62,7 @@ export class RecipeMainSearchParamsComponent {
       this.queryParams.excludedIngredients = undefined;
     }
 
+    this.recipeService.determineConflictingIngredients();
     this.queryParams.page = 0;
     this.queryParamsChanged$.next();
   }

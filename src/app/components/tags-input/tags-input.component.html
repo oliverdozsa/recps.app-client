@@ -6,7 +6,7 @@
   >
     <!-- Tags -->
     @for (tag of tags; track $index) {
-      <div class="badge gap-1 select-none" [class]="badgeClass"
+      <div class="badge gap-1 select-none" [class]="getActualBadgeClass(displayFunction(tag))"
       >
         {{ displayFunction(tag) }}
         <button

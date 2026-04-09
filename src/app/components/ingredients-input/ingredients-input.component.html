@@ -1,1 +1,3 @@
-<app-tags-input [externalOptions]="options" [displayFunction]="display" [badgeClass]="badgeClass" (queryChange)="onQueryChange($event)" (tagsChange)="selectedIngredientsChange.emit($event)"></app-tags-input>
+<app-tags-input [externalOptions]="options" [displayFunction]="display" [badgeClass]="badgeClass"
+                [errorTags]="conflictingIngredientNames"
+                (queryChange)="onQueryChange($event)" (tagsChange)="onIngredientsChange($event)"></app-tags-input>

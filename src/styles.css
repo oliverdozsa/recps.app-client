@@ -29,7 +29,7 @@
   --color-success-content: oklch(27% 0.072 132.109);
   --color-warning: oklch(0.791 0.155 84.231);
   --color-warning-content: oklch(27% 0.077 45.635);
-  --color-error: oklch(63% 0.237 25.331);
+  --color-error: oklch(0.586 0.228 27.805);
   --color-error-content: oklch(98% 0.001 106.423);
 }
 

@@ -11,6 +11,7 @@ export class TagsInputComponent {
   @Input() placeholder = 'Add tags...';
   @Input() displayFunction: (item: any) => string = () => "";
   @Input() badgeClass = "badge-primary";
+  @Input() errorTags: string[] = [];
   @Output() tagsChange = new EventEmitter<any[]>();
   @Output() queryChange = new EventEmitter<string>();
 
@@ -24,6 +25,14 @@ export class TagsInputComponent {
   set externalOptions(value: any[]) {
     this._externalOptions = value;
     this.showDropdown = this.filteredOptions.length > 0 && this.focused;
+  }
+
+  getActualBadgeClass(displayName: string): string {
+    if(this.isErrorTag(displayName)) {
+      return "badge-error";
+    } else {
+      return this.badgeClass;;
+    }
   }
 
   _externalOptions: any[] | null = null;
@@ -121,5 +130,9 @@ export class TagsInputComponent {
     const optionAsString = this.displayFunction(option);
 
     return !tagsAsString.includes(optionAsString);
+  }
+
+  isErrorTag(displayName: string) {
+    return this.errorTags.includes(displayName);
   }
 }
