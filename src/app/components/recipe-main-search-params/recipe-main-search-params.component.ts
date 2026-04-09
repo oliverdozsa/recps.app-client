@@ -6,11 +6,13 @@ import {debounceTime, Subject} from 'rxjs';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {RecipeSearchRequest} from '../../services/requests';
 import {IngredientGroup, IngredientGroupWithRelation} from '../../services/common.data';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-recipe-main-search-params',
   imports: [
-    IngredientsInputComponent
+    IngredientsInputComponent,
+    TranslatePipe
   ],
   templateUrl: './recipe-main-search-params.component.html',
   styleUrl: './recipe-main-search-params.component.css'

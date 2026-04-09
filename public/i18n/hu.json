@@ -1,0 +1,26 @@
+{
+  "recipeMainSearchParams": {
+    "searchByName": "név alapján",
+    "searchByNamePlaceholder": "recept név...",
+    "byIngredients": "hozzávalók",
+    "excluded": "ne legyen benne"
+
+  },
+  "tagsInput": {
+    "addTagsPlaceholder": "kezdj el írni..."
+  },
+  "about": {
+    "title": "rólunk",
+    "description": "A recps.app egy receptkereső ami segít ételeket keresni hozzávalók alapján. Kereshetsz név szerint, szűrhetsz hozzávalókra, vagy kizárhatod, amiket nem szeretnél."
+  },
+  "login": {
+    "signOut": "kilépés"
+  },
+  "home": {
+    "title": "receptek"
+  },
+  "searchResultDisplay": {
+    "noResultFound": "nincsenek ilyen receptek...",
+    "conflictingIngredients": "ütköző hozzávalók miatt!\negy hozzávaló nem szerepelhet egyszerre a keresett és a kizárt hozzávalók között!"
+  }
+}

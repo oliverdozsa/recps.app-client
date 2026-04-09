@@ -25,7 +25,7 @@
       #tagInput
       type="text"
       class="outline-none bg-transparent flex-1 min-w-24 text-sm text-base-content placeholder:text-base-content/40"
-      [placeholder]="tags.length === 0 ? placeholder : ''"
+      [placeholder]="'tagsInput.addTagsPlaceholder' | translate"
       [(ngModel)]="inputValue"
       (input)="onInput()"
       (blur)="onBlur()"

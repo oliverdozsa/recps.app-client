@@ -1,3 +1,12 @@
-<div>
-  about
-</div>
+@if (languageService.loading()) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-base-100/60">
+    <span class="loading loading-spinner loading-xl"></span>
+  </div>
+} @else {
+  <div class="text-3xl text-center">
+    {{ "about.title" | translate }}
+  </div>
+  <p class="text-center">
+    {{ "about.description" | translate }}
+  </p>
+}

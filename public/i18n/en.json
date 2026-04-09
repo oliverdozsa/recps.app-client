@@ -1,0 +1,25 @@
+{
+  "recipeMainSearchParams": {
+    "searchByName": "search by name",
+    "searchByNamePlaceholder": "recipe name...",
+    "byIngredients": "by ingredients",
+    "excluded": "exclude"
+  },
+  "tagsInput": {
+    "addTagsPlaceholder": "start typing..."
+  },
+  "about": {
+    "title": "about",
+    "description": "recps.app is a recipe search app that helps you find meals based on what you have. Search by name, filter by ingredients you want to include, or exclude ones you'd rather avoid."
+  },
+  "login": {
+    "signOut": "sign out"
+  },
+  "home": {
+    "title": "recipes"
+  },
+  "searchResultDisplay": {
+    "noResultFound": "no such recipes found...",
+    "conflictingIngredients": "due to conflicting ingredients! <br /> an ingredient cannot be part of included and excluded at the same time!"
+  }
+}

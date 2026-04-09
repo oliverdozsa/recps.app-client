@@ -1,14 +1,14 @@
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import {Component, ElementRef, EventEmitter, inject, Input, Output, ViewChild} from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import {TranslatePipe, TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-tags-input',
-  imports: [FormsModule],
+  imports: [FormsModule, TranslatePipe],
   templateUrl: './tags-input.component.html',
 })
 export class TagsInputComponent {
   @Input() options: any[] = [];
-  @Input() placeholder = 'Add tags...';
   @Input() displayFunction: (item: any) => string = () => "";
   @Input() badgeClass = "badge-primary";
   @Input() errorTags: string[] = [];

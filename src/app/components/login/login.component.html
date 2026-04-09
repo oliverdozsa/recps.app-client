@@ -20,16 +20,10 @@
           <h6 class="text-base-content text-base font-semibold">{{ name }}</h6>
         </div>
       </li>
-      <li>
-        <a class="dropdown-item" href="#">
-          <span class="icon-[tabler--user]"></span>
-          My Profile
-        </a>
-      </li>
-      <li class="dropdown-footer gap-2">
+      <li class="dropdown-item gap-2">
         <button class="btn btn-error btn-soft btn-block" (click)="authService.logout()">
           <span class="icon-[tabler--logout]"></span>
-          Sign out
+          {{ "login.signOut" | translate }}
         </button>
       </li>
     </ul>
