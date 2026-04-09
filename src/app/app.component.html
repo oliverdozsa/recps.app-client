@@ -1,7 +1,7 @@
-<div class="bg-base-200 h-full pb-7">
+<div class="bg-base-200 min-h-screen flex flex-col pb-7">
   <nav class="navbar bg-base-200 justify-between gap-4">
     <div class="navbar-start">
-      <div class="dropdown relative inline-flex [--auto-close:inside] [--offset:9]">
+      <div class="dropdown relative inline-flex [--offset:9]">
         <button id="dropdown-name" type="button"
                 class="dropdown-toggle btn btn-text btn-circle dropdown-open:bg-base-content/10 dropdown-open:text-base-content"
                 aria-haspopup="menu" aria-expanded="false" aria-label="Dropdown">
@@ -26,7 +26,7 @@
     </div>
   </nav>
 
-  <div class="mt-2">
+  <div class="mt-2 flex-1">
     <div class="grid grid-cols-12">
       <div class="col-span-1"></div>
       <div class="col-span-10">
@@ -36,3 +36,9 @@
     </div>
   </div>
 </div>
+
+<footer class="footer footer-center bg-base-200/60 px-6 py-4">
+  <aside>
+    <a href="https://github.com/oliverdozsa/recps.app-client" target="_blank"><span class="icon-[tabler--brand-github] size-5"></span></a>
+  </aside>
+</footer>

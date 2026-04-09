@@ -29,6 +29,7 @@
       [(ngModel)]="inputValue"
       (input)="onInput()"
       (blur)="onBlur()"
+      (focus)="focusInput()"
       (keydown)="onKeydown($event)"
       autocomplete="off"
     />
@@ -36,8 +37,9 @@
 
   <!-- Dropdown -->
   @if (showDropdown && filteredOptions.length > 0 && inputValue) {
-    <ul class="absolute z-50 mt-1 w-full bg-base-100 border border-base-content/15 rounded-box shadow-lg max-h-60 overflow-y-auto py-1"
-        role="listbox"
+    <ul
+      class="absolute z-50 mt-1 w-full bg-base-100 border border-base-content/15 rounded-box shadow-lg max-h-60 overflow-y-auto py-1"
+      role="listbox"
     >
       @for (option of filteredOptions; track $index; let i = $index) {
         <li
