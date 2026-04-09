@@ -1,4 +1,4 @@
-import {Component, DestroyRef, EventEmitter, inject, OnInit, Output} from '@angular/core';
+import {Component, DestroyRef, EventEmitter, inject, Input, OnInit, Output} from '@angular/core';
 import {TagsInputComponent} from '../tags-input/tags-input.component';
 import {IngredientsService} from '../../services/ingredients.service';
 import {LanguageService} from '../../services/language.service';
@@ -16,6 +16,7 @@ export class IngredientsInputComponent implements OnInit {
   private ingredientsService = inject(IngredientsService);
   private languageService = inject(LanguageService);
 
+  @Input() badgeClass = "badge-primary";
   @Output() selectedIngredientsChange = new EventEmitter<IngredientSearchResponse[]>();
 
   options: IngredientSearchResponse[] = [];

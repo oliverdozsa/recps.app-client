@@ -52,12 +52,18 @@ export class RecipeMainSearchParamsComponent {
     }
 
     this.queryParams.page = 0;
-
     this.queryParamsChanged$.next();
   }
 
   excludedIngredientsChange(ingredients: IngredientSearchResponse[]) {
-    // TODO
+    if(ingredients.length > 0) {
+      this.queryParams.excludedIngredients = ingredients.map(i => i.ingredientId);
+    } else {
+      this.queryParams.excludedIngredients = undefined;
+    }
+
+    this.queryParams.page = 0;
+    this.queryParamsChanged$.next();
   }
 
   filterByNameRawChange(value: string) {

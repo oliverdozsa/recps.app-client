@@ -10,6 +10,7 @@ export class TagsInputComponent {
   @Input() options: any[] = [];
   @Input() placeholder = 'Add tags...';
   @Input() displayFunction: (item: any) => string = () => "";
+  @Input() badgeClass = "badge-primary";
   @Output() tagsChange = new EventEmitter<any[]>();
   @Output() queryChange = new EventEmitter<string>();
 
