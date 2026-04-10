@@ -23,6 +23,7 @@ export class IngredientsInputComponent implements OnInit {
   @Output() selectedIngredientsChange = new EventEmitter<IngredientSearchResponse[]>();
 
   options: IngredientSearchResponse[] = [];
+  isSearching = false;
 
   private query$ = new Subject<string>();
   private destroyRef = inject(DestroyRef);
@@ -50,11 +51,13 @@ export class IngredientsInputComponent implements OnInit {
         }
         const langId = this.languageService.selectedLanguage()?.id;
         if (!langId) return EMPTY;
+        this.isSearching = true;
         return this.ingredientsService.search(langId, query);
       }),
       takeUntilDestroyed(this.destroyRef)
     ).subscribe(results => {
       this.options = results;
+      this.isSearching = false;
     });
   }
 
