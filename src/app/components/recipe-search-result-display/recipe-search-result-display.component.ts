@@ -17,5 +17,5 @@ export class RecipeSearchResultDisplayComponent {
     return this.recipeService.conflictingIngredients.size > 0;
   }
 
-  recipes = input<RecipeSearchResponse[]>([]);
+  recipes = input<RecipeSearchResponse[] | undefined>(undefined);
 }

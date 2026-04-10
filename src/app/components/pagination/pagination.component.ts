@@ -1,5 +1,6 @@
 import {Component, computed, inject, input, output, signal} from '@angular/core';
 import {RecipeService} from '../../services/recipe.service';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-pagination',
@@ -34,6 +35,12 @@ export class PaginationComponent {
     pages.push(total);
     return pages;
   });
+
+  constructor() {
+    this.recipeService.pageReset$
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => this.reset());
+  }
 
   goToPage(page: number): void {
     if (page < 1 || page > this.totalPages() || page === this.currentPage()) return;

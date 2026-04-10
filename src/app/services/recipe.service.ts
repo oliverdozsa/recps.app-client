@@ -11,6 +11,7 @@ import {environment} from '../../environments/environment';
 })
 export class RecipeService {
   queryParamsChanged$ = new Subject<void>();
+  pageReset$ = new Subject<void>();
   queryParams: RecipeSearchRequest = {
     limit: 15,
     page: 0
@@ -35,6 +36,11 @@ export class RecipeService {
         this.conflictingIngredients.add(id);
       }
     });
+  }
+
+  resetPage() {
+    this.queryParams.page = 0;
+    this.pageReset$.next();
   }
 
   private collectIncludedIngredientIds(): number[] {

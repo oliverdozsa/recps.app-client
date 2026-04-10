@@ -53,7 +53,7 @@ export class RecipeMainSearchParamsComponent {
     }
 
     this.recipeService.determineConflictingIngredients();
-    this.queryParams.page = 0;
+    this.recipeService.resetPage();
     this.queryParamsChanged$.next();
   }
 
@@ -65,7 +65,7 @@ export class RecipeMainSearchParamsComponent {
     }
 
     this.recipeService.determineConflictingIngredients();
-    this.queryParams.page = 0;
+    this.recipeService.resetPage();
     this.queryParamsChanged$.next();
   }
 
@@ -76,7 +76,7 @@ export class RecipeMainSearchParamsComponent {
   private filterByNameChange(value: string) {
     if (value.length >= 2 || value.length == 0) {
       this.queryParams.filterByName = value;
-      this.queryParams.page = 0;
+      this.recipeService.resetPage();
       this.queryParamsChanged$.next();
     }
   }

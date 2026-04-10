@@ -6,7 +6,6 @@ import {TranslatePipe} from '@ngx-translate/core';
 @Component({
   selector: 'app-login',
   imports: [
-    NgIf,
     TranslatePipe
   ],
   templateUrl: './login.component.html',

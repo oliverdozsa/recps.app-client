@@ -3,7 +3,7 @@
     <app-recipe-card [recipe]="recipe"></app-recipe-card>
   }
 </div>
-@if (recipes().length == 0) {
+@if (recipes() != undefined && recipes()!.length == 0) {
   <div class="flex justify-center">
     @if (areConflictingIngredientsPresent) {
       <div>
@@ -16,10 +16,9 @@
     }
 
   </div>
-  <p class="text-center">
-
-    {{ "searchResultDisplay.noResultFound" | translate }}</p>
+  <p class="text-center">{{ "searchResultDisplay.noResultFound" | translate }}</p>
   @if (areConflictingIngredientsPresent) {
-    <p class="text-center text-error whitespace-pre-line">{{ "searchResultDisplay.conflictingIngredients" | translate }}</p>
+    <p
+      class="text-center text-error whitespace-pre-line">{{ "searchResultDisplay.conflictingIngredients" | translate }}</p>
   }
 }

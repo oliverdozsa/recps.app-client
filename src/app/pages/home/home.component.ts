@@ -27,7 +27,7 @@ import {PaginationComponent} from '../../components/pagination/pagination.compon
   styleUrl: './home.component.css'
 })
 export class HomeComponent implements OnInit {
-  recipes = signal<RecipeSearchResponse[]>([]);
+  recipes = signal<RecipeSearchResponse[] | undefined>(undefined);
   loading = signal(false);
   totalCount = signal(0);
 
