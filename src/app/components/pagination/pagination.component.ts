@@ -40,6 +40,9 @@ export class PaginationComponent {
     this.recipeService.pageReset$
       .pipe(takeUntilDestroyed())
       .subscribe(() => this.reset());
+
+    const restoredPage = this.recipeService.queryParams.page ?? 0;
+    this.currentPage.set(restoredPage + 1);
   }
 
   goToPage(page: number): void {

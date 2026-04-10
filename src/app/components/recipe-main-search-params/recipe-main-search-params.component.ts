@@ -36,7 +36,17 @@ export class RecipeMainSearchParamsComponent {
     return this.queryParams.filterByName ? this.queryParams.filterByName : "";
   }
 
+  get includedIngredients(): IngredientSearchResponse[] {
+    return this.recipeService.includedIngredients;
+  }
+
+  get excludedIngredients(): IngredientSearchResponse[] {
+    return this.recipeService.excludedIngredients;
+  }
+
   includedIngredientsChange(ingredients: IngredientSearchResponse[]) {
+    this.recipeService.includedIngredients = ingredients;
+
     if (ingredients.length > 0) {
       const ingredientGroup: IngredientGroup = {
         ids: ingredients.map(i => i.ingredientId),
@@ -58,6 +68,8 @@ export class RecipeMainSearchParamsComponent {
   }
 
   excludedIngredientsChange(ingredients: IngredientSearchResponse[]) {
+    this.recipeService.excludedIngredients = ingredients;
+
     if(ingredients.length > 0) {
       this.queryParams.excludedIngredients = ingredients.map(i => i.ingredientId);
     } else {

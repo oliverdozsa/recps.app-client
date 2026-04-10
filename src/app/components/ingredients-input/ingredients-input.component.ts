@@ -20,6 +20,7 @@ export class IngredientsInputComponent implements OnInit {
   private recipeService = inject(RecipeService);
 
   @Input() badgeClass = "badge-primary";
+  @Input() initialIngredients: IngredientSearchResponse[] = [];
   @Output() selectedIngredientsChange = new EventEmitter<IngredientSearchResponse[]>();
 
   options: IngredientSearchResponse[] = [];
@@ -42,6 +43,10 @@ export class IngredientsInputComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (this.initialIngredients.length > 0) {
+      this.currentIngredients = [...this.initialIngredients];
+    }
+
     this.query$.pipe(
       debounceTime(300),
       switchMap(query => {

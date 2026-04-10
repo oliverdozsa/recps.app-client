@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, inject, Input, Output, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, ViewChild} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import {TranslatePipe, TranslateService} from '@ngx-translate/core';
 
@@ -7,13 +7,20 @@ import {TranslatePipe, TranslateService} from '@ngx-translate/core';
   imports: [FormsModule, TranslatePipe],
   templateUrl: './tags-input.component.html',
 })
-export class TagsInputComponent {
+export class TagsInputComponent implements OnInit {
   @Input() options: any[] = [];
   @Input() displayFunction: (item: any) => string = () => "";
   @Input() badgeClass = "badge-primary";
   @Input() errorTags: string[] = [];
+  @Input() initialTags: any[] = [];
   @Output() tagsChange = new EventEmitter<any[]>();
   @Output() queryChange = new EventEmitter<string>();
+
+  ngOnInit(): void {
+    if (this.initialTags.length > 0) {
+      this.tags = [...this.initialTags];
+    }
+  }
 
   @ViewChild('tagInput') tagInput!: ElementRef<HTMLInputElement>;
 

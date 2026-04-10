@@ -1,6 +1,6 @@
 <div class="relative">
   <app-tags-input [externalOptions]="options" [displayFunction]="display" [badgeClass]="badgeClass"
-                  [errorTags]="conflictingIngredientNames"
+                  [errorTags]="conflictingIngredientNames" [initialTags]="initialIngredients"
                   (queryChange)="onQueryChange($event)" (tagsChange)="onIngredientsChange($event)"></app-tags-input>
   @if (isSearching) {
     <span class="loading loading-spinner loading-sm absolute right-3 top-3 pointer-events-none"></span>

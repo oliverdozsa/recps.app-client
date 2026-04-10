@@ -5,11 +5,13 @@
 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-3">
   <div class="md:col-span-2">
     <h2 class="text-lg font-semibold">{{"recipeMainSearchParams.byIngredients" | translate}}</h2>
-    <app-ingredients-input (selectedIngredientsChange)="includedIngredientsChange($event)"></app-ingredients-input>
+    <app-ingredients-input [initialIngredients]="includedIngredients"
+                           (selectedIngredientsChange)="includedIngredientsChange($event)"></app-ingredients-input>
   </div>
 
   <div class="md:col-span-1">
     <h2 class="text-lg font-semibold">{{"recipeMainSearchParams.excluded" | translate}}</h2>
-    <app-ingredients-input badgeClass="badge-warning" (selectedIngredientsChange)="excludedIngredientsChange($event)"></app-ingredients-input>
+    <app-ingredients-input badgeClass="badge-warning" [initialIngredients]="excludedIngredients"
+                           (selectedIngredientsChange)="excludedIngredientsChange($event)"></app-ingredients-input>
   </div>
 </div>
