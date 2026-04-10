@@ -1,21 +1,30 @@
 <div class="card bg-base-100 p-4 w-72">
-  @if (recipe().imageUrl) {
-    <img [src]="recipe().imageUrl" [alt]="recipe().name" class="my-2 rounded w-full object-cover h-40" />
-  }
+  <a [href]="recipe().url">
+    @if (recipe().imageUrl) {
+      <img [src]="recipe().imageUrl" [alt]="recipe().name" class="my-2 rounded w-full object-cover h-40"/>
+    } @else {
+      <div class="my-2 rounded w-full object-cover h-40 flex justify-center items-center">
+        <div>
+          <span class="icon-[tabler--bowl-spoon] size-20 text-neutral-500"></span>
+        </div>
+      </div>
+    }
+  </a>
   <div class="flex">
     <div class="font-semibold grow">{{ recipe().name }}</div>
     <div>
-      <a [href]="recipe().url" target="_blank" class="link link-primary"><span class="icon-[tabler--external-link] size-5"></span></a>
+      <a [href]="recipe().url" target="_blank" class="link link-primary"><span
+        class="icon-[tabler--external-link] size-5"></span></a>
     </div>
   </div>
 
   @if (recipe().cookingTime) {
-    <div class="text-sm text-base-content/60 mt-1">{{ recipe().cookingTime }} min</div>
+    <div class="text-sm text-base-content/60 mt-1">{{ recipe().cookingTime }} {{ "recipeCard.mins" | translate }}</div>
   }
 
   <div class="overflow-y-auto max-h-32">
     @for (ingredient of recipe().ingredients; track ingredient.id) {
-      <span class="badge badge-outline badge-primary mx-0.5 my-0.5">{{ingredient.names![0].name}}</span>
+      <span class="badge badge-outline badge-primary mx-0.5 my-0.5">{{ ingredient.names![0].name }}</span>
     }
   </div>
 </div>

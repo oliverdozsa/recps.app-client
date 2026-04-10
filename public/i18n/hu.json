@@ -22,5 +22,8 @@
   "searchResultDisplay": {
     "noResultFound": "nincsenek ilyen receptek...",
     "conflictingIngredients": "ütköző hozzávalók miatt!\negy hozzávaló nem szerepelhet egyszerre a keresett és a kizárt hozzávalók között!"
+  },
+  "recipeCard": {
+    "mins": "perc"
   }
 }

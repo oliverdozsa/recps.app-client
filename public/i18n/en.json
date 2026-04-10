@@ -21,5 +21,8 @@
   "searchResultDisplay": {
     "noResultFound": "no such recipes found...",
     "conflictingIngredients": "due to conflicting ingredients! <br /> an ingredient cannot be part of included and excluded at the same time!"
+  },
+  "recipeCard": {
+    "mins": "mins"
   }
 }
