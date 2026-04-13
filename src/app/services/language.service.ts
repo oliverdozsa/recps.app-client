@@ -6,6 +6,8 @@ import {environment} from '../../environments/environment';
 import {TranslateService} from '@ngx-translate/core';
 
 
+const STORAGE_KEY = "recps.selectedLanguage";
+
 @Injectable({
   providedIn: 'root'
 })
@@ -23,8 +25,11 @@ export class LanguageService {
       const lang = this.selectedLanguage();
       if (lang?.isoName) {
         this.translate.use(lang.isoName);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(lang));
       }
     });
+
+    this.loadPersistedSelectedLanguage();
   }
 
   getAll(): Observable<LanguageResponse[]> {
@@ -47,6 +52,13 @@ export class LanguageService {
     if (this.languages().length == 0) {
       this.getAll().subscribe(() => {
       });
+    }
+  }
+
+  loadPersistedSelectedLanguage() {
+    if(localStorage.getItem(STORAGE_KEY)) {
+      const savedSelectedLanguage = JSON.parse(localStorage.getItem(STORAGE_KEY)!);
+      this.selectedLanguage.set(savedSelectedLanguage)
     }
   }
 }
