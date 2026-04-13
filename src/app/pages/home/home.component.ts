@@ -1,4 +1,4 @@
-import {Component, inject, OnInit, signal} from '@angular/core';
+import {Component, effect, inject, OnInit, signal} from '@angular/core';
 import {
   RecipeSearchResultDisplayComponent
 } from '../../components/recipe-search-result-display/recipe-search-result-display.component';
@@ -42,6 +42,14 @@ export class HomeComponent implements OnInit {
     this.recipeService.queryParamsChanged$
       .pipe(takeUntilDestroyed())
       .subscribe(() => this.search())
+
+    effect(() => {
+      const lang = this.languageService.selectedLanguage();
+      if (!lang?.id) return;
+      if (this.recipeService.queryParams.ingredientLanguageId === lang.id) return;
+      this.recipeService.queryParams.ingredientLanguageId = lang.id;
+      this.search();
+    });
   }
 
   ngOnInit(): void {
