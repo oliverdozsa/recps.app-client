@@ -11,7 +11,7 @@ import {
 import {RecipeService} from '../../services/recipe.service';
 import {LanguageService} from '../../services/language.service';
 import {PageResponseRecipeSearchResponse, RecipeSearchResponse} from '../../services/responses';
-import {forkJoin} from 'rxjs';
+import {switchMap} from 'rxjs';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {PaginationComponent} from '../../components/pagination/pagination.component';
 
@@ -46,13 +46,15 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.loading.set(true);
-    forkJoin([
-      this.recipeService.search(),
-      this.languageService.getAll()
-    ]).subscribe({
-      next: ([recipesResponse]) => this.usePageResponse(recipesResponse),
+    this.languageService.getAll().pipe(
+      switchMap(() => {
+        this.recipeService.queryParams.ingredientLanguageId = this.languageService.selectedLanguage()!.id!;
+        return this.recipeService.search();
+      })
+    ).subscribe({
+      next: response => this.usePageResponse(response),
       complete: () => this.loading.set(false),
-      error: error => this.loading.set(false),
+      error: () => this.loading.set(false),
     });
   }
 

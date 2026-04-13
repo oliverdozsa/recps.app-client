@@ -22,6 +22,7 @@ export class RecipeService {
   queryParamsChanged$ = new Subject<void>();
   pageReset$ = new Subject<void>();
   queryParams: RecipeSearchRequest = {
+    ingredientLanguageId: 0,
     limit: 15,
     page: 0
   };

@@ -34,8 +34,10 @@ export class LanguageService {
         this.languages.set(langs);
         this.loading.set(false);
         if (langs.length > 0 && !this.selectedLanguage()) {
-          // TODO: use user set values, or browser's language as default
-          this.selectedLanguage.set(langs[0]);
+          const browserLang = navigator.language.split('-')[0].toLowerCase();
+          const match = langs.find(l => l.isoName?.toLowerCase() === browserLang);
+          const fallback = langs.find(l => l.isoName?.toLowerCase() === 'en') ?? langs[0];
+          this.selectedLanguage.set(match ?? fallback);
         }
       })
     );
