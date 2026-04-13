@@ -5,6 +5,11 @@ export interface IngredientSearchRequest {
   languageId: number;
 }
 
+export interface IngredientsByIdsRequest {
+  ids: number[];
+  languageId: number;
+}
+
 export interface RecipeSearchRequest {
   includedIngredientGroups?: IngredientGroupWithRelation[];
   excludedIngredients?: number[];

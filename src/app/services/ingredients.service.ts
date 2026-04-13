@@ -2,7 +2,7 @@ import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {IngredientSearchResponse} from './responses';
-import {IngredientSearchRequest} from './requests';
+import {IngredientSearchRequest, IngredientsByIdsRequest} from './requests';
 import {environment} from '../../environments/environment';
 
 
@@ -16,5 +16,10 @@ export class IngredientsService {
   search(languageId: number, query: string): Observable<IngredientSearchResponse[]> {
     const request: IngredientSearchRequest = {languageId, query};
     return this.http.post<IngredientSearchResponse[]>(`${this.baseUrl}/ingredients/search`, request);
+  }
+
+  findByIds(languageId: number, ids: number[]): Observable<IngredientSearchResponse[]> {
+    const request: IngredientsByIdsRequest = {languageId, ids};
+    return this.http.post<IngredientSearchResponse[]>(`${this.baseUrl}/ingredients/byIds`, request);
   }
 }
