@@ -3,9 +3,10 @@ import {provideRouter} from '@angular/router';
 import {routes} from './app.routes';
 import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 import {OAuthStorage, provideOAuthClient} from 'angular-oauth2-oidc';
-import {environmentProd} from '../environments/environment.development';
+
 import {provideTranslateService} from '@ngx-translate/core';
 import {provideTranslateHttpLoader} from '@ngx-translate/http-loader';
+import {environment} from '../environments/environment';
 
 export function storageFactory(): OAuthStorage {
   return localStorage
@@ -16,7 +17,7 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({eventCoalescing: true}),
     provideRouter(routes),
     provideHttpClient(withInterceptorsFromDi()),
-    provideOAuthClient({resourceServer: {allowedUrls: [environmentProd.apiUrl, "localhost"], sendAccessToken: true}}),
+    provideOAuthClient({resourceServer: {allowedUrls: [environment.apiUrl, "localhost"], sendAccessToken: true}}),
     {provide: OAuthStorage, useFactory: storageFactory},
     provideTranslateService({
       loader: provideTranslateHttpLoader({
