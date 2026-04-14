@@ -1,3 +1,3 @@
 export const environmentProd = {
-  apiUrl: "https://recps.app"
+  apiUrl: "https://api.recps.app"
 };
