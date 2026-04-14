@@ -3,7 +3,7 @@ import {provideRouter} from '@angular/router';
 import {routes} from './app.routes';
 import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 import {OAuthStorage, provideOAuthClient} from 'angular-oauth2-oidc';
-import {environmentProd} from '../environments/environment.prod';
+import {environmentProd} from '../environments/environment.development';
 import {provideTranslateService} from '@ngx-translate/core';
 import {provideTranslateHttpLoader} from '@ngx-translate/http-loader';
 
