@@ -5,7 +5,7 @@ export interface RecipeSearchResponse {
   name?: string;
   url?: string;
   imageUrl?: string;
-  ingredients?: Ingredient[];
+  ingredients: Ingredient[];
   cookingTime?: number;
   sourcePage?: string;
 }

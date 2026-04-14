@@ -30,6 +30,7 @@ import {PaginationComponent} from '../../components/pagination/pagination.compon
 export class HomeComponent implements OnInit {
   recipes = signal<RecipeSearchResponse[] | undefined>(undefined);
   loading = signal(false);
+  refreshingIngredientNames = signal(false);
   totalCount = signal(0);
 
   private recipeService = inject(RecipeService);
@@ -86,7 +87,9 @@ export class HomeComponent implements OnInit {
     const ids = allIngredients.map(i => i.ingredientId);
     if (ids.length === 0) return;
 
+    this.refreshingIngredientNames.set(true);
     this.ingredientsService.findByIds(languageId, ids).subscribe(results => {
+      this.refreshingIngredientNames.set(false);
       const byId = new Map(results.map(r => [r.ingredientId, r]));
       for (const ingredient of allIngredients) {
         const updated = byId.get(ingredient.ingredientId);

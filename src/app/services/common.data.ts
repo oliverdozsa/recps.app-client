@@ -4,8 +4,8 @@ export interface IngredientName {
 }
 
 export interface Ingredient {
-  id?: number;
-  names?: IngredientName[];
+  id: number;
+  names: IngredientName[];
 }
 
 export type IngredientGroupRelation = 'AND' | 'OR';

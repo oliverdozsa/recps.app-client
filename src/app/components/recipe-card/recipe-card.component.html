@@ -1,5 +1,5 @@
 <div class="card bg-base-100 p-4 w-72">
-  <a [href]="recipe().url">
+  <a [href]="recipe().url" target="_blank">
     @if (recipe().imageUrl) {
       <img [src]="recipe().imageUrl" [alt]="recipe().name" class="my-2 rounded w-full object-cover h-40"/>
     } @else {
@@ -11,7 +11,7 @@
     }
   </a>
   <div class="flex">
-    <div class="font-semibold grow">{{ recipe().name }}</div>
+    <div class="font-semibold grow"><a [href]="recipe().url" target="_blank">{{ recipe().name }}</a></div>
     <div>
       <a [href]="recipe().url" target="_blank" class="link link-primary"><span
         class="icon-[tabler--external-link] size-5"></span></a>
@@ -23,8 +23,8 @@
   }
 
   <div class="overflow-y-auto max-h-32">
-    @for (ingredient of recipe().ingredients; track ingredient.id) {
-      <span class="badge badge-outline badge-primary mx-0.5 my-0.5">{{ ingredient.names![0].name }}</span>
+    @for (ingredient of ingredients(); track ingredient.id) {
+      <span class="badge mx-0.5 my-0.5" [ngClass]="getBadgeClassOf(ingredient)">{{ ingredient.names![0].name }}</span>
     }
   </div>
 </div>

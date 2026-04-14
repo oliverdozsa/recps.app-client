@@ -38,7 +38,7 @@ export class TagsInputComponent implements OnInit {
     if(this.isErrorTag(displayName)) {
       return "badge-error";
     } else {
-      return this.badgeClass;;
+      return this.badgeClass;
     }
   }
 
