@@ -31,3 +31,8 @@ export interface IngredientCategorySearchResponse {
   name?: string;
   ingredientIds?: number[];
 }
+
+export interface IngredientSearchAndCategoryUnion {
+  ingredient?: IngredientSearchResponse,
+  category?: IngredientCategorySearchResponse
+}
