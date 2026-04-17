@@ -2,6 +2,11 @@ import {Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, View
 import { FormsModule } from '@angular/forms';
 import {TranslatePipe, TranslateService} from '@ngx-translate/core';
 
+export interface SelectOption {
+  value: any,
+  displayName: string
+}
+
 @Component({
   selector: 'app-tags-input',
   imports: [FormsModule, TranslatePipe],
@@ -13,8 +18,10 @@ export class TagsInputComponent implements OnInit {
   @Input() badgeClass = "badge-primary";
   @Input() errorTags: string[] = [];
   @Input() initialTags: any[] = [];
+  @Input() selectOptions: SelectOption[] = [];
   @Output() tagsChange = new EventEmitter<any[]>();
   @Output() queryChange = new EventEmitter<string>();
+  @Output() selectOptionChange = new EventEmitter<any>();
 
   ngOnInit(): void {
     if (this.initialTags.length > 0) {

@@ -1,8 +1,8 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {IngredientSearchResponse} from './responses';
-import {IngredientSearchRequest, IngredientsByIdsRequest} from './requests';
+import {IngredientCategorySearchResponse, IngredientSearchResponse} from './responses';
+import {IngredientCategorySearchRequest, IngredientSearchRequest, IngredientsByIdsRequest} from './requests';
 import {environment} from '../../environments/environment';
 
 
@@ -21,5 +21,10 @@ export class IngredientsService {
   findByIds(languageId: number, ids: number[]): Observable<IngredientSearchResponse[]> {
     const request: IngredientsByIdsRequest = {languageId, ids};
     return this.http.post<IngredientSearchResponse[]>(`${this.baseUrl}/ingredients/byIds`, request);
+  }
+
+  searchCategories(languageId: number, filterByName: string): Observable<IngredientCategorySearchResponse[]> {
+    const request: IngredientCategorySearchRequest = {languageId, filterByName};
+    return this.http.post<IngredientCategorySearchResponse[]>(`${this.baseUrl}/ingredient-categories/search`, request);
   }
 }

@@ -33,6 +33,18 @@
       (keydown)="onKeydown($event)"
       autocomplete="off"
     />
+
+    @if (selectOptions.length > 0) {
+      <select
+        class="select select-sm select-ghost border-0 bg-transparent outline-none focus:outline-none focus:border-0 focus:ring-0 focus:shadow-none w-auto min-h-8 h-8 text-sm"
+        (click)="$event.stopPropagation()"
+        (change)="selectOptionChange.emit($any($event.target).value)"
+      >
+        @for (option of selectOptions; track $index) {
+          <option [value]="option.value">{{option.displayName}}</option>
+        }
+      </select>
+    }
   </div>
 
   <!-- Dropdown -->

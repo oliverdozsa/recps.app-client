@@ -25,3 +25,9 @@ export interface IngredientSearchResponse {
   name: string;
   alternatives?: string[];
 }
+
+export interface IngredientCategorySearchResponse {
+  id?: number;
+  name?: string;
+  ingredientIds?: number[];
+}

@@ -8,6 +8,11 @@ import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {RecipeService} from '../../services/recipe.service';
 import {Ingredient} from '../../services/common.data';
 
+enum SearchSource {
+  Ingredients,
+  Categories
+}
+
 @Component({
   selector: 'app-ingredients-input',
   imports: [TagsInputComponent],
@@ -21,10 +26,12 @@ export class IngredientsInputComponent implements OnInit {
 
   @Input() badgeClass = "badge-primary";
   @Input() initialIngredients: IngredientSearchResponse[] = [];
+  @Input() enableCategories = true;
   @Output() selectedIngredientsChange = new EventEmitter<IngredientSearchResponse[]>();
 
   options: IngredientSearchResponse[] = [];
   isSearching = false;
+  searchSource = SearchSource.Ingredients;
 
   private query$ = new Subject<string>();
   private destroyRef = inject(DestroyRef);
@@ -40,6 +47,17 @@ export class IngredientsInputComponent implements OnInit {
     });
 
     return result;
+  }
+
+  get selectOptionsForSearchSource() {
+    if(this.enableCategories) {
+      return [
+        {value: SearchSource.Ingredients, displayName: "Search in ingredients"},
+        {value: SearchSource.Categories, displayName: "Search in categories"}
+      ]
+    }
+
+    return [];
   }
 
   ngOnInit(): void {
@@ -77,6 +95,10 @@ export class IngredientsInputComponent implements OnInit {
   onIngredientsChange(ingredients: IngredientSearchResponse[]): void {
     this.selectedIngredientsChange.emit(ingredients);
     this.currentIngredients = ingredients;
+  }
+
+  onSelectChange(value: SearchSource) {
+    this.searchSource = value;
   }
 
   private findIngredientNameById(id: number) {

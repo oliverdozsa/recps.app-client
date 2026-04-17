@@ -10,6 +10,11 @@ export interface IngredientsByIdsRequest {
   languageId: number;
 }
 
+export interface IngredientCategorySearchRequest {
+  languageId: number;
+  filterByName: string;
+}
+
 export interface RecipeSearchRequest {
   includedIngredientGroups?: IngredientGroupWithRelation[];
   excludedIngredients?: number[];
