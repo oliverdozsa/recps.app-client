@@ -15,6 +15,11 @@ export interface IngredientCategorySearchRequest {
   filterByName: string;
 }
 
+export interface IngredientCategoryByIdsRequest {
+  ids: number[];
+  languageId: number;
+}
+
 export interface RecipeSearchRequest {
   includedIngredientGroups?: IngredientGroupWithRelation[];
   excludedIngredients?: number[];

@@ -2,7 +2,7 @@ import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {map, Observable} from 'rxjs';
 import {IngredientCategorySearchResponse, IngredientSearchResponse, IngredientSearchAndCategoryUnion} from './responses';
-import {IngredientCategorySearchRequest, IngredientSearchRequest, IngredientsByIdsRequest} from './requests';
+import {IngredientCategoryByIdsRequest, IngredientCategorySearchRequest, IngredientSearchRequest, IngredientsByIdsRequest} from './requests';
 import {environment} from '../../environments/environment';
 
 export enum SearchSource {
@@ -29,6 +29,11 @@ export class IngredientsService {
   findByIds(languageId: number, ids: number[]): Observable<IngredientSearchResponse[]> {
     const request: IngredientsByIdsRequest = {languageId, ids};
     return this.http.post<IngredientSearchResponse[]>(`${this.baseUrl}/ingredients/byIds`, request);
+  }
+
+  findCategoriesByIds(languageId: number, ids: number[]): Observable<IngredientCategorySearchResponse[]> {
+    const request: IngredientCategoryByIdsRequest = {languageId, ids};
+    return this.http.post<IngredientCategorySearchResponse[]>(`${this.baseUrl}/ingredient-categories/byIds`, request);
   }
 
   private searchIngredients(languageId: number, query: string): Observable<IngredientSearchResponse[]> {
