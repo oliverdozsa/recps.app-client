@@ -1,11 +1,11 @@
 import {Component, inject} from '@angular/core';
 import {IngredientsInputComponent} from '../ingredients-input/ingredients-input.component';
-import {IngredientSearchResponse} from '../../services/responses';
+import {IngredientSearchAndCategoryUnion, unionIds} from '../../services/responses';
 import {RecipeService} from '../../services/recipe.service';
 import {debounceTime, Subject} from 'rxjs';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {RecipeSearchRequest} from '../../services/requests';
-import {IngredientGroup, IngredientGroupWithRelation} from '../../services/common.data';
+import {IngredientGroupWithRelation} from '../../services/common.data';
 import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
@@ -36,28 +36,37 @@ export class RecipeMainSearchParamsComponent {
     return this.queryParams.filterByName ? this.queryParams.filterByName : "";
   }
 
-  get includedIngredients(): IngredientSearchResponse[] {
+  get includedIngredients(): IngredientSearchAndCategoryUnion[] {
     return this.recipeService.includedIngredients;
   }
 
-  get excludedIngredients(): IngredientSearchResponse[] {
+  get excludedIngredients(): IngredientSearchAndCategoryUnion[] {
     return this.recipeService.excludedIngredients;
   }
 
-  includedIngredientsChange(ingredients: IngredientSearchResponse[]) {
-    this.recipeService.includedIngredients = ingredients;
+  includedIngredientsChange(items: IngredientSearchAndCategoryUnion[]) {
+    this.recipeService.includedIngredients = items;
 
-    if (ingredients.length > 0) {
-      const ingredientGroup: IngredientGroup = {
-        ids: ingredients.map(i => i.ingredientId),
-        minMatch: ingredients.length
+    if (items.length > 0) {
+      const categories = items.filter(u => u.category);
+      const ingredients = items.filter(u => u.ingredient);
+
+      /* Categories are separate groups with min. match set to 1 so any of their ingredient is good. */
+      const categoriesAsGroups = categories
+        .map<IngredientGroupWithRelation>(c => ({
+            group: {ids: unionIds(c), minMatch: 1},
+            relation: "AND"
+          })
+        )
+
+      /* The "plain" ingredients form one group with min. match set to the group's length. */
+      const ingredientIds = ingredients.flatMap(i => unionIds(i));
+      const ingredientsAsGroup: IngredientGroupWithRelation = {
+        group: {ids: ingredientIds, minMatch: ingredientIds.length}
       }
 
-      const groupWithRelation: IngredientGroupWithRelation = {
-        group: ingredientGroup
-      };
 
-      this.queryParams.includedIngredientGroups = [groupWithRelation];
+      this.queryParams.includedIngredientGroups = categoriesAsGroups.concat(ingredientsAsGroup)
     } else {
       this.queryParams.includedIngredientGroups = undefined;
     }
@@ -67,11 +76,11 @@ export class RecipeMainSearchParamsComponent {
     this.queryParamsChanged$.next();
   }
 
-  excludedIngredientsChange(ingredients: IngredientSearchResponse[]) {
-    this.recipeService.excludedIngredients = ingredients;
+  excludedIngredientsChange(items: IngredientSearchAndCategoryUnion[]) {
+    this.recipeService.excludedIngredients = items;
 
-    if(ingredients.length > 0) {
-      this.queryParams.excludedIngredients = ingredients.map(i => i.ingredientId);
+    if (items.length > 0) {
+      this.queryParams.excludedIngredients = items.flatMap(unionIds);
     } else {
       this.queryParams.excludedIngredients = undefined;
     }

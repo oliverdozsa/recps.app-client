@@ -1,17 +1,11 @@
 import {Component, DestroyRef, EventEmitter, inject, Input, OnInit, Output} from '@angular/core';
 import {TagsInputComponent} from '../tags-input/tags-input.component';
-import {IngredientsService} from '../../services/ingredients.service';
+import {IngredientsService, SearchSource} from '../../services/ingredients.service';
 import {LanguageService} from '../../services/language.service';
-import {Subject, debounceTime, switchMap, EMPTY} from 'rxjs';
-import {IngredientSearchResponse} from '../../services/responses';
+import {BehaviorSubject, combineLatest, Subject, debounceTime, switchMap, EMPTY} from 'rxjs';
+import {IngredientSearchAndCategoryUnion, unionIds, unionName} from '../../services/responses';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {RecipeService} from '../../services/recipe.service';
-import {Ingredient} from '../../services/common.data';
-
-enum SearchSource {
-  Ingredients,
-  Categories
-}
 
 @Component({
   selector: 'app-ingredients-input',
@@ -25,17 +19,17 @@ export class IngredientsInputComponent implements OnInit {
   private recipeService = inject(RecipeService);
 
   @Input() badgeClass = "badge-primary";
-  @Input() initialIngredients: IngredientSearchResponse[] = [];
+  @Input() initialIngredients: IngredientSearchAndCategoryUnion[] = [];
   @Input() enableCategories = true;
-  @Output() selectedIngredientsChange = new EventEmitter<IngredientSearchResponse[]>();
+  @Output() selectedIngredientsChange = new EventEmitter<IngredientSearchAndCategoryUnion[]>();
 
-  options: IngredientSearchResponse[] = [];
+  options: IngredientSearchAndCategoryUnion[] = [];
   isSearching = false;
-  searchSource = SearchSource.Ingredients;
 
   private query$ = new Subject<string>();
+  private source$ = new BehaviorSubject<SearchSource>(SearchSource.Ingredients);
   private destroyRef = inject(DestroyRef);
-  private currentIngredients: IngredientSearchResponse[] = [];
+  private currentIngredients: IngredientSearchAndCategoryUnion[] = [];
 
   get conflictingIngredientNames(): string[] {
     const result: string[] = [];
@@ -50,7 +44,7 @@ export class IngredientsInputComponent implements OnInit {
   }
 
   get selectOptionsForSearchSource() {
-    if(this.enableCategories) {
+    if (this.enableCategories) {
       return [
         {value: SearchSource.Ingredients, displayName: "Search in ingredients"},
         {value: SearchSource.Categories, displayName: "Search in categories"}
@@ -65,9 +59,11 @@ export class IngredientsInputComponent implements OnInit {
       this.currentIngredients = [...this.initialIngredients];
     }
 
-    this.query$.pipe(
-      debounceTime(300),
-      switchMap(query => {
+    combineLatest([
+      this.query$.pipe(debounceTime(300)),
+      this.source$
+    ]).pipe(
+      switchMap(([query, source]) => {
         if (query.length < 2) {
           this.options = [];
           return EMPTY;
@@ -75,7 +71,7 @@ export class IngredientsInputComponent implements OnInit {
         const langId = this.languageService.selectedLanguage()?.id;
         if (!langId) return EMPTY;
         this.isSearching = true;
-        return this.ingredientsService.search(langId, query);
+        return this.ingredientsService.searchUnified(langId, query, source);
       }),
       takeUntilDestroyed(this.destroyRef)
     ).subscribe(results => {
@@ -88,25 +84,25 @@ export class IngredientsInputComponent implements OnInit {
     this.query$.next(query);
   }
 
-  display(ingredient: IngredientSearchResponse): string {
-    return ingredient.name!;
+  display(item: IngredientSearchAndCategoryUnion): string {
+    return unionName(item);
   }
 
-  onIngredientsChange(ingredients: IngredientSearchResponse[]): void {
+  onIngredientsChange(ingredients: IngredientSearchAndCategoryUnion[]): void {
     this.selectedIngredientsChange.emit(ingredients);
     this.currentIngredients = ingredients;
   }
 
   onSelectChange(value: SearchSource) {
-    this.searchSource = value;
+    this.source$.next(value);
   }
 
-  private findIngredientNameById(id: number) {
-    const ingredient = this.currentIngredients.find(i => i.ingredientId == id);
-    if (ingredient) {
-      return ingredient.name;
-    } else {
-      return undefined;
+  private findIngredientNameById(id: number): string | undefined {
+    for (const item of this.currentIngredients) {
+      if (unionIds(item).includes(id)) {
+        return unionName(item);
+      }
     }
+    return undefined;
   }
 }

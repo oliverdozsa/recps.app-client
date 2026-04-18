@@ -1,15 +1,15 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable, Subject} from 'rxjs';
-import {IngredientSearchResponse, PageResponseRecipeSearchResponse} from './responses';
+import {IngredientSearchAndCategoryUnion, PageResponseRecipeSearchResponse} from './responses';
 import {RecipeSearchRequest} from './requests';
 import {environment} from '../../environments/environment';
 
 interface PersistedRecipeQuery {
   timestamp: number;
   queryParams: RecipeSearchRequest;
-  includedIngredients: IngredientSearchResponse[];
-  excludedIngredients: IngredientSearchResponse[];
+  includedIngredients: IngredientSearchAndCategoryUnion[];
+  excludedIngredients: IngredientSearchAndCategoryUnion[];
 }
 
 const STORAGE_KEY = 'recps.queryState';
@@ -27,8 +27,8 @@ export class RecipeService {
     page: 0
   };
 
-  includedIngredients: IngredientSearchResponse[] = [];
-  excludedIngredients: IngredientSearchResponse[] = [];
+  includedIngredients: IngredientSearchAndCategoryUnion[] = [];
+  excludedIngredients: IngredientSearchAndCategoryUnion[] = [];
 
   conflictingIngredients = new Set<number>();
 

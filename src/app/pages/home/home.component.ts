@@ -80,22 +80,23 @@ export class HomeComponent implements OnInit {
   }
 
   private refreshIngredientNames(languageId: number): void {
-    const allIngredients = [
+    const all = [
       ...this.recipeService.includedIngredients,
       ...this.recipeService.excludedIngredients,
     ];
-    const ids = allIngredients.map(i => i.ingredientId);
+    const ingredientChips = all.filter(u => u.ingredient !== undefined);
+    const ids = ingredientChips.map(u => u.ingredient!.ingredientId);
     if (ids.length === 0) return;
 
     this.refreshingIngredientNames.set(true);
     this.ingredientsService.findByIds(languageId, ids).subscribe(results => {
       this.refreshingIngredientNames.set(false);
       const byId = new Map(results.map(r => [r.ingredientId, r]));
-      for (const ingredient of allIngredients) {
-        const updated = byId.get(ingredient.ingredientId);
+      for (const chip of ingredientChips) {
+        const updated = byId.get(chip.ingredient!.ingredientId);
         if (updated) {
-          ingredient.name = updated.name;
-          ingredient.alternatives = updated.alternatives;
+          chip.ingredient!.name = updated.name;
+          chip.ingredient!.alternatives = updated.alternatives;
         }
       }
     });

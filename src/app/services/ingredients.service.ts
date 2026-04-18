@@ -5,6 +5,10 @@ import {IngredientCategorySearchResponse, IngredientSearchResponse, IngredientSe
 import {IngredientCategorySearchRequest, IngredientSearchRequest, IngredientsByIdsRequest} from './requests';
 import {environment} from '../../environments/environment';
 
+export enum SearchSource {
+  Ingredients,
+  Categories
+}
 
 @Injectable({
   providedIn: 'root'
@@ -13,12 +17,13 @@ export class IngredientsService {
   private http = inject(HttpClient);
   private baseUrl = environment.apiUrl;
 
-  search(languageId: number, query: string): Observable<IngredientSearchAndCategoryUnion[]> {
-    const request: IngredientSearchRequest = {languageId, query};
-    return this.http.post<IngredientSearchResponse[]>(`${this.baseUrl}/ingredients/search`, request)
-      .pipe(
-        map(is => this.toIngredientSearchAndCategoryUnions(is))
-      );
+  searchUnified(languageId: number, query: string, source: SearchSource): Observable<IngredientSearchAndCategoryUnion[]> {
+    if (source === SearchSource.Categories) {
+      return this.searchCategories(languageId, query)
+        .pipe(map(cs => cs.map(category => ({category}))));
+    }
+    return this.searchIngredients(languageId, query)
+      .pipe(map(is => is.map(ingredient => ({ingredient}))));
   }
 
   findByIds(languageId: number, ids: number[]): Observable<IngredientSearchResponse[]> {
@@ -26,14 +31,13 @@ export class IngredientsService {
     return this.http.post<IngredientSearchResponse[]>(`${this.baseUrl}/ingredients/byIds`, request);
   }
 
-  searchCategories(languageId: number, filterByName: string): Observable<IngredientCategorySearchResponse[]> {
-    const request: IngredientCategorySearchRequest = {languageId, filterByName};
-    return this.http.post<IngredientCategorySearchResponse[]>(`${this.baseUrl}/ingredient-categories/search`, request);
+  private searchIngredients(languageId: number, query: string): Observable<IngredientSearchResponse[]> {
+    const request: IngredientSearchRequest = {languageId, query};
+    return this.http.post<IngredientSearchResponse[]>(`${this.baseUrl}/ingredients/search`, request);
   }
 
-  private toIngredientSearchAndCategoryUnions(is: IngredientSearchResponse[]) {
-    return is.map(i => {
-      return {ingredient: i}
-    })
+  private searchCategories(languageId: number, filterByName: string): Observable<IngredientCategorySearchResponse[]> {
+    const request: IngredientCategorySearchRequest = {languageId, filterByName};
+    return this.http.post<IngredientCategorySearchResponse[]>(`${this.baseUrl}/ingredient-categories/search`, request);
   }
 }
