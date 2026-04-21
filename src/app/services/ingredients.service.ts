@@ -18,7 +18,7 @@ export class IngredientsService {
   private baseUrl = environment.apiUrl;
 
   searchUnified(languageId: number, query: string, source: SearchSource): Observable<IngredientSearchAndCategoryUnion[]> {
-    if (source === SearchSource.Categories) {
+    if (source == SearchSource.Categories) {
       return this.searchCategories(languageId, query)
         .pipe(map(cs => cs.map(category => ({category}))));
     }

@@ -85,7 +85,12 @@ export class IngredientsInputComponent implements OnInit {
   }
 
   display(item: IngredientSearchAndCategoryUnion): string {
-    return unionName(item);
+    if (item.ingredient) {
+      return unionName(item);
+    } else {
+      return "🏷️ " + unionName(item);
+    }
+
   }
 
   onIngredientsChange(ingredients: IngredientSearchAndCategoryUnion[]): void {

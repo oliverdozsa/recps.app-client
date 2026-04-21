@@ -50,7 +50,7 @@ export class RecipeService {
 
     this.conflictingIngredients.clear();
     includedIngredientIds.forEach(id => {
-      if(excludedIngredientIds.has(id)) {
+      if(excludedIngredientIds.has(id) && !this.doesIngredientIdBelongToCategory(id)) {
         this.conflictingIngredients.add(id);
       }
     });
@@ -126,5 +126,21 @@ export class RecipeService {
     }
 
     return [];
+  }
+
+  private doesIngredientIdBelongToCategory(id: number) {
+
+    const items = this.includedIngredients.concat(this.excludedIngredients);
+    for(let item of items) {
+      if(item.ingredient) {
+        continue
+      }
+
+      if(item.category!.ingredientIds.includes(id)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }

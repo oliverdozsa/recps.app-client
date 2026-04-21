@@ -59,14 +59,25 @@ export class RecipeMainSearchParamsComponent {
           })
         )
 
+      if (categoriesAsGroups.length > 0) {
+        this.queryParams.includedIngredientGroups = categoriesAsGroups;
+      } else {
+        this.queryParams.includedIngredientGroups = undefined;
+      }
+
       /* The "plain" ingredients form one group with min. match set to the group's length. */
       const ingredientIds = ingredients.flatMap(i => unionIds(i));
       const ingredientsAsGroup: IngredientGroupWithRelation = {
         group: {ids: ingredientIds, minMatch: ingredientIds.length}
       }
 
-
-      this.queryParams.includedIngredientGroups = categoriesAsGroups.concat(ingredientsAsGroup)
+      if (ingredientIds.length > 0) {
+        if (this.queryParams.includedIngredientGroups != undefined) {
+          this.queryParams.includedIngredientGroups = categoriesAsGroups.concat(ingredientsAsGroup)
+        } else {
+          this.queryParams.includedIngredientGroups = [ingredientsAsGroup];
+        }
+      }
     } else {
       this.queryParams.includedIngredientGroups = undefined;
     }
