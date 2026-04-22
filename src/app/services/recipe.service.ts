@@ -4,11 +4,13 @@ import {Observable, Subject} from 'rxjs';
 import {IngredientSearchAndCategoryUnion, PageResponseRecipeSearchResponse} from './responses';
 import {RecipeSearchRequest} from './requests';
 import {environment} from '../../environments/environment';
+import {IngredientGroupRelation} from './common.data';
 
 interface PersistedRecipeQuery {
   timestamp: number;
   queryParams: RecipeSearchRequest;
   includedIngredientGroups: IngredientSearchAndCategoryUnion[][];
+  laneRelations: IngredientGroupRelation[];
   excludedIngredients: IngredientSearchAndCategoryUnion[];
 }
 
@@ -28,6 +30,7 @@ export class RecipeService {
   };
 
   includedIngredientGroups: IngredientSearchAndCategoryUnion[][] = [[]];
+  laneRelations: IngredientGroupRelation[] = [];
   excludedIngredients: IngredientSearchAndCategoryUnion[] = [];
 
   conflictingIngredients = new Set<number>();
@@ -87,6 +90,7 @@ export class RecipeService {
       } else {
         this.includedIngredientGroups = [[]];
       }
+      this.laneRelations = parsed.laneRelations ?? [];
       this.excludedIngredients = parsed.excludedIngredients ?? [];
       this.determineConflictingIngredients();
     } catch {
@@ -99,6 +103,7 @@ export class RecipeService {
       timestamp: Date.now(),
       queryParams: this.queryParams,
       includedIngredientGroups: this.includedIngredientGroups,
+      laneRelations: this.laneRelations,
       excludedIngredients: this.excludedIngredients,
     };
     try {

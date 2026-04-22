@@ -5,7 +5,7 @@ import {RecipeService} from '../../services/recipe.service';
 import {debounceTime, Subject} from 'rxjs';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {RecipeSearchRequest} from '../../services/requests';
-import {IngredientGroupWithRelation} from '../../services/common.data';
+import {IngredientGroupRelation, IngredientGroupWithRelation} from '../../services/common.data';
 import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
@@ -44,6 +44,10 @@ export class RecipeMainSearchParamsComponent {
     return this.recipeService.excludedIngredients;
   }
 
+  laneRelation(index: number): IngredientGroupRelation {
+    return this.recipeService.laneRelations[index] ?? 'AND';
+  }
+
   groupIngredientsChange(index: number, items: IngredientSearchAndCategoryUnion[]): void {
     this.recipeService.includedIngredientGroups[index] = items;
     this.rebuildQueryGroups();
@@ -54,12 +58,23 @@ export class RecipeMainSearchParamsComponent {
 
   addGroup(): void {
     this.recipeService.includedIngredientGroups.push([]);
+    this.recipeService.laneRelations.push('AND');
   }
 
   removeGroup(index: number): void {
     this.recipeService.includedIngredientGroups.splice(index, 1);
+    const relationIndex = Math.min(index, this.recipeService.laneRelations.length - 1);
+    this.recipeService.laneRelations.splice(relationIndex, 1);
     this.rebuildQueryGroups();
     this.recipeService.determineConflictingIngredients();
+    this.recipeService.resetPage();
+    this.queryParamsChanged$.next();
+  }
+
+  toggleLaneRelation(index: number): void {
+    const current = this.recipeService.laneRelations[index] ?? 'AND';
+    this.recipeService.laneRelations[index] = current === 'AND' ? 'OR' : 'AND';
+    this.rebuildQueryGroups();
     this.recipeService.resetPage();
     this.queryParamsChanged$.next();
   }
@@ -82,13 +97,16 @@ export class RecipeMainSearchParamsComponent {
     this.filterByNameDebounced$.next(value);
   }
 
-  private toGroupsWithRelation(items: IngredientSearchAndCategoryUnion[]): IngredientGroupWithRelation[] {
+  private toGroupsWithRelation(
+    items: IngredientSearchAndCategoryUnion[],
+    laneRelation?: IngredientGroupRelation
+  ): IngredientGroupWithRelation[] {
     const categories = items.filter(u => u.category);
     const ingredients = items.filter(u => u.ingredient);
 
-    const categoriesAsGroups = categories.map<IngredientGroupWithRelation>(c => ({
+    const categoriesAsGroups = categories.map<IngredientGroupWithRelation>((c, i) => ({
       group: {ids: unionIds(c), minMatch: 1},
-      relation: "AND"
+      relation: 'AND'
     }));
 
     const ingredientIds = ingredients.flatMap(i => unionIds(i));
@@ -96,13 +114,22 @@ export class RecipeMainSearchParamsComponent {
     if (ingredientIds.length > 0) {
       result.push({group: {ids: ingredientIds, minMatch: ingredientIds.length}});
     }
+
+    if (result.length > 0 && laneRelation) {
+      result[result.length - 1]["relation"] = laneRelation;
+    }
+
     return result;
   }
 
   private rebuildQueryGroups(): void {
-    const allGroups = this.recipeService.includedIngredientGroups
-      .flatMap(lane => this.toGroupsWithRelation(lane));
-    this.queryParams.includedIngredientGroups = allGroups.length > 0 ? allGroups : undefined;
+    const result: IngredientGroupWithRelation[] = [];
+    const numOfGroups = this.recipeService.includedIngredientGroups.length;
+    this.recipeService.includedIngredientGroups.forEach((lane, laneIndex) => {
+      const laneRelation = numOfGroups > 1 && laneIndex < numOfGroups - 1 ? this.laneRelation(laneIndex) : undefined;
+      result.push(...this.toGroupsWithRelation(lane, laneRelation));
+    });
+    this.queryParams.includedIngredientGroups = result.length > 0 ? result : undefined;
   }
 
   private filterByNameChange(value: string) {
