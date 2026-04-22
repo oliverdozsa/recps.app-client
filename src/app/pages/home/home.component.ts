@@ -81,7 +81,7 @@ export class HomeComponent implements OnInit {
 
   private refreshIngredientNames(languageId: number): void {
     const all = [
-      ...this.recipeService.includedIngredients,
+      ...this.recipeService.includedIngredientGroups.flat(),
       ...this.recipeService.excludedIngredients,
     ];
     const ingredientChips = all.filter(u => u.ingredient !== undefined);

@@ -36,52 +36,29 @@ export class RecipeMainSearchParamsComponent {
     return this.queryParams.filterByName ? this.queryParams.filterByName : "";
   }
 
-  get includedIngredients(): IngredientSearchAndCategoryUnion[] {
-    return this.recipeService.includedIngredients;
+  get includedIngredientGroups(): IngredientSearchAndCategoryUnion[][] {
+    return this.recipeService.includedIngredientGroups;
   }
 
   get excludedIngredients(): IngredientSearchAndCategoryUnion[] {
     return this.recipeService.excludedIngredients;
   }
 
-  includedIngredientsChange(items: IngredientSearchAndCategoryUnion[]) {
-    this.recipeService.includedIngredients = items;
+  groupIngredientsChange(index: number, items: IngredientSearchAndCategoryUnion[]): void {
+    this.recipeService.includedIngredientGroups[index] = items;
+    this.rebuildQueryGroups();
+    this.recipeService.determineConflictingIngredients();
+    this.recipeService.resetPage();
+    this.queryParamsChanged$.next();
+  }
 
-    if (items.length > 0) {
-      const categories = items.filter(u => u.category);
-      const ingredients = items.filter(u => u.ingredient);
+  addGroup(): void {
+    this.recipeService.includedIngredientGroups.push([]);
+  }
 
-      /* Categories are separate groups with min. match set to 1 so any of their ingredient is good. */
-      const categoriesAsGroups = categories
-        .map<IngredientGroupWithRelation>(c => ({
-            group: {ids: unionIds(c), minMatch: 1},
-            relation: "AND"
-          })
-        )
-
-      if (categoriesAsGroups.length > 0) {
-        this.queryParams.includedIngredientGroups = categoriesAsGroups;
-      } else {
-        this.queryParams.includedIngredientGroups = undefined;
-      }
-
-      /* The "plain" ingredients form one group with min. match set to the group's length. */
-      const ingredientIds = ingredients.flatMap(i => unionIds(i));
-      const ingredientsAsGroup: IngredientGroupWithRelation = {
-        group: {ids: ingredientIds, minMatch: ingredientIds.length}
-      }
-
-      if (ingredientIds.length > 0) {
-        if (this.queryParams.includedIngredientGroups != undefined) {
-          this.queryParams.includedIngredientGroups = categoriesAsGroups.concat(ingredientsAsGroup)
-        } else {
-          this.queryParams.includedIngredientGroups = [ingredientsAsGroup];
-        }
-      }
-    } else {
-      this.queryParams.includedIngredientGroups = undefined;
-    }
-
+  removeGroup(index: number): void {
+    this.recipeService.includedIngredientGroups.splice(index, 1);
+    this.rebuildQueryGroups();
     this.recipeService.determineConflictingIngredients();
     this.recipeService.resetPage();
     this.queryParamsChanged$.next();
@@ -103,6 +80,29 @@ export class RecipeMainSearchParamsComponent {
 
   filterByNameRawChange(value: string) {
     this.filterByNameDebounced$.next(value);
+  }
+
+  private toGroupsWithRelation(items: IngredientSearchAndCategoryUnion[]): IngredientGroupWithRelation[] {
+    const categories = items.filter(u => u.category);
+    const ingredients = items.filter(u => u.ingredient);
+
+    const categoriesAsGroups = categories.map<IngredientGroupWithRelation>(c => ({
+      group: {ids: unionIds(c), minMatch: 1},
+      relation: "AND"
+    }));
+
+    const ingredientIds = ingredients.flatMap(i => unionIds(i));
+    const result = [...categoriesAsGroups];
+    if (ingredientIds.length > 0) {
+      result.push({group: {ids: ingredientIds, minMatch: ingredientIds.length}});
+    }
+    return result;
+  }
+
+  private rebuildQueryGroups(): void {
+    const allGroups = this.recipeService.includedIngredientGroups
+      .flatMap(lane => this.toGroupsWithRelation(lane));
+    this.queryParams.includedIngredientGroups = allGroups.length > 0 ? allGroups : undefined;
   }
 
   private filterByNameChange(value: string) {

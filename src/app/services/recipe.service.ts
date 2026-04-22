@@ -8,7 +8,7 @@ import {environment} from '../../environments/environment';
 interface PersistedRecipeQuery {
   timestamp: number;
   queryParams: RecipeSearchRequest;
-  includedIngredients: IngredientSearchAndCategoryUnion[];
+  includedIngredientGroups: IngredientSearchAndCategoryUnion[][];
   excludedIngredients: IngredientSearchAndCategoryUnion[];
 }
 
@@ -27,7 +27,7 @@ export class RecipeService {
     page: 0
   };
 
-  includedIngredients: IngredientSearchAndCategoryUnion[] = [];
+  includedIngredientGroups: IngredientSearchAndCategoryUnion[][] = [[]];
   excludedIngredients: IngredientSearchAndCategoryUnion[] = [];
 
   conflictingIngredients = new Set<number>();
@@ -81,7 +81,12 @@ export class RecipeService {
         return;
       }
       this.queryParams = parsed.queryParams;
-      this.includedIngredients = parsed.includedIngredients ?? [];
+      const rawIncluded = parsed.includedIngredientGroups;
+      if (Array.isArray(rawIncluded) && rawIncluded.length > 0 && Array.isArray(rawIncluded[0])) {
+        this.includedIngredientGroups = rawIncluded;
+      } else {
+        this.includedIngredientGroups = [[]];
+      }
       this.excludedIngredients = parsed.excludedIngredients ?? [];
       this.determineConflictingIngredients();
     } catch {
@@ -93,7 +98,7 @@ export class RecipeService {
     const payload: PersistedRecipeQuery = {
       timestamp: Date.now(),
       queryParams: this.queryParams,
-      includedIngredients: this.includedIngredients,
+      includedIngredientGroups: this.includedIngredientGroups,
       excludedIngredients: this.excludedIngredients,
     };
     try {
@@ -130,7 +135,7 @@ export class RecipeService {
 
   private doesIngredientIdBelongToCategory(id: number) {
 
-    const items = this.includedIngredients.concat(this.excludedIngredients);
+    const items = this.includedIngredientGroups.flat().concat(this.excludedIngredients);
     for(let item of items) {
       if(item.ingredient) {
         continue

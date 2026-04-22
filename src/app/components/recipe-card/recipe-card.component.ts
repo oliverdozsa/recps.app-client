@@ -39,7 +39,7 @@ export class RecipeCardComponent {
   }
 
   private getRankOf(ingredient: Ingredient) {
-    const includedIds = this.recipeService.includedIngredients.flatMap(unionIds);
+    const includedIds = this.recipeService.includedIngredientGroups.flat().flatMap(unionIds);
     if (includedIds.includes(ingredient.id)) {
       return 0;
     }
