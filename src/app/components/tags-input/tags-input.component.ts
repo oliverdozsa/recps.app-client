@@ -1,5 +1,6 @@
-import {Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import {NgTemplateOutlet} from '@angular/common';
 import {TranslatePipe, TranslateService} from '@ngx-translate/core';
 
 export interface SelectOption {
@@ -9,7 +10,7 @@ export interface SelectOption {
 
 @Component({
   selector: 'app-tags-input',
-  imports: [FormsModule, TranslatePipe],
+  imports: [FormsModule, TranslatePipe, NgTemplateOutlet],
   templateUrl: './tags-input.component.html',
 })
 export class TagsInputComponent implements OnInit {
@@ -19,6 +20,7 @@ export class TagsInputComponent implements OnInit {
   @Input() errorTags: string[] = [];
   @Input() initialTags: any[] = [];
   @Input() selectOptions: SelectOption[] = [];
+  @Input() tagTemplate?: TemplateRef<{ $implicit: any; remove: () => void }>;
   @Output() tagsChange = new EventEmitter<any[]>();
   @Output() queryChange = new EventEmitter<string>();
   @Output() selectOptionChange = new EventEmitter<any>();
@@ -148,5 +150,9 @@ export class TagsInputComponent implements OnInit {
 
   isErrorTag(displayName: string) {
     return this.errorTags.includes(displayName);
+  }
+
+  createRemoveFn(tag: any): () => void {
+    return () => this.removeTag(tag);
   }
 }

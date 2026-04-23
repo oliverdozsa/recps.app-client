@@ -21,7 +21,9 @@ export class IngredientsInputComponent implements OnInit {
   @Input() badgeClass = "badge-primary";
   @Input() initialIngredients: IngredientSearchAndCategoryUnion[] = [];
   @Input() enableCategories = true;
+  @Input() enableCategoryMinMatch = false;
   @Output() selectedIngredientsChange = new EventEmitter<IngredientSearchAndCategoryUnion[]>();
+  @Output() minMatchChange = new EventEmitter<void>();
 
   options: IngredientSearchAndCategoryUnion[] = [];
   isSearching = false;
@@ -100,6 +102,22 @@ export class IngredientsInputComponent implements OnInit {
 
   onSelectChange(value: SearchSource) {
     this.source$.next(value);
+  }
+
+  getTagBadgeClass(tag: IngredientSearchAndCategoryUnion): string {
+    if (this.conflictingIngredientNames.includes(this.display(tag))) {
+      return 'badge-error';
+    }
+    return this.badgeClass;
+  }
+
+  getCategoryMinMatch(categoryId: number): number {
+    return this.recipeService.categoryMinMatch[categoryId] ?? 1;
+  }
+
+  onCategoryMinMatchChange(categoryId: number, value: number, max: number): void {
+    this.recipeService.categoryMinMatch[categoryId] = Math.min(Math.max(1, value), max);
+    this.minMatchChange.emit();
   }
 
   private findIngredientNameById(id: number): string | undefined {

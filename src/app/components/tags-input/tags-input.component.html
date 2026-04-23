@@ -6,18 +6,24 @@
   >
     <!-- Tags -->
     @for (tag of tags; track $index) {
-      <div class="badge gap-1 select-none" [class]="getActualBadgeClass(displayFunction(tag))"
-      >
-        {{ displayFunction(tag) }}
-        <button
-          type="button"
-          class="cursor-pointer hover:opacity-70 transition-opacity flex items-center"
-          (click)="removeTag(tag); $event.stopPropagation()"
-          [attr.aria-label]="'Remove ' + tag"
-        >
-          <span class="icon-[tabler--x] size-3"></span>
-        </button>
-      </div>
+      @if (tagTemplate) {
+        <ng-container
+          [ngTemplateOutlet]="tagTemplate"
+          [ngTemplateOutletContext]="{ $implicit: tag, remove: createRemoveFn(tag) }">
+        </ng-container>
+      } @else {
+        <div class="badge gap-1 select-none" [class]="getActualBadgeClass(displayFunction(tag))">
+          {{ displayFunction(tag) }}
+          <button
+            type="button"
+            class="cursor-pointer hover:opacity-70 transition-opacity flex items-center"
+            (click)="removeTag(tag); $event.stopPropagation()"
+            [attr.aria-label]="'Remove ' + tag"
+          >
+            <span class="icon-[tabler--x] size-3"></span>
+          </button>
+        </div>
+      }
     }
 
     <!-- Text input -->

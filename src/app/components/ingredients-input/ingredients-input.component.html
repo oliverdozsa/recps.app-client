@@ -1,9 +1,54 @@
 <div class="relative">
-  <app-tags-input [externalOptions]="options" [displayFunction]="display" [badgeClass]="badgeClass"
-                  [errorTags]="conflictingIngredientNames" [initialTags]="initialIngredients"
-                  [selectOptions]="selectOptionsForSearchSource"
-                  (queryChange)="onQueryChange($event)" (tagsChange)="onIngredientsChange($event)"
-                  (selectOptionChange)="onSelectChange($event)"></app-tags-input>
+  <ng-template #ingredientTag let-tag let-remove="remove">
+    @if (tag.category) {
+      <div class="badge gap-1 select-none items-center" [class]="getTagBadgeClass(tag)">
+        {{ display(tag) }}
+        @if (enableCategoryMinMatch) {
+          <input
+            type="number"
+            class="w-9 text-center text-xs bg-base-200 border-none rounded-md outline-none"
+            [min]="1"
+            [max]="tag.category.ingredientIds.length"
+            [value]="getCategoryMinMatch(tag.category.id)"
+            (change)="onCategoryMinMatchChange(tag.category.id, +$any($event.target).value, tag.category.ingredientIds.length)"
+            (click)="$event.stopPropagation()"
+          />
+        }
+        <button
+          type="button"
+          class="cursor-pointer hover:opacity-70 transition-opacity flex items-center"
+          (click)="remove(); $event.stopPropagation()"
+        >
+          <span class="icon-[tabler--x] size-3"></span>
+        </button>
+      </div>
+    } @else {
+      <div class="badge gap-1 select-none" [class]="getTagBadgeClass(tag)">
+        {{ display(tag) }}
+        <button
+          type="button"
+          class="cursor-pointer hover:opacity-70 transition-opacity flex items-center"
+          (click)="remove(); $event.stopPropagation()"
+        >
+          <span class="icon-[tabler--x] size-3"></span>
+        </button>
+      </div>
+    }
+  </ng-template>
+
+  <app-tags-input
+    [externalOptions]="options"
+    [displayFunction]="display"
+    [badgeClass]="badgeClass"
+    [errorTags]="conflictingIngredientNames"
+    [initialTags]="initialIngredients"
+    [selectOptions]="selectOptionsForSearchSource"
+    [tagTemplate]="ingredientTag"
+    (queryChange)="onQueryChange($event)"
+    (tagsChange)="onIngredientsChange($event)"
+    (selectOptionChange)="onSelectChange($event)">
+  </app-tags-input>
+
   @if (isSearching) {
     <span class="loading loading-spinner loading-sm absolute right-3 top-3 pointer-events-none"></span>
   }

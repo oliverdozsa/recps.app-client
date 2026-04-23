@@ -18,7 +18,9 @@
       <div class="flex items-start gap-1">
         <div class="flex-1">
           <app-ingredients-input [initialIngredients]="group"
-                                 (selectedIngredientsChange)="groupIngredientsChange($index, $event)"></app-ingredients-input>
+                                 [enableCategoryMinMatch]="true"
+                                 (selectedIngredientsChange)="groupIngredientsChange($index, $event)"
+                                 (minMatchChange)="onCategoryMinMatchChange()"></app-ingredients-input>
         </div>
         @if (includedIngredientGroups.length > 1) {
           <button class="btn btn-ghost btn-sm mt-1" (click)="removeGroup($index)">✕</button>

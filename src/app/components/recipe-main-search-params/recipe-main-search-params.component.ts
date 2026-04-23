@@ -104,8 +104,8 @@ export class RecipeMainSearchParamsComponent {
     const categories = items.filter(u => u.category);
     const ingredients = items.filter(u => u.ingredient);
 
-    const categoriesAsGroups = categories.map<IngredientGroupWithRelation>((c, i) => ({
-      group: {ids: unionIds(c), minMatch: 1},
+    const categoriesAsGroups = categories.map<IngredientGroupWithRelation>((c) => ({
+      group: {ids: unionIds(c), minMatch: this.recipeService.categoryMinMatch[c.category!.id] ?? 1},
       relation: 'AND'
     }));
 
@@ -130,6 +130,12 @@ export class RecipeMainSearchParamsComponent {
       result.push(...this.toGroupsWithRelation(lane, laneRelation));
     });
     this.queryParams.includedIngredientGroups = result.length > 0 ? result : undefined;
+  }
+
+  onCategoryMinMatchChange(): void {
+    this.rebuildQueryGroups();
+    this.recipeService.resetPage();
+    this.queryParamsChanged$.next();
   }
 
   private filterByNameChange(value: string) {

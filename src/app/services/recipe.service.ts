@@ -12,6 +12,7 @@ interface PersistedRecipeQuery {
   includedIngredientGroups: IngredientSearchAndCategoryUnion[][];
   laneRelations: IngredientGroupRelation[];
   excludedIngredients: IngredientSearchAndCategoryUnion[];
+  categoryMinMatch: Record<number, number>;
 }
 
 const STORAGE_KEY = 'recps.queryState';
@@ -32,6 +33,7 @@ export class RecipeService {
   includedIngredientGroups: IngredientSearchAndCategoryUnion[][] = [[]];
   laneRelations: IngredientGroupRelation[] = [];
   excludedIngredients: IngredientSearchAndCategoryUnion[] = [];
+  categoryMinMatch: Record<number, number> = {};
 
   conflictingIngredients = new Set<number>();
 
@@ -92,6 +94,7 @@ export class RecipeService {
       }
       this.laneRelations = parsed.laneRelations ?? [];
       this.excludedIngredients = parsed.excludedIngredients ?? [];
+      this.categoryMinMatch = parsed.categoryMinMatch ?? {};
       this.determineConflictingIngredients();
     } catch {
       try { localStorage.removeItem(STORAGE_KEY); } catch { /* ignore */ }
@@ -105,6 +108,7 @@ export class RecipeService {
       includedIngredientGroups: this.includedIngredientGroups,
       laneRelations: this.laneRelations,
       excludedIngredients: this.excludedIngredients,
+      categoryMinMatch: this.categoryMinMatch,
     };
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
