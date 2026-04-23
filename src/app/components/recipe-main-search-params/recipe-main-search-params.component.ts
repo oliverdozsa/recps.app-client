@@ -97,6 +97,22 @@ export class RecipeMainSearchParamsComponent {
     this.filterByNameDebounced$.next(value);
   }
 
+  onCategoryMinMatchChange(): void {
+    this.rebuildQueryGroups();
+    this.recipeService.resetPage();
+    this.queryParamsChanged$.next();
+  }
+
+  private rebuildQueryGroups(): void {
+    const result: IngredientGroupWithRelation[] = [];
+    const numOfGroups = this.recipeService.includedIngredientGroups.length;
+    this.recipeService.includedIngredientGroups.forEach((lane, laneIndex) => {
+      const laneRelation = numOfGroups > 1 && laneIndex < numOfGroups - 1 ? this.laneRelation(laneIndex) : undefined;
+      result.push(...this.toGroupsWithRelation(lane, laneRelation));
+    });
+    this.queryParams.includedIngredientGroups = result.length > 0 ? result : undefined;
+  }
+
   private toGroupsWithRelation(
     items: IngredientSearchAndCategoryUnion[],
     laneRelation?: IngredientGroupRelation
@@ -120,22 +136,6 @@ export class RecipeMainSearchParamsComponent {
     }
 
     return result;
-  }
-
-  private rebuildQueryGroups(): void {
-    const result: IngredientGroupWithRelation[] = [];
-    const numOfGroups = this.recipeService.includedIngredientGroups.length;
-    this.recipeService.includedIngredientGroups.forEach((lane, laneIndex) => {
-      const laneRelation = numOfGroups > 1 && laneIndex < numOfGroups - 1 ? this.laneRelation(laneIndex) : undefined;
-      result.push(...this.toGroupsWithRelation(lane, laneRelation));
-    });
-    this.queryParams.includedIngredientGroups = result.length > 0 ? result : undefined;
-  }
-
-  onCategoryMinMatchChange(): void {
-    this.rebuildQueryGroups();
-    this.recipeService.resetPage();
-    this.queryParamsChanged$.next();
   }
 
   private filterByNameChange(value: string) {
