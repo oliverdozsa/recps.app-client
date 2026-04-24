@@ -124,6 +124,13 @@ export class IngredientsInputComponent implements OnInit {
     return this.recipeService.categoryAsPercent[categoryId] ?? false;
   }
 
+  getMinMatchOptions(categoryId: number, ingredientCount: number): number[] {
+    if (this.getCategoryAsPercent(categoryId)) {
+      return Array.from({length: 20}, (_, i) => (i + 1) * 5);
+    }
+    return Array.from({length: ingredientCount}, (_, i) => i + 1);
+  }
+
   onCategoryAsPercentToggle(categoryId: number, absoluteMax: number): void {
     const next = !this.getCategoryAsPercent(categoryId);
     this.recipeService.categoryAsPercent[categoryId] = next;

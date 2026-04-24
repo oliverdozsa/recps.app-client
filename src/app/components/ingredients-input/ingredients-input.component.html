@@ -4,24 +4,24 @@
       <div class="badge gap-1 select-none items-center" [class]="getTagBadgeClass(tag)">
         {{ display(tag) }}
         @if (enableCategoryMinMatch) {
-          <input
-            type="number"
-            class="w-9 text-center text-xs bg-base-200 border-none rounded-md outline-none"
-            [min]="1"
-            [max]="getCategoryAsPercent(tag.category.id) ? 100 : tag.category.ingredientIds.length"
-            [value]="getCategoryMinMatch(tag.category.id)"
+          <select
+            class="text-center text-xs bg-base-200 border-none rounded-md outline-none"
             (change)="onCategoryMinMatchChange(tag.category.id, +$any($event.target).value)"
             (click)="$event.stopPropagation()"
-          />
+          >
+            @for (opt of getMinMatchOptions(tag.category.id, tag.category.ingredientIds.length); track opt) {
+              <option [value]="opt" [selected]="opt === getCategoryMinMatch(tag.category.id)">{{ opt }}</option>
+            }
+          </select>
           <button
             type="button"
-            class="text-xs font-semibold opacity-60 hover:opacity-100 transition-opacity"
+            class="text-xs font-semibold size-4 btn btn-xs btn-primary btn-soft"
             (click)="onCategoryAsPercentToggle(tag.category.id, tag.category.ingredientIds.length); $event.stopPropagation()"
           >{{ getCategoryAsPercent(tag.category.id) ? '%' : '#' }}</button>
         }
         <button
           type="button"
-          class="cursor-pointer hover:opacity-70 transition-opacity flex items-center"
+          class="cursor-pointer hover:opacity-70 transition-opacity flex items-center ps-2"
           (click)="remove(); $event.stopPropagation()"
         >
           <span class="icon-[tabler--x] size-3"></span>
