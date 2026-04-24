@@ -8,11 +8,16 @@
             type="number"
             class="w-9 text-center text-xs bg-base-200 border-none rounded-md outline-none"
             [min]="1"
-            [max]="tag.category.ingredientIds.length"
+            [max]="getCategoryAsPercent(tag.category.id) ? 100 : tag.category.ingredientIds.length"
             [value]="getCategoryMinMatch(tag.category.id)"
-            (change)="onCategoryMinMatchChange(tag.category.id, +$any($event.target).value, tag.category.ingredientIds.length)"
+            (change)="onCategoryMinMatchChange(tag.category.id, +$any($event.target).value)"
             (click)="$event.stopPropagation()"
           />
+          <button
+            type="button"
+            class="text-xs font-semibold opacity-60 hover:opacity-100 transition-opacity"
+            (click)="onCategoryAsPercentToggle(tag.category.id, tag.category.ingredientIds.length); $event.stopPropagation()"
+          >{{ getCategoryAsPercent(tag.category.id) ? '%' : '#' }}</button>
         }
         <button
           type="button"

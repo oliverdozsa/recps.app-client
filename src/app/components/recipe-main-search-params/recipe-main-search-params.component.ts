@@ -121,7 +121,11 @@ export class RecipeMainSearchParamsComponent {
     const ingredients = items.filter(u => u.ingredient);
 
     const categoriesAsGroups = categories.map<IngredientGroupWithRelation>((c) => ({
-      group: {ids: unionIds(c), minMatch: this.recipeService.categoryMinMatch[c.category!.id] ?? 1},
+      group: {
+        ids: unionIds(c),
+        minMatch: this.recipeService.categoryMinMatch[c.category!.id] ?? 1,
+        asPercent: this.recipeService.categoryAsPercent[c.category!.id] ?? false
+      },
       relation: 'AND'
     }));
 

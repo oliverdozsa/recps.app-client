@@ -115,8 +115,22 @@ export class IngredientsInputComponent implements OnInit {
     return this.recipeService.categoryMinMatch[categoryId] ?? 1;
   }
 
-  onCategoryMinMatchChange(categoryId: number, value: number, max: number): void {
-    this.recipeService.categoryMinMatch[categoryId] = Math.min(Math.max(1, value), max);
+  onCategoryMinMatchChange(categoryId: number, value: number): void {
+    this.recipeService.categoryMinMatch[categoryId] = value;
+    this.minMatchChange.emit();
+  }
+
+  getCategoryAsPercent(categoryId: number): boolean {
+    return this.recipeService.categoryAsPercent[categoryId] ?? false;
+  }
+
+  onCategoryAsPercentToggle(categoryId: number, absoluteMax: number): void {
+    const next = !this.getCategoryAsPercent(categoryId);
+    this.recipeService.categoryAsPercent[categoryId] = next;
+    const current = this.recipeService.categoryMinMatch[categoryId] ?? 1;
+    this.recipeService.categoryMinMatch[categoryId] = next
+      ? Math.min(current, 100)
+      : Math.min(current, absoluteMax);
     this.minMatchChange.emit();
   }
 
