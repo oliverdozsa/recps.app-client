@@ -3,7 +3,16 @@
     "searchByName": "search by name",
     "searchByNamePlaceholder": "recipe name...",
     "byIngredients": "by ingredients",
-    "excluded": "exclude"
+    "excluded": "exclude",
+    "addGroup": "add group",
+    "laneRelation": {
+      "or": "OR",
+      "and": "AND"
+    }
+  },
+  "ingredientsInput": {
+    "searchInIngredients": "search ingredients",
+    "searchInCategories": "search categories"
   },
   "tagsInput": {
     "addTagsPlaceholder": "start typing..."

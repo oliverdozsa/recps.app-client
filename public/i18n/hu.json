@@ -3,8 +3,16 @@
     "searchByName": "név alapján",
     "searchByNamePlaceholder": "recept név...",
     "byIngredients": "hozzávalók",
-    "excluded": "ne legyen benne"
-
+    "excluded": "ne legyen benne",
+    "addGroup": "új csoport",
+    "laneRelation": {
+      "or": "VAGY",
+      "and": "ÉS"
+    }
+  },
+  "ingredientsInput": {
+    "searchInIngredients": "hozzávalókban",
+    "searchInCategories": "kategóriákban"
   },
   "tagsInput": {
     "addTagsPlaceholder": "kezdj el írni..."

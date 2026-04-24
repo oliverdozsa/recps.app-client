@@ -6,6 +6,7 @@ import {BehaviorSubject, combineLatest, Subject, debounceTime, switchMap, EMPTY}
 import {IngredientSearchAndCategoryUnion, unionIds, unionName} from '../../services/responses';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {RecipeService} from '../../services/recipe.service';
+import {TranslateService, _} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-ingredients-input',
@@ -17,6 +18,7 @@ export class IngredientsInputComponent implements OnInit {
   private ingredientsService = inject(IngredientsService);
   private languageService = inject(LanguageService);
   private recipeService = inject(RecipeService);
+  private translate = inject(TranslateService);
 
   @Input() badgeClass = "badge-primary";
   @Input() initialIngredients: IngredientSearchAndCategoryUnion[] = [];
@@ -33,6 +35,9 @@ export class IngredientsInputComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
   private currentIngredients: IngredientSearchAndCategoryUnion[] = [];
 
+  private searchInCategoriesName = "";
+  private searchInIngredientsName = "";
+
   get conflictingIngredientNames(): string[] {
     const result: string[] = [];
     this.recipeService.conflictingIngredients.forEach(id => {
@@ -48,12 +53,22 @@ export class IngredientsInputComponent implements OnInit {
   get selectOptionsForSearchSource() {
     if (this.enableCategories) {
       return [
-        {value: SearchSource.Ingredients, displayName: "Search in ingredients"},
-        {value: SearchSource.Categories, displayName: "Search in categories"}
+        {value: SearchSource.Ingredients, displayName: this.searchInIngredientsName},
+        {value: SearchSource.Categories, displayName: this.searchInCategoriesName}
       ]
     }
 
     return [];
+  }
+
+  constructor() {
+    this.translate.stream(_("ingredientsInput.searchInIngredients"))
+      .pipe(takeUntilDestroyed())
+      .subscribe((translated: string) => {this.searchInIngredientsName = translated})
+
+    this.translate.stream(_("ingredientsInput.searchInCategories"))
+      .pipe(takeUntilDestroyed())
+      .subscribe((translated: string) => {this.searchInCategoriesName = translated})
   }
 
   ngOnInit(): void {

@@ -6,7 +6,7 @@ import {debounceTime, Subject} from 'rxjs';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {RecipeSearchRequest} from '../../services/requests';
 import {IngredientGroupRelation, IngredientGroupWithRelation} from '../../services/common.data';
-import {TranslatePipe} from '@ngx-translate/core';
+import {_, TranslatePipe, TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-recipe-main-search-params',
@@ -19,9 +19,16 @@ import {TranslatePipe} from '@ngx-translate/core';
 })
 export class RecipeMainSearchParamsComponent {
   private recipeService = inject(RecipeService);
+  private translate = inject(TranslateService);
+
   private filterByNameDebounced$ = new Subject<string>();
   private queryParams: RecipeSearchRequest;
   private queryParamsChanged$: Subject<void>;
+
+  groupRelationTranslations = {
+    "AND": "AND",
+    "OR": "OR"
+  };
 
   constructor() {
     this.queryParams = this.recipeService.queryParams;
@@ -30,6 +37,14 @@ export class RecipeMainSearchParamsComponent {
     this.filterByNameDebounced$
       .pipe(debounceTime(300), takeUntilDestroyed())
       .subscribe(value => this.filterByNameChange(value));
+
+    this.translate.stream(_("recipeMainSearchParams.laneRelation.or"))
+      .pipe(takeUntilDestroyed())
+      .subscribe((t: string) => this.groupRelationTranslations["OR"] = t);
+
+    this.translate.stream(_("recipeMainSearchParams.laneRelation.and"))
+      .pipe(takeUntilDestroyed())
+      .subscribe((t: string) => this.groupRelationTranslations["AND"] = t);
   }
 
   get filterByName(): string {
