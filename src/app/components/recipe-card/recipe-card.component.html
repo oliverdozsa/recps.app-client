@@ -27,4 +27,8 @@
       <span class="badge mx-0.5 my-0.5" [ngClass]="getBadgeClassOf(ingredient)">{{ ingredient.names![0].name }}</span>
     }
   </div>
+
+  <div class="card-footer text-sm text-base-content/50 p-0 mt-2">
+    {{recipe().sourcePage}}
+  </div>
 </div>
