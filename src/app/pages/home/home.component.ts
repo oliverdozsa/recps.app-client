@@ -12,7 +12,7 @@ import {RecipeService} from '../../services/recipe.service';
 import {IngredientsService} from '../../services/ingredients.service';
 import {LanguageService} from '../../services/language.service';
 import {PageResponseRecipeSearchResponse, RecipeSearchResponse} from '../../services/responses';
-import {switchMap} from 'rxjs';
+import {forkJoin, of, switchMap} from 'rxjs';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {PaginationComponent} from '../../components/pagination/pagination.component';
 
@@ -80,22 +80,44 @@ export class HomeComponent implements OnInit {
   }
 
   private refreshIngredientNames(languageId: number): void {
-    const allIngredients = [
-      ...this.recipeService.includedIngredients,
+    const all = [
+      ...this.recipeService.includedIngredientGroups.flat(),
       ...this.recipeService.excludedIngredients,
     ];
-    const ids = allIngredients.map(i => i.ingredientId);
-    if (ids.length === 0) return;
+    const ingredientChips = all.filter(u => u.ingredient !== undefined);
+    const categoryChips = all.filter(u => u.category !== undefined);
+
+    const ingredientIds = ingredientChips.map(u => u.ingredient!.ingredientId);
+    const categoryIds = categoryChips.map(u => u.category!.id);
+
+    if (ingredientIds.length === 0 && categoryIds.length === 0) return;
 
     this.refreshingIngredientNames.set(true);
-    this.ingredientsService.findByIds(languageId, ids).subscribe(results => {
+    forkJoin({
+      ingredients: ingredientIds.length > 0
+        ? this.ingredientsService.findByIds(languageId, ingredientIds)
+        : of([]),
+      categories: categoryIds.length > 0
+        ? this.ingredientsService.findCategoriesByIds(languageId, categoryIds)
+        : of([]),
+    }).subscribe(({ingredients, categories}) => {
       this.refreshingIngredientNames.set(false);
-      const byId = new Map(results.map(r => [r.ingredientId, r]));
-      for (const ingredient of allIngredients) {
-        const updated = byId.get(ingredient.ingredientId);
+
+      const ingredientById = new Map(ingredients.map(r => [r.ingredientId, r]));
+      for (const chip of ingredientChips) {
+        const updated = ingredientById.get(chip.ingredient!.ingredientId);
         if (updated) {
-          ingredient.name = updated.name;
-          ingredient.alternatives = updated.alternatives;
+          chip.ingredient!.name = updated.name;
+          chip.ingredient!.alternatives = updated.alternatives;
+        }
+      }
+
+      const categoryById = new Map(categories.map(c => [c.id, c]));
+      for (const chip of categoryChips) {
+        const updated = categoryById.get(chip.category!.id);
+        if (updated) {
+          chip.category!.name = updated.name;
+          chip.category!.ingredientIds = updated.ingredientIds;
         }
       }
     });

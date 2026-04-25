@@ -1,12 +1,12 @@
 import {Component, inject} from '@angular/core';
 import {IngredientsInputComponent} from '../ingredients-input/ingredients-input.component';
-import {IngredientSearchResponse} from '../../services/responses';
+import {IngredientSearchAndCategoryUnion, unionIds} from '../../services/responses';
 import {RecipeService} from '../../services/recipe.service';
 import {debounceTime, Subject} from 'rxjs';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {RecipeSearchRequest} from '../../services/requests';
-import {IngredientGroup, IngredientGroupWithRelation} from '../../services/common.data';
-import {TranslatePipe} from '@ngx-translate/core';
+import {IngredientGroupRelation, IngredientGroupWithRelation} from '../../services/common.data';
+import {_, TranslatePipe, TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-recipe-main-search-params',
@@ -19,9 +19,16 @@ import {TranslatePipe} from '@ngx-translate/core';
 })
 export class RecipeMainSearchParamsComponent {
   private recipeService = inject(RecipeService);
+  private translate = inject(TranslateService);
+
   private filterByNameDebounced$ = new Subject<string>();
   private queryParams: RecipeSearchRequest;
   private queryParamsChanged$: Subject<void>;
+
+  groupRelationTranslations = {
+    "AND": "AND",
+    "OR": "OR"
+  };
 
   constructor() {
     this.queryParams = this.recipeService.queryParams;
@@ -30,48 +37,68 @@ export class RecipeMainSearchParamsComponent {
     this.filterByNameDebounced$
       .pipe(debounceTime(300), takeUntilDestroyed())
       .subscribe(value => this.filterByNameChange(value));
+
+    this.translate.stream(_("recipeMainSearchParams.laneRelation.or"))
+      .pipe(takeUntilDestroyed())
+      .subscribe((t: string) => this.groupRelationTranslations["OR"] = t);
+
+    this.translate.stream(_("recipeMainSearchParams.laneRelation.and"))
+      .pipe(takeUntilDestroyed())
+      .subscribe((t: string) => this.groupRelationTranslations["AND"] = t);
   }
 
   get filterByName(): string {
     return this.queryParams.filterByName ? this.queryParams.filterByName : "";
   }
 
-  get includedIngredients(): IngredientSearchResponse[] {
-    return this.recipeService.includedIngredients;
+  get includedIngredientGroups(): IngredientSearchAndCategoryUnion[][] {
+    return this.recipeService.includedIngredientGroups;
   }
 
-  get excludedIngredients(): IngredientSearchResponse[] {
+  get excludedIngredients(): IngredientSearchAndCategoryUnion[] {
     return this.recipeService.excludedIngredients;
   }
 
-  includedIngredientsChange(ingredients: IngredientSearchResponse[]) {
-    this.recipeService.includedIngredients = ingredients;
+  laneRelation(index: number): IngredientGroupRelation {
+    return this.recipeService.laneRelations[index] ?? 'AND';
+  }
 
-    if (ingredients.length > 0) {
-      const ingredientGroup: IngredientGroup = {
-        ids: ingredients.map(i => i.ingredientId),
-        minMatch: ingredients.length
-      }
-
-      const groupWithRelation: IngredientGroupWithRelation = {
-        group: ingredientGroup
-      };
-
-      this.queryParams.includedIngredientGroups = [groupWithRelation];
-    } else {
-      this.queryParams.includedIngredientGroups = undefined;
-    }
-
+  groupIngredientsChange(index: number, items: IngredientSearchAndCategoryUnion[]): void {
+    this.recipeService.includedIngredientGroups[index] = items;
+    this.rebuildQueryGroups();
     this.recipeService.determineConflictingIngredients();
     this.recipeService.resetPage();
     this.queryParamsChanged$.next();
   }
 
-  excludedIngredientsChange(ingredients: IngredientSearchResponse[]) {
-    this.recipeService.excludedIngredients = ingredients;
+  addGroup(): void {
+    this.recipeService.includedIngredientGroups.push([]);
+    this.recipeService.laneRelations.push('AND');
+  }
 
-    if(ingredients.length > 0) {
-      this.queryParams.excludedIngredients = ingredients.map(i => i.ingredientId);
+  removeGroup(index: number): void {
+    this.recipeService.includedIngredientGroups.splice(index, 1);
+    const relationIndex = Math.min(index, this.recipeService.laneRelations.length - 1);
+    this.recipeService.laneRelations.splice(relationIndex, 1);
+    this.rebuildQueryGroups();
+    this.recipeService.determineConflictingIngredients();
+    this.recipeService.resetPage();
+    this.queryParamsChanged$.next();
+  }
+
+  toggleLaneRelation(index: number): void {
+    const current = this.recipeService.laneRelations[index] ?? 'AND';
+    this.recipeService.laneRelations[index] = current === 'AND' ? 'OR' : 'AND';
+    this.rebuildQueryGroups();
+    this.recipeService.resetPage();
+    this.queryParamsChanged$.next();
+  }
+
+  excludedIngredientsChange(items: IngredientSearchAndCategoryUnion[]) {
+    this.recipeService.excludedIngredients = items;
+
+    if (items.length > 0) {
+      this.queryParams.excludedIngredients = items.flatMap(unionIds);
     } else {
       this.queryParams.excludedIngredients = undefined;
     }
@@ -83,6 +110,51 @@ export class RecipeMainSearchParamsComponent {
 
   filterByNameRawChange(value: string) {
     this.filterByNameDebounced$.next(value);
+  }
+
+  onCategoryMinMatchChange(): void {
+    this.rebuildQueryGroups();
+    this.recipeService.resetPage();
+    this.queryParamsChanged$.next();
+  }
+
+  private rebuildQueryGroups(): void {
+    const result: IngredientGroupWithRelation[] = [];
+    const numOfGroups = this.recipeService.includedIngredientGroups.length;
+    this.recipeService.includedIngredientGroups.forEach((lane, laneIndex) => {
+      const laneRelation = numOfGroups > 1 && laneIndex < numOfGroups - 1 ? this.laneRelation(laneIndex) : undefined;
+      result.push(...this.toGroupsWithRelation(lane, laneRelation));
+    });
+    this.queryParams.includedIngredientGroups = result.length > 0 ? result : undefined;
+  }
+
+  private toGroupsWithRelation(
+    items: IngredientSearchAndCategoryUnion[],
+    laneRelation?: IngredientGroupRelation
+  ): IngredientGroupWithRelation[] {
+    const categories = items.filter(u => u.category);
+    const ingredients = items.filter(u => u.ingredient);
+
+    const categoriesAsGroups = categories.map<IngredientGroupWithRelation>((c) => ({
+      group: {
+        ids: unionIds(c),
+        minMatch: this.recipeService.categoryMinMatch[c.category!.id] ?? 1,
+        asPercent: this.recipeService.categoryAsPercent[c.category!.id] ?? false
+      },
+      relation: 'AND'
+    }));
+
+    const ingredientIds = ingredients.flatMap(i => unionIds(i));
+    const result = [...categoriesAsGroups];
+    if (ingredientIds.length > 0) {
+      result.push({group: {ids: ingredientIds, minMatch: ingredientIds.length}});
+    }
+
+    if (result.length > 0 && laneRelation) {
+      result[result.length - 1]["relation"] = laneRelation;
+    }
+
+    return result;
   }
 
   private filterByNameChange(value: string) {

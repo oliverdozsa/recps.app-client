@@ -13,6 +13,7 @@ export type IngredientGroupRelation = 'AND' | 'OR';
 export interface IngredientGroup {
   ids: number[];
   minMatch?: number;
+  asPercent?: boolean
 }
 
 export interface IngredientGroupWithRelation {

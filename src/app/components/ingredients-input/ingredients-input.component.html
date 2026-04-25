@@ -1,7 +1,59 @@
 <div class="relative">
-  <app-tags-input [externalOptions]="options" [displayFunction]="display" [badgeClass]="badgeClass"
-                  [errorTags]="conflictingIngredientNames" [initialTags]="initialIngredients"
-                  (queryChange)="onQueryChange($event)" (tagsChange)="onIngredientsChange($event)"></app-tags-input>
+  <ng-template #ingredientTag let-tag let-remove="remove">
+    @if (tag.category) {
+      <div class="badge gap-1 select-none items-center" [class]="getTagBadgeClass(tag)">
+        {{ display(tag) }}
+        @if (enableCategoryMinMatch) {
+          <select
+            class="text-center text-xs bg-base-200 border-none rounded-md outline-none"
+            (change)="onCategoryMinMatchChange(tag.category.id, +$any($event.target).value)"
+            (click)="$event.stopPropagation()"
+          >
+            @for (opt of getMinMatchOptions(tag.category.id, tag.category.ingredientIds.length); track opt) {
+              <option [value]="opt" [selected]="opt === getCategoryMinMatch(tag.category.id)">{{ opt }}</option>
+            }
+          </select>
+          <button
+            type="button"
+            class="text-xs font-semibold size-4 btn btn-xs btn-primary btn-soft"
+            (click)="onCategoryAsPercentToggle(tag.category.id, tag.category.ingredientIds.length); $event.stopPropagation()"
+          >{{ getCategoryAsPercent(tag.category.id) ? '%' : '#' }}</button>
+        }
+        <button
+          type="button"
+          class="cursor-pointer hover:opacity-70 transition-opacity flex items-center ps-2"
+          (click)="remove(); $event.stopPropagation()"
+        >
+          <span class="icon-[tabler--x] size-3"></span>
+        </button>
+      </div>
+    } @else {
+      <div class="badge gap-1 select-none" [class]="getTagBadgeClass(tag)">
+        {{ display(tag) }}
+        <button
+          type="button"
+          class="cursor-pointer hover:opacity-70 transition-opacity flex items-center"
+          (click)="remove(); $event.stopPropagation()"
+        >
+          <span class="icon-[tabler--x] size-3"></span>
+        </button>
+      </div>
+    }
+  </ng-template>
+
+  <app-tags-input
+    [externalOptions]="options"
+    [displayFunction]="display"
+    [badgeClass]="badgeClass"
+    [errorTags]="conflictingIngredientNames"
+    [initialTags]="initialIngredients"
+    [selectOptions]="selectOptionsForSearchSource"
+    [tagTemplate]="ingredientTag"
+    (queryChange)="onQueryChange($event)"
+    (tagsChange)="onIngredientsChange($event)"
+    (selectOptionChange)="onSelectChange($event)">
+  </app-tags-input>
+
   @if (isSearching) {
     <span class="loading loading-spinner loading-sm absolute right-3 top-3 pointer-events-none"></span>
   }

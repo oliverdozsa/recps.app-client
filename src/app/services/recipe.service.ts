@@ -1,15 +1,19 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable, Subject} from 'rxjs';
-import {IngredientSearchResponse, PageResponseRecipeSearchResponse} from './responses';
+import {IngredientSearchAndCategoryUnion, PageResponseRecipeSearchResponse} from './responses';
 import {RecipeSearchRequest} from './requests';
 import {environment} from '../../environments/environment';
+import {IngredientGroupRelation} from './common.data';
 
 interface PersistedRecipeQuery {
   timestamp: number;
   queryParams: RecipeSearchRequest;
-  includedIngredients: IngredientSearchResponse[];
-  excludedIngredients: IngredientSearchResponse[];
+  includedIngredientGroups: IngredientSearchAndCategoryUnion[][];
+  laneRelations: IngredientGroupRelation[];
+  excludedIngredients: IngredientSearchAndCategoryUnion[];
+  categoryMinMatch: Record<number, number>;
+  categoryAsPercent: Record<number, boolean>;
 }
 
 const STORAGE_KEY = 'recps.queryState';
@@ -27,8 +31,11 @@ export class RecipeService {
     page: 0
   };
 
-  includedIngredients: IngredientSearchResponse[] = [];
-  excludedIngredients: IngredientSearchResponse[] = [];
+  includedIngredientGroups: IngredientSearchAndCategoryUnion[][] = [[]];
+  laneRelations: IngredientGroupRelation[] = [];
+  excludedIngredients: IngredientSearchAndCategoryUnion[] = [];
+  categoryMinMatch: Record<number, number> = {};
+  categoryAsPercent: Record<number, boolean> = {};
 
   conflictingIngredients = new Set<number>();
 
@@ -50,7 +57,7 @@ export class RecipeService {
 
     this.conflictingIngredients.clear();
     includedIngredientIds.forEach(id => {
-      if(excludedIngredientIds.has(id)) {
+      if(excludedIngredientIds.has(id) && !this.doesIngredientIdBelongToCategory(id)) {
         this.conflictingIngredients.add(id);
       }
     });
@@ -81,8 +88,16 @@ export class RecipeService {
         return;
       }
       this.queryParams = parsed.queryParams;
-      this.includedIngredients = parsed.includedIngredients ?? [];
+      const rawIncluded = parsed.includedIngredientGroups;
+      if (Array.isArray(rawIncluded) && rawIncluded.length > 0 && Array.isArray(rawIncluded[0])) {
+        this.includedIngredientGroups = rawIncluded;
+      } else {
+        this.includedIngredientGroups = [[]];
+      }
+      this.laneRelations = parsed.laneRelations ?? [];
       this.excludedIngredients = parsed.excludedIngredients ?? [];
+      this.categoryMinMatch = parsed.categoryMinMatch ?? {};
+      this.categoryAsPercent = parsed.categoryAsPercent ?? {};
       this.determineConflictingIngredients();
     } catch {
       try { localStorage.removeItem(STORAGE_KEY); } catch { /* ignore */ }
@@ -93,8 +108,11 @@ export class RecipeService {
     const payload: PersistedRecipeQuery = {
       timestamp: Date.now(),
       queryParams: this.queryParams,
-      includedIngredients: this.includedIngredients,
+      includedIngredientGroups: this.includedIngredientGroups,
+      laneRelations: this.laneRelations,
       excludedIngredients: this.excludedIngredients,
+      categoryMinMatch: this.categoryMinMatch,
+      categoryAsPercent: this.categoryAsPercent,
     };
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
@@ -126,5 +144,21 @@ export class RecipeService {
     }
 
     return [];
+  }
+
+  private doesIngredientIdBelongToCategory(id: number) {
+
+    const items = this.includedIngredientGroups.flat().concat(this.excludedIngredients);
+    for(let item of items) {
+      if(item.ingredient) {
+        continue
+      }
+
+      if(item.category!.ingredientIds.includes(id)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 }

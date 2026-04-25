@@ -1,5 +1,5 @@
 import {Component, computed, inject, input} from '@angular/core';
-import {RecipeSearchResponse} from '../../services/responses';
+import {RecipeSearchResponse, unionIds} from '../../services/responses';
 import {TranslatePipe} from '@ngx-translate/core';
 import {RecipeService} from '../../services/recipe.service';
 import {Ingredient} from '../../services/common.data';
@@ -39,8 +39,8 @@ export class RecipeCardComponent {
   }
 
   private getRankOf(ingredient: Ingredient) {
-    const includedIngredientIds = this.recipeService.includedIngredients.map(i => i.ingredientId);
-    if (includedIngredientIds.includes(ingredient.id)) {
+    const includedIds = this.recipeService.includedIngredientGroups.flat().flatMap(unionIds);
+    if (includedIds.includes(ingredient.id)) {
       return 0;
     }
 

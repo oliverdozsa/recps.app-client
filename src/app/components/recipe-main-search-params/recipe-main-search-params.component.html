@@ -5,8 +5,32 @@
 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-3">
   <div class="md:col-span-2">
     <h2 class="text-lg font-semibold">{{"recipeMainSearchParams.byIngredients" | translate}}</h2>
-    <app-ingredients-input [initialIngredients]="includedIngredients"
-                           (selectedIngredientsChange)="includedIngredientsChange($event)"></app-ingredients-input>
+
+    @for (group of includedIngredientGroups; track group) {
+      @if ($index > 0) {
+        <div class="flex items-center gap-2 my-1">
+          <div class="flex-1 border-t border-base-300"></div>
+          <button class="btn btn-outline btn-primary btn-xs font-semibold tracking-widest"
+                  (click)="toggleLaneRelation($index - 1)">{{ groupRelationTranslations[laneRelation($index - 1)] }}</button>
+          <div class="flex-1 border-t border-base-300"></div>
+        </div>
+      }
+      <div class="flex items-center gap-1">
+        <div class="flex-1">
+          <app-ingredients-input [initialIngredients]="group"
+                                 [enableCategoryMinMatch]="true"
+                                 (selectedIngredientsChange)="groupIngredientsChange($index, $event)"
+                                 (minMatchChange)="onCategoryMinMatchChange()"></app-ingredients-input>
+        </div>
+        @if (includedIngredientGroups.length > 1) {
+          <button class="btn btn-error btn-sm btn-text mt-1" (click)="removeGroup($index)">
+            <span class="icon-[tabler--trash] size-4.5 shrink-0"></span>
+          </button>
+        }
+      </div>
+    }
+
+    <button class="btn btn-text btn-primary btn-sm mt-2" (click)="addGroup()">+ {{"recipeMainSearchParams.addGroup" | translate}}</button>
   </div>
 
   <div class="md:col-span-1">

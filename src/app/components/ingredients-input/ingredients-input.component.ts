@@ -1,12 +1,12 @@
 import {Component, DestroyRef, EventEmitter, inject, Input, OnInit, Output} from '@angular/core';
 import {TagsInputComponent} from '../tags-input/tags-input.component';
-import {IngredientsService} from '../../services/ingredients.service';
+import {IngredientsService, SearchSource} from '../../services/ingredients.service';
 import {LanguageService} from '../../services/language.service';
-import {Subject, debounceTime, switchMap, EMPTY} from 'rxjs';
-import {IngredientSearchResponse} from '../../services/responses';
+import {BehaviorSubject, combineLatest, Subject, debounceTime, switchMap, EMPTY} from 'rxjs';
+import {IngredientSearchAndCategoryUnion, unionIds, unionName} from '../../services/responses';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {RecipeService} from '../../services/recipe.service';
-import {Ingredient} from '../../services/common.data';
+import {TranslateService, _} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-ingredients-input',
@@ -18,17 +18,25 @@ export class IngredientsInputComponent implements OnInit {
   private ingredientsService = inject(IngredientsService);
   private languageService = inject(LanguageService);
   private recipeService = inject(RecipeService);
+  private translate = inject(TranslateService);
 
   @Input() badgeClass = "badge-primary";
-  @Input() initialIngredients: IngredientSearchResponse[] = [];
-  @Output() selectedIngredientsChange = new EventEmitter<IngredientSearchResponse[]>();
+  @Input() initialIngredients: IngredientSearchAndCategoryUnion[] = [];
+  @Input() enableCategories = true;
+  @Input() enableCategoryMinMatch = false;
+  @Output() selectedIngredientsChange = new EventEmitter<IngredientSearchAndCategoryUnion[]>();
+  @Output() minMatchChange = new EventEmitter<void>();
 
-  options: IngredientSearchResponse[] = [];
+  options: IngredientSearchAndCategoryUnion[] = [];
   isSearching = false;
 
   private query$ = new Subject<string>();
+  private source$ = new BehaviorSubject<SearchSource>(SearchSource.Ingredients);
   private destroyRef = inject(DestroyRef);
-  private currentIngredients: IngredientSearchResponse[] = [];
+  private currentIngredients: IngredientSearchAndCategoryUnion[] = [];
+
+  private searchInCategoriesName = "";
+  private searchInIngredientsName = "";
 
   get conflictingIngredientNames(): string[] {
     const result: string[] = [];
@@ -42,14 +50,37 @@ export class IngredientsInputComponent implements OnInit {
     return result;
   }
 
+  get selectOptionsForSearchSource() {
+    if (this.enableCategories) {
+      return [
+        {value: SearchSource.Ingredients, displayName: this.searchInIngredientsName},
+        {value: SearchSource.Categories, displayName: this.searchInCategoriesName}
+      ]
+    }
+
+    return [];
+  }
+
+  constructor() {
+    this.translate.stream(_("ingredientsInput.searchInIngredients"))
+      .pipe(takeUntilDestroyed())
+      .subscribe((translated: string) => {this.searchInIngredientsName = translated})
+
+    this.translate.stream(_("ingredientsInput.searchInCategories"))
+      .pipe(takeUntilDestroyed())
+      .subscribe((translated: string) => {this.searchInCategoriesName = translated})
+  }
+
   ngOnInit(): void {
     if (this.initialIngredients.length > 0) {
       this.currentIngredients = [...this.initialIngredients];
     }
 
-    this.query$.pipe(
-      debounceTime(300),
-      switchMap(query => {
+    combineLatest([
+      this.query$.pipe(debounceTime(300)),
+      this.source$
+    ]).pipe(
+      switchMap(([query, source]) => {
         if (query.length < 2) {
           this.options = [];
           return EMPTY;
@@ -57,7 +88,7 @@ export class IngredientsInputComponent implements OnInit {
         const langId = this.languageService.selectedLanguage()?.id;
         if (!langId) return EMPTY;
         this.isSearching = true;
-        return this.ingredientsService.search(langId, query);
+        return this.ingredientsService.searchUnified(langId, query, source);
       }),
       takeUntilDestroyed(this.destroyRef)
     ).subscribe(results => {
@@ -70,21 +101,67 @@ export class IngredientsInputComponent implements OnInit {
     this.query$.next(query);
   }
 
-  display(ingredient: IngredientSearchResponse): string {
-    return ingredient.name!;
+  display(item: IngredientSearchAndCategoryUnion): string {
+    if (item.ingredient) {
+      return unionName(item);
+    } else {
+      return "🏷️ " + unionName(item);
+    }
+
   }
 
-  onIngredientsChange(ingredients: IngredientSearchResponse[]): void {
+  onIngredientsChange(ingredients: IngredientSearchAndCategoryUnion[]): void {
     this.selectedIngredientsChange.emit(ingredients);
     this.currentIngredients = ingredients;
   }
 
-  private findIngredientNameById(id: number) {
-    const ingredient = this.currentIngredients.find(i => i.ingredientId == id);
-    if (ingredient) {
-      return ingredient.name;
-    } else {
-      return undefined;
+  onSelectChange(value: SearchSource) {
+    this.source$.next(value);
+  }
+
+  getTagBadgeClass(tag: IngredientSearchAndCategoryUnion): string {
+    if (this.conflictingIngredientNames.includes(this.display(tag))) {
+      return 'badge-error';
     }
+    return this.badgeClass;
+  }
+
+  getCategoryMinMatch(categoryId: number): number {
+    return this.recipeService.categoryMinMatch[categoryId] ?? 1;
+  }
+
+  onCategoryMinMatchChange(categoryId: number, value: number): void {
+    this.recipeService.categoryMinMatch[categoryId] = value;
+    this.minMatchChange.emit();
+  }
+
+  getCategoryAsPercent(categoryId: number): boolean {
+    return this.recipeService.categoryAsPercent[categoryId] ?? false;
+  }
+
+  getMinMatchOptions(categoryId: number, ingredientCount: number): number[] {
+    if (this.getCategoryAsPercent(categoryId)) {
+      return Array.from({length: 20}, (_, i) => (i + 1) * 5);
+    }
+    return Array.from({length: ingredientCount}, (_, i) => i + 1);
+  }
+
+  onCategoryAsPercentToggle(categoryId: number, absoluteMax: number): void {
+    const next = !this.getCategoryAsPercent(categoryId);
+    this.recipeService.categoryAsPercent[categoryId] = next;
+    const current = this.recipeService.categoryMinMatch[categoryId] ?? 1;
+    this.recipeService.categoryMinMatch[categoryId] = next
+      ? Math.min(current, 100)
+      : Math.min(current, absoluteMax);
+    this.minMatchChange.emit();
+  }
+
+  private findIngredientNameById(id: number): string | undefined {
+    for (const item of this.currentIngredients) {
+      if (unionIds(item).includes(id)) {
+        return unionName(item);
+      }
+    }
+    return undefined;
   }
 }
