@@ -20,6 +20,9 @@ export interface IngredientCategoryByIdsRequest {
   languageId: number;
 }
 
+export type RecipeOrderBy = 'prepTime' | 'ingredientCount';
+export type RecipeOrderDirection = 'asc' | 'desc';
+
 export interface RecipeSearchRequest {
   includedIngredientGroups?: IngredientGroupWithRelation[];
   excludedIngredients?: number[];
@@ -27,4 +30,6 @@ export interface RecipeSearchRequest {
   ingredientLanguageId: number;
   limit: number;
   page?: number;
+  orderBy?: RecipeOrderBy;
+  orderDirection?: RecipeOrderDirection;
 }

@@ -33,5 +33,15 @@
   },
   "recipeCard": {
     "mins": "perc"
+  },
+  "recipeAdvancedSearchParams": {
+    "title": "Szűrők",
+    "prepTime": "Elkészítési idő",
+    "orderBy": "Rendezés",
+    "orderByNone": "nincs",
+    "orderByPrepTime": "elkészítési idő",
+    "orderByIngredientCount": "hozzávalók száma",
+    "orderAsc": "növekvő",
+    "orderDesc": "csökkenő"
   }
 }
