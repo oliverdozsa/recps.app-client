@@ -1,4 +1,4 @@
-import {Component, ElementRef, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {debounceTime, Subject} from 'rxjs';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 
@@ -7,10 +7,12 @@ import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
   templateUrl: './dual-range.component.html',
   styleUrl: './dual-range.component.css'
 })
-export class DualRangeComponent {
+export class DualRangeComponent implements OnInit {
   @Input() min = 0;
   @Input() max = 100;
   @Input() step = 1;
+  @Input() initialMinValue: number | undefined = undefined;
+  @Input() initialMaxValue: number | undefined = undefined;
   @Output() minValueChange = new EventEmitter<number | null>();
   @Output() maxValueChange = new EventEmitter<number | null>();
 
@@ -37,6 +39,11 @@ export class DualRangeComponent {
         takeUntilDestroyed()
       )
       .subscribe(val => this.maxValueChange.emit(val));
+  }
+
+  ngOnInit(): void {
+    this.minValue = this.initialMinValue == undefined ? null : this.initialMinValue;
+    this.maxValue = this.initialMaxValue == undefined ? null : this.initialMaxValue;
   }
 
   get lowerThumb(): number {

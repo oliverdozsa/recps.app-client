@@ -22,6 +22,22 @@ export class RecipeAdvancedSearchParamsComponent {
     return this.recipeService.queryParams.orderDirection ?? 'asc';
   }
 
+  get prepTimeMin(): number | undefined {
+    return this.recipeService.queryParams.prepTime?.min;
+  }
+
+  get prepTimeMax(): number | undefined {
+    return this.recipeService.queryParams.prepTime?.max;
+  }
+
+  get countIngredientsMin(): number | undefined {
+    return this.recipeService.queryParams.countIngredients?.min;
+  }
+
+  get countIngredientsMax(): number | undefined {
+    return this.recipeService.queryParams.countIngredients?.max;
+  }
+
   orderByChange(value: string): void {
     this.recipeService.queryParams.orderBy = value ? value as RecipeOrderBy : undefined;
     this.recipeService.resetPage();
