@@ -4,7 +4,34 @@
 
     <div>
       <label class="label text-sm">{{ "recipeAdvancedSearchParams.prepTime" | translate }}</label>
-      <input type="range" class="range" aria-label="range"/>
+      <div class="flex gap-2">
+        <label class="input input-sm flex items-center gap-1 flex-1">
+          <span class="text-xs opacity-60">{{ "recipeAdvancedSearchParams.min" | translate }}</span>
+          <input type="number" class="w-full" min="0" [ngModel]="prepTimeMin"
+                 (ngModelChange)="setPrepTimeMin($event?.toString() ?? '')"/>
+        </label>
+        <label class="input input-sm flex items-center gap-1 flex-1">
+          <span class="text-xs opacity-60">{{ "recipeAdvancedSearchParams.max" | translate }}</span>
+          <input type="number" class="w-full" min="0" [ngModel]="prepTimeMax"
+                 (ngModelChange)="setPrepTimeMax($event?.toString() ?? '')"/>
+        </label>
+      </div>
+    </div>
+
+    <div>
+      <label class="label text-sm">{{ "recipeAdvancedSearchParams.countIngredients" | translate }}</label>
+      <div class="flex gap-2">
+        <label class="input input-sm flex items-center gap-1 flex-1">
+          <span class="text-xs opacity-60">{{ "recipeAdvancedSearchParams.min" | translate }}</span>
+          <input type="number" class="w-full" min="0" [ngModel]="countIngredientsMin"
+                 (ngModelChange)="setCountIngredientsMin($event?.toString() ?? '')"/>
+        </label>
+        <label class="input input-sm flex items-center gap-1 flex-1">
+          <span class="text-xs opacity-60">{{ "recipeAdvancedSearchParams.max" | translate }}</span>
+          <input type="number" class="w-full" min="0" [ngModel]="countIngredientsMax"
+                 (ngModelChange)="setCountIngredientsMax($event?.toString() ?? '')"/>
+        </label>
+      </div>
     </div>
 
     <div>

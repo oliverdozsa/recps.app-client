@@ -23,6 +23,16 @@ export interface IngredientCategoryByIdsRequest {
 export type RecipeOrderBy = 'prepTime' | 'ingredientCount';
 export type RecipeOrderDirection = 'asc' | 'desc';
 
+export interface PrepTime {
+  min?: number;
+  max?: number;
+}
+
+export interface CountIngredients {
+  min?: number;
+  max?: number;
+}
+
 export interface RecipeSearchRequest {
   includedIngredientGroups?: IngredientGroupWithRelation[];
   excludedIngredients?: number[];
@@ -32,4 +42,6 @@ export interface RecipeSearchRequest {
   page?: number;
   orderBy?: RecipeOrderBy;
   orderDirection?: RecipeOrderDirection;
+  prepTime?: PrepTime;
+  countIngredients?: CountIngredients;
 }

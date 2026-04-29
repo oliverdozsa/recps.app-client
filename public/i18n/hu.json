@@ -37,6 +37,9 @@
   "recipeAdvancedSearchParams": {
     "title": "Szűrők",
     "prepTime": "Elkészítési idő",
+    "countIngredients": "Hozzávalók száma",
+    "min": "Min",
+    "max": "Max",
     "orderBy": "Rendezés",
     "orderByNone": "nincs",
     "orderByPrepTime": "elkészítési idő",
