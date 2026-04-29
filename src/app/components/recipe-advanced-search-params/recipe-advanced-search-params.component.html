@@ -4,34 +4,16 @@
 
     <div>
       <label class="label text-sm">{{ "recipeAdvancedSearchParams.prepTime" | translate }}</label>
-      <div class="flex gap-2">
-        <label class="input input-sm flex items-center gap-1 flex-1">
-          <span class="text-xs opacity-60">{{ "recipeAdvancedSearchParams.min" | translate }}</span>
-          <input type="number" class="w-full" min="0" [ngModel]="prepTimeMin"
-                 (ngModelChange)="setPrepTimeMin($event?.toString() ?? '')"/>
-        </label>
-        <label class="input input-sm flex items-center gap-1 flex-1">
-          <span class="text-xs opacity-60">{{ "recipeAdvancedSearchParams.max" | translate }}</span>
-          <input type="number" class="w-full" min="0" [ngModel]="prepTimeMax"
-                 (ngModelChange)="setPrepTimeMax($event?.toString() ?? '')"/>
-        </label>
-      </div>
+      <app-dual-range [min]="0" [max]="120" [step]="5"
+                      (minValueChange)="setPrepTimeMin($event)"
+                      (maxValueChange)="setPrepTimeMax($event)"/>
     </div>
 
     <div>
       <label class="label text-sm">{{ "recipeAdvancedSearchParams.countIngredients" | translate }}</label>
-      <div class="flex gap-2">
-        <label class="input input-sm flex items-center gap-1 flex-1">
-          <span class="text-xs opacity-60">{{ "recipeAdvancedSearchParams.min" | translate }}</span>
-          <input type="number" class="w-full" min="0" [ngModel]="countIngredientsMin"
-                 (ngModelChange)="setCountIngredientsMin($event?.toString() ?? '')"/>
-        </label>
-        <label class="input input-sm flex items-center gap-1 flex-1">
-          <span class="text-xs opacity-60">{{ "recipeAdvancedSearchParams.max" | translate }}</span>
-          <input type="number" class="w-full" min="0" [ngModel]="countIngredientsMax"
-                 (ngModelChange)="setCountIngredientsMax($event?.toString() ?? '')"/>
-        </label>
-      </div>
+      <app-dual-range [min]="0" [max]="25" [step]="1"
+                      (minValueChange)="setCountIngredientsMin($event)"
+                      (maxValueChange)="setCountIngredientsMax($event)"/>
     </div>
 
     <div>

@@ -38,8 +38,6 @@
     "title": "Advanced Filters",
     "prepTime": "Prep time",
     "countIngredients": "Ingredient count",
-    "min": "Min",
-    "max": "Max",
     "orderBy": "Order by",
     "orderByNone": "none",
     "orderByPrepTime": "prep time",
