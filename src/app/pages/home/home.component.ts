@@ -3,15 +3,12 @@ import {
   RecipeSearchResultDisplayComponent
 } from '../../components/recipe-search-result-display/recipe-search-result-display.component';
 import {
-  RecipeAdvancedSearchParamsComponent
-} from '../../components/recipe-advanced-search-params/recipe-advanced-search-params.component';
-import {
   RecipeMainSearchParamsComponent
 } from '../../components/recipe-main-search-params/recipe-main-search-params.component';
 import {RecipeService} from '../../services/recipe.service';
 import {IngredientsService} from '../../services/ingredients.service';
 import {LanguageService} from '../../services/language.service';
-import {PageResponseRecipeSearchResponse, RecipeSearchResponse} from '../../services/responses';
+import {PageResponseRecipeSearchResponse, RecipeSearchResponse, SourcePageResponse} from '../../services/responses';
 import {forkJoin, of, switchMap} from 'rxjs';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {PaginationComponent} from '../../components/pagination/pagination.component';
@@ -20,7 +17,6 @@ import {PaginationComponent} from '../../components/pagination/pagination.compon
   selector: 'app-home',
   imports: [
     RecipeSearchResultDisplayComponent,
-    RecipeAdvancedSearchParamsComponent,
     RecipeMainSearchParamsComponent,
     PaginationComponent
   ],
@@ -29,6 +25,7 @@ import {PaginationComponent} from '../../components/pagination/pagination.compon
 })
 export class HomeComponent implements OnInit {
   recipes = signal<RecipeSearchResponse[] | undefined>(undefined);
+  sourcePages = signal<SourcePageResponse[]>([]);
   loading = signal(false);
   refreshingIngredientNames = signal(false);
   totalCount = signal(0);
@@ -61,10 +58,16 @@ export class HomeComponent implements OnInit {
     this.languageService.getAll().pipe(
       switchMap(() => {
         this.recipeService.queryParams.ingredientLanguageId = this.languageService.selectedLanguage()!.id!;
-        return this.recipeService.search();
+        return forkJoin({
+          recipes: this.recipeService.search(),
+          sourcePages: this.recipeService.getSourcePages(),
+        });
       })
     ).subscribe({
-      next: response => this.usePageResponse(response),
+      next: ({recipes, sourcePages}) => {
+        this.usePageResponse(recipes);
+        this.sourcePages.set(sourcePages);
+      },
       complete: () => this.loading.set(false),
       error: () => this.loading.set(false),
     });

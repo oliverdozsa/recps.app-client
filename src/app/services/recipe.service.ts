@@ -1,7 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable, Subject} from 'rxjs';
-import {IngredientSearchAndCategoryUnion, PageResponseRecipeSearchResponse} from './responses';
+import {IngredientSearchAndCategoryUnion, PageResponseRecipeSearchResponse, SourcePageResponse} from './responses';
 import {RecipeSearchRequest} from './requests';
 import {environment} from '../../environments/environment';
 import {IngredientGroupRelation} from './common.data';
@@ -49,6 +49,10 @@ export class RecipeService {
 
   search(): Observable<PageResponseRecipeSearchResponse> {
     return this.http.post<PageResponseRecipeSearchResponse>(`${this.baseUrl}/recipes/search`, this.queryParams);
+  }
+
+  getSourcePages(): Observable<SourcePageResponse[]> {
+    return this.http.get<SourcePageResponse[]>(`${this.baseUrl}/recipes/sourcePages`);
   }
 
   determineConflictingIngredients() {
