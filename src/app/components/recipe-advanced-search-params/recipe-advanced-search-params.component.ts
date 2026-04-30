@@ -12,7 +12,7 @@ import {DualRangeComponent} from '../dual-range/dual-range.component';
   styleUrl: './recipe-advanced-search-params.component.css'
 })
 export class RecipeAdvancedSearchParamsComponent {
-  private recipeService = inject(RecipeService);
+  recipeService = inject(RecipeService);
 
   get orderBy(): RecipeOrderBy | '' {
     return this.recipeService.queryParams.orderBy ?? '';
@@ -70,6 +70,19 @@ export class RecipeAdvancedSearchParamsComponent {
 
   setCountIngredientsMax(value: number | null): void {
     this.recipeService.queryParams.countIngredients = this.mergeRange(this.recipeService.queryParams.countIngredients, 'max', value ?? undefined);
+    this.recipeService.resetPage();
+    this.recipeService.queryParamsChanged$.next();
+  }
+
+  isSourcePageSelected(id: number): boolean {
+    return this.recipeService.queryParams.sourcePages?.includes(id) ?? false;
+  }
+
+  toggleSourcePage(id: number, event: Event): void {
+    const checked = (event.target as HTMLInputElement).checked;
+    const current = this.recipeService.queryParams.sourcePages ?? [];
+    const updated = checked ? [...current, id] : current.filter(x => x !== id);
+    this.recipeService.queryParams.sourcePages = updated.length > 0 ? updated : undefined;
     this.recipeService.resetPage();
     this.recipeService.queryParamsChanged$.next();
   }

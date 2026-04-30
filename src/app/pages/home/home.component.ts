@@ -8,7 +8,7 @@ import {
 import {RecipeService} from '../../services/recipe.service';
 import {IngredientsService} from '../../services/ingredients.service';
 import {LanguageService} from '../../services/language.service';
-import {PageResponseRecipeSearchResponse, RecipeSearchResponse, SourcePageResponse} from '../../services/responses';
+import {PageResponseRecipeSearchResponse, RecipeSearchResponse} from '../../services/responses';
 import {forkJoin, of, switchMap} from 'rxjs';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {PaginationComponent} from '../../components/pagination/pagination.component';
@@ -25,7 +25,6 @@ import {PaginationComponent} from '../../components/pagination/pagination.compon
 })
 export class HomeComponent implements OnInit {
   recipes = signal<RecipeSearchResponse[] | undefined>(undefined);
-  sourcePages = signal<SourcePageResponse[]>([]);
   loading = signal(false);
   refreshingIngredientNames = signal(false);
   totalCount = signal(0);
@@ -58,15 +57,12 @@ export class HomeComponent implements OnInit {
     this.languageService.getAll().pipe(
       switchMap(() => {
         this.recipeService.queryParams.ingredientLanguageId = this.languageService.selectedLanguage()!.id!;
-        return forkJoin({
-          recipes: this.recipeService.search(),
-          sourcePages: this.recipeService.getSourcePages(),
-        });
-      })
+        return this.recipeService.getSourcePages();
+      }),
+      switchMap(() => this.recipeService.search())
     ).subscribe({
-      next: ({recipes, sourcePages}) => {
+      next: (recipes) => {
         this.usePageResponse(recipes);
-        this.sourcePages.set(sourcePages);
       },
       complete: () => this.loading.set(false),
       error: () => this.loading.set(false),

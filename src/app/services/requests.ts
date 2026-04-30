@@ -44,4 +44,5 @@ export interface RecipeSearchRequest {
   orderDirection?: RecipeOrderDirection;
   prepTime?: PrepTime;
   countIngredients?: CountIngredients;
+  sourcePages?: number[];
 }

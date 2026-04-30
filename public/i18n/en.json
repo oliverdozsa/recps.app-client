@@ -43,6 +43,7 @@
     "orderByPrepTime": "prep time",
     "orderByIngredientCount": "ingredient count",
     "orderAsc": "ascending",
-    "orderDesc": "descending"
+    "orderDesc": "descending",
+    "sourcePages": "Source pages"
   }
 }

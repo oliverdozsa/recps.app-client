@@ -43,6 +43,7 @@
     "orderByPrepTime": "elkészítési idő",
     "orderByIngredientCount": "hozzávalók száma",
     "orderAsc": "növekvő",
-    "orderDesc": "csökkenő"
+    "orderDesc": "csökkenő",
+    "sourcePages": "Oldalak"
   }
 }
