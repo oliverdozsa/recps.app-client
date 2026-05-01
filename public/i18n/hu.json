@@ -35,15 +35,15 @@
     "mins": "perc"
   },
   "recipeAdvancedSearchParams": {
-    "title": "Szűrők",
-    "prepTime": "Elkészítési idő",
-    "countIngredients": "Hozzávalók száma",
-    "orderBy": "Rendezés",
+    "title": "szűrők",
+    "prepTime": "elkészítési idő",
+    "countIngredients": "hozzávalók száma",
+    "orderBy": "rendezés",
     "orderByNone": "nincs",
     "orderByPrepTime": "elkészítési idő",
     "orderByIngredientCount": "hozzávalók száma",
     "orderAsc": "növekvő",
     "orderDesc": "csökkenő",
-    "sourcePages": "Oldalak"
+    "sourcePages": "oldalak"
   }
 }

@@ -28,14 +28,14 @@
 
       @if (orderBy) {
         <div class="join mt-2 w-full">
-          <button class="join-item btn btn-sm flex-1"
-                  [class.btn-primary]="orderDirection === 'asc'"
+          <button class="join-item btn btn-primary btn-sm flex-1"
+                  [class.btn-outline]="orderDirection != 'asc'"
                   (click)="setDirection('asc')">
             <span class="icon-[tabler--sort-ascending] size-4"></span>
             {{ "recipeAdvancedSearchParams.orderAsc" | translate }}
           </button>
-          <button class="join-item btn btn-sm flex-1"
-                  [class.btn-primary]="orderDirection === 'desc'"
+          <button class="join-item btn btn-primary btn-sm flex-1"
+                  [class.btn-outline]="orderDirection != 'desc'"
                   (click)="setDirection('desc')">
             <span class="icon-[tabler--sort-descending] size-4"></span>
             {{ "recipeAdvancedSearchParams.orderDesc" | translate }}
