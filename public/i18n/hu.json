@@ -33,5 +33,17 @@
   },
   "recipeCard": {
     "mins": "perc"
+  },
+  "recipeAdvancedSearchParams": {
+    "title": "szűrők",
+    "prepTime": "elkészítési idő",
+    "countIngredients": "hozzávalók száma",
+    "orderBy": "rendezés",
+    "orderByNone": "nincs",
+    "orderByPrepTime": "elkészítési idő",
+    "orderByIngredientCount": "hozzávalók száma",
+    "orderAsc": "növekvő",
+    "orderDesc": "csökkenő",
+    "sourcePages": "oldalak"
   }
 }

@@ -1,10 +1,11 @@
-import {inject, Injectable} from '@angular/core';
+import {inject, Injectable, signal} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable, Subject} from 'rxjs';
-import {IngredientSearchAndCategoryUnion, PageResponseRecipeSearchResponse} from './responses';
+import {Observable, Subject, tap} from 'rxjs';
+import {IngredientSearchAndCategoryUnion, PageResponseRecipeSearchResponse, SourcePageResponse} from './responses';
 import {RecipeSearchRequest} from './requests';
 import {environment} from '../../environments/environment';
 import {IngredientGroupRelation} from './common.data';
+import {LanguageService} from './language.service';
 
 interface PersistedRecipeQuery {
   timestamp: number;
@@ -38,9 +39,11 @@ export class RecipeService {
   categoryAsPercent: Record<number, boolean> = {};
 
   conflictingIngredients = new Set<number>();
+  sourcePages = signal<SourcePageResponse[]>([]);
 
   private http = inject(HttpClient);
   private baseUrl = environment.apiUrl;
+  private languageService = inject(LanguageService);
 
   constructor() {
     this.loadPersistedQuery();
@@ -48,7 +51,14 @@ export class RecipeService {
   }
 
   search(): Observable<PageResponseRecipeSearchResponse> {
+    this.setDefaultSourcePagesIfNeeded();
     return this.http.post<PageResponseRecipeSearchResponse>(`${this.baseUrl}/recipes/search`, this.queryParams);
+  }
+
+  getSourcePages(): Observable<SourcePageResponse[]> {
+    return this.http.get<SourcePageResponse[]>(`${this.baseUrl}/recipes/sourcePages`).pipe(
+      tap(pages => this.sourcePages.set(pages))
+    );
   }
 
   determineConflictingIngredients() {
@@ -160,5 +170,14 @@ export class RecipeService {
     }
 
     return false;
+  }
+
+  private setDefaultSourcePagesIfNeeded() {
+    if(localStorage.getItem(STORAGE_KEY) == null) {
+      const languageId = this.languageService.selectedLanguage()!.id;
+      this.queryParams.sourcePages = this.sourcePages()
+        .filter(s => s.languageId == languageId)
+        .map(s => s.id);
+    }
   }
 }

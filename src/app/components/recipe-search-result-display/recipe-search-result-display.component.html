@@ -1,4 +1,5 @@
 <div class="flex flex-wrap gap-4 justify-center mb-10">
+  <app-recipe-advanced-search-params></app-recipe-advanced-search-params>
   @for (recipe of recipes(); track recipe.id) {
     <app-recipe-card [recipe]="recipe"></app-recipe-card>
   }

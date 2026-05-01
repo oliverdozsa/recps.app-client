@@ -16,8 +16,14 @@ export interface PageResponseRecipeSearchResponse {
 }
 
 export interface LanguageResponse {
-  id?: number;
-  isoName?: string;
+  id: number;
+  isoName: string;
+}
+
+export interface SourcePageResponse {
+  id: number;
+  name: string;
+  languageId: number;
 }
 
 export interface IngredientSearchResponse {

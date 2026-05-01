@@ -33,5 +33,17 @@
   },
   "recipeCard": {
     "mins": "mins"
+  },
+  "recipeAdvancedSearchParams": {
+    "title": "filters",
+    "prepTime": "prep time",
+    "countIngredients": "ingredient count",
+    "orderBy": "order by",
+    "orderByNone": "none",
+    "orderByPrepTime": "prep time",
+    "orderByIngredientCount": "ingredient count",
+    "orderAsc": "ascending",
+    "orderDesc": "descending",
+    "sourcePages": "source pages"
   }
 }

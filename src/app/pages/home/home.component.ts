@@ -3,9 +3,6 @@ import {
   RecipeSearchResultDisplayComponent
 } from '../../components/recipe-search-result-display/recipe-search-result-display.component';
 import {
-  RecipeAdvancedSearchParamsComponent
-} from '../../components/recipe-advanced-search-params/recipe-advanced-search-params.component';
-import {
   RecipeMainSearchParamsComponent
 } from '../../components/recipe-main-search-params/recipe-main-search-params.component';
 import {RecipeService} from '../../services/recipe.service';
@@ -20,7 +17,6 @@ import {PaginationComponent} from '../../components/pagination/pagination.compon
   selector: 'app-home',
   imports: [
     RecipeSearchResultDisplayComponent,
-    RecipeAdvancedSearchParamsComponent,
     RecipeMainSearchParamsComponent,
     PaginationComponent
   ],
@@ -61,10 +57,13 @@ export class HomeComponent implements OnInit {
     this.languageService.getAll().pipe(
       switchMap(() => {
         this.recipeService.queryParams.ingredientLanguageId = this.languageService.selectedLanguage()!.id!;
-        return this.recipeService.search();
-      })
+        return this.recipeService.getSourcePages();
+      }),
+      switchMap(() => this.recipeService.search())
     ).subscribe({
-      next: response => this.usePageResponse(response),
+      next: (recipes) => {
+        this.usePageResponse(recipes);
+      },
       complete: () => this.loading.set(false),
       error: () => this.loading.set(false),
     });

@@ -1,0 +1,13 @@
+<div class="dual-range-container">
+  <div class="dual-range-track" [style]="trackFillStyle"></div>
+  <input #lowerInput type="range" class="dual-range-thumb"
+         [min]="min" [max]="max" [step]="step" [value]="lowerThumb"
+         (input)="onLowerChange($any($event.target).value)"/>
+  <input #upperInput type="range" class="dual-range-thumb"
+         [min]="min" [max]="max" [step]="step" [value]="upperThumb"
+         (input)="onUpperChange($any($event.target).value)"/>
+</div>
+<div class="flex justify-between text-xs mt-1 opacity-60">
+  <span>{{ lowerThumb }}</span>
+  <span>{{ upperThumb == max ? upperThumb + "+" : upperThumb }}</span>
+</div>
