@@ -1,7 +1,8 @@
 <div class="card bg-base-100 p-4 w-72">
   <a [href]="recipe().url" target="_blank">
-    @if (recipe().imageUrl) {
-      <img [src]="recipe().imageUrl" [alt]="recipe().name" class="my-2 rounded w-full object-cover h-40"/>
+    @if (recipe().imageUrl && !imageError()) {
+      <img [src]="recipe().imageUrl" [alt]="recipe().name" class="my-2 rounded w-full object-cover h-40"
+           (error)="imageError.set(true)"/>
     } @else {
       <div class="my-2 rounded w-full object-cover h-40 flex justify-center items-center">
         <div>

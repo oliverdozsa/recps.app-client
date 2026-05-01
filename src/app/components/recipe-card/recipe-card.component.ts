@@ -1,4 +1,4 @@
-import {Component, computed, inject, input} from '@angular/core';
+import {Component, computed, effect, inject, input, signal} from '@angular/core';
 import {RecipeSearchResponse, unionIds} from '../../services/responses';
 import {TranslatePipe} from '@ngx-translate/core';
 import {RecipeService} from '../../services/recipe.service';
@@ -18,6 +18,8 @@ export class RecipeCardComponent {
   private recipeService = inject(RecipeService);
 
   recipe = input.required<RecipeSearchResponse>();
+  imageError = signal(false);
+
   ingredients = computed(() => {
     const ingredients = this.recipe().ingredients;
     ingredients.sort((a, b) => this.compareIngredients(a, b));
