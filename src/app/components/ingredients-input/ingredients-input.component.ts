@@ -103,7 +103,7 @@ export class IngredientsInputComponent implements OnInit {
 
   display(item: IngredientSearchAndCategoryUnion): string {
     if (item.ingredient) {
-      return unionName(item);
+      return unionName(item) + (item.ingredient.alternatives?.length ? ` (${item.ingredient.alternatives.join(",")})` : "");
     } else {
       return "🏷️ " + unionName(item);
     }
