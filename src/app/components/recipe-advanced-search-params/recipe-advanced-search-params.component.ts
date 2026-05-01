@@ -1,9 +1,11 @@
-import {Component, inject} from '@angular/core';
+import {Component, computed, inject} from '@angular/core';
 import {RecipeService} from '../../services/recipe.service';
 import {RecipeOrderBy, RecipeOrderDirection} from '../../services/requests';
 import {FormsModule} from '@angular/forms';
 import {TranslatePipe} from '@ngx-translate/core';
 import {DualRangeComponent} from '../dual-range/dual-range.component';
+import {LanguageService} from '../../services/language.service';
+import {SourcePageResponse} from '../../services/responses';
 
 @Component({
   selector: 'app-recipe-advanced-search-params',
@@ -13,6 +15,43 @@ import {DualRangeComponent} from '../dual-range/dual-range.component';
 })
 export class RecipeAdvancedSearchParamsComponent {
   recipeService = inject(RecipeService);
+  private languageService = inject(LanguageService);
+
+  sourcePageGroups = computed(() => {
+    const langMap = new Map(this.languageService.languages().map(l => [l.id, l]));
+    const grouped = new Map<number, { languageId: number; languageName: string; pages: SourcePageResponse[] }>();
+    for (const page of this.recipeService.sourcePages()) {
+      if (!grouped.has(page.languageId)) {
+        grouped.set(page.languageId, {
+          languageId: page.languageId,
+          languageName: langMap.get(page.languageId)?.isoName.toUpperCase() ?? '?',
+          pages: []
+        });
+      }
+      grouped.get(page.languageId)!.pages.push(page);
+    }
+    return [...grouped.values()];
+  });
+
+  private collapsedGroups = new Set<number>();
+
+  isGroupExpanded(langId: number): boolean {
+    return !this.collapsedGroups.has(langId);
+  }
+
+  toggleGroup(langId: number): void {
+    if (this.collapsedGroups.has(langId)) {
+      this.collapsedGroups.delete(langId);
+    } else {
+      this.collapsedGroups.add(langId);
+    }
+  }
+
+  selectedCountInGroup(langId: number): number {
+    return this.recipeService.sourcePages()
+      .filter(p => p.languageId === langId && this.isSourcePageSelected(p.id))
+      .length;
+  }
 
   get orderBy(): RecipeOrderBy | '' {
     return this.recipeService.queryParams.orderBy ?? '';
