@@ -1,4 +1,13 @@
-# RecpsAppClient
+# recps.app-server
+This is the client side part of <https://recps.app>, an application that aggregates recipes from various sources and makes them searchable.
+
+# Features
+- 🥕 Searching recipes by ingredients, ingredient categories
+- 🤓 Advanced searching by using group of ingredients, and setting the relationship between groups
+- 🎯 Filtering recipes by number of ingredients, preparation time, and source page
+- 🌎 Multilingual support for ingredients
+
+# Project structure
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.0.7.
 
