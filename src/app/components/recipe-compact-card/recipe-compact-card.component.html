@@ -1,0 +1,37 @@
+<div class="card image-full bg-base-100 w-72 h-20 overflow-hidden">
+  <figure>
+    <a [href]="recipe.url" target="_blank">
+      @if (recipe.imageUrl && !imageError()) {
+        <img [src]="recipe.imageUrl" [alt]="recipe.name" class="my-2 rounded w-full object-cover h-20"
+             (error)="imageError.set(true)"/>
+      } @else {
+        <div class="my-2 rounded w-full object-cover h-40 flex justify-center items-center">
+          <div>
+            <span class="icon-[tabler--bowl-spoon] size-20 text-neutral-500"></span>
+          </div>
+        </div>
+      }
+    </a>
+  </figure>
+
+  <div class="card-body px-3 py-1.5 gap-0.5">
+    <div class="flex min-w-0">
+      <div class="font-semibold grow min-w-0"><a class="block truncate max-w-54" [href]="recipe.url"
+                                                 target="_blank">{{ recipe.name }}</a></div>
+      <div>
+        <a [href]="recipe.url" target="_blank" class="link link-primary"><span
+          class="icon-[tabler--external-link] size-5"></span></a>
+      </div>
+    </div>
+
+    @if (recipe.cookingTime) {
+      <div class="text-sm text-white">{{ recipe.cookingTime }} {{ "recipeCard.mins" | translate }}</div>
+    }
+
+    <div class="text-sm text-white p-0">
+      {{ recipe.sourcePage }}
+    </div>
+  </div>
+
+
+</div>

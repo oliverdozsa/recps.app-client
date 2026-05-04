@@ -1,0 +1,3 @@
+::ng-deep app-recipe-compact-card .image-full::before {
+  opacity: 0.56;
+}
