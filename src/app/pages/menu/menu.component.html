@@ -1,0 +1,106 @@
+<div class="p-4 flex flex-col gap-4">
+
+  <!-- Header -->
+  <div class="flex flex-wrap items-center gap-4">
+    <h1 class="text-2xl font-bold">Menu Planner</h1>
+    <div class="join">
+      <button class="join-item btn btn-sm" (click)="decreaseDays()" [disabled]="numDays() <= 1">
+        <span class="icon-[tabler--minus] size-4"></span>
+      </button>
+      <span class="join-item btn btn-sm btn-ghost pointer-events-none">{{ numDays() }} days</span>
+      <button class="join-item btn btn-sm" (click)="increaseDays()">
+        <span class="icon-[tabler--plus] size-4"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Status bar -->
+  @if (selectedRecipe() !== null) {
+    <div role="alert" class="alert alert-info py-2 flex items-center gap-2">
+      <span class="icon-[tabler--hand-click] size-5"></span>
+      <span class="flex-1 text-sm"><strong>{{ selectedRecipe()!.name }}</strong> selected — tap a day column to place it</span>
+      <button class="btn btn-sm btn-ghost btn-circle" (click)="selectedRecipe.set(null)">
+        <span class="icon-[tabler--x] size-4"></span>
+      </button>
+    </div>
+  } @else {
+    <div role="alert" class="alert py-2">
+      <span class="icon-[tabler--info-circle] size-5"></span>
+      <span class="text-sm">Select a recipe from the pool, then tap a day column to place it</span>
+    </div>
+  }
+
+  <!-- Main layout -->
+  <div class="flex flex-col lg:flex-row gap-6 items-start">
+
+    <!-- Pool: marked recipes -->
+    <div class="w-full lg:w-80 shrink-0 flex flex-col gap-2">
+      <h2 class="font-semibold text-base-content/70">
+        Marked Recipes
+        <span class="badge badge-neutral ml-1">{{ markedRecipes.length }}</span>
+      </h2>
+      <!-- Horizontal scroll on mobile, vertical list on desktop -->
+      <div class="flex flex-row lg:flex-col overflow-x-auto lg:overflow-y-auto gap-2 pb-1 lg:pb-0 lg:max-h-[calc(100vh-18rem)]">
+        @for (recipe of markedRecipes; track recipe.id) {
+          <div class="relative shrink-0 cursor-pointer rounded-2xl transition-shadow duration-150"
+               [class.ring-2]="selectedRecipe() === recipe"
+               [class.ring-primary]="selectedRecipe() === recipe"
+               (click)="selectRecipe(recipe)">
+            <app-recipe-compact-card [recipe]="recipe"/>
+            <!-- Transparent overlay to capture clicks instead of following the card's links -->
+            <div class="absolute inset-0 rounded-2xl"></div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Day columns -->
+    <div class="w-full overflow-x-auto">
+      <div class="flex flex-col lg:flex-row gap-3 pb-2 lg:min-w-max">
+        @for (recipes of menuDays(); track $index; let i = $index) {
+          <div class="card w-full lg:w-80 bg-base-200 transition-colors duration-150"
+               [class.border-2]="selectedRecipe() !== null"
+               [class.border-primary]="selectedRecipe() !== null"
+               [class.cursor-pointer]="selectedRecipe() !== null"
+               (click)="placeInDay(i)">
+            <div class="card-body p-3 gap-2">
+              <h3 class="card-title text-base">Day {{ i + 1 }}</h3>
+
+              <!-- Placed recipes -->
+              <div class="flex flex-col gap-1.5">
+                @for (recipe of recipes; track $index; let j = $index) {
+                  <!-- stopPropagation prevents accidental placeInDay when clicking on a placed card -->
+                  <div class="relative shrink-0" (click)="$event.stopPropagation()">
+                    <app-recipe-compact-card [recipe]="recipe"/>
+                    <button class="btn btn-circle btn-xs btn-error absolute top-1 right-1 z-10"
+                            (click)="removeFromDay(i, j, $event)">
+                      <span class="icon-[tabler--x] size-3"></span>
+                    </button>
+                  </div>
+                }
+              </div>
+
+              <!-- Empty state / placement hint -->
+              @if (recipes.length === 0) {
+                <div class="flex flex-col items-center justify-center py-6 text-base-content/40 gap-1">
+                  @if (selectedRecipe() !== null) {
+                    <span class="icon-[tabler--circle-plus] size-8"></span>
+                    <span class="text-sm">Tap to place here</span>
+                  } @else {
+                    <span class="icon-[tabler--bowl-spoon] size-8"></span>
+                    <span class="text-sm">No recipes yet</span>
+                  }
+                </div>
+              }
+
+              @if (recipes.length > 0 && selectedRecipe() !== null) {
+                <div class="text-center text-primary text-xs py-1">Tap to add another</div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+  </div>
+</div>

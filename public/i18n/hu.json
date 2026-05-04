@@ -45,5 +45,8 @@
     "orderAsc": "növekvő",
     "orderDesc": "csökkenő",
     "sourcePages": "oldalak"
+  },
+  "menu": {
+    "title": "menü tervező"
   }
 }

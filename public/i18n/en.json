@@ -45,5 +45,8 @@
     "orderAsc": "ascending",
     "orderDesc": "descending",
     "sourcePages": "source pages"
+  },
+  "menu": {
+    "title": "menu planner"
   }
 }
