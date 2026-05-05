@@ -14,5 +14,10 @@ export class RecipeCompactCardComponent {
   @Input()
   recipe!: RecipeSearchResponse;
 
+  @Input()
+  selected: boolean = false;
+
   imageError = signal(false);
+
+
 }

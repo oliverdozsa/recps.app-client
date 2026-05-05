@@ -40,13 +40,11 @@
         <span class="badge badge-neutral ml-1">{{ markedRecipes.length }}</span>
       </h2>
       <!-- Horizontal scroll on mobile, vertical list on desktop -->
-      <div class="flex flex-row lg:flex-col overflow-x-auto lg:overflow-y-auto gap-2 pb-1 lg:pb-0 lg:max-h-[calc(100vh-18rem)]">
+      <div class="py-1 flex flex-row lg:flex-col overflow-x-auto lg:overflow-y-auto pb-1 lg:pb-0 lg:max-h-[calc(100vh-18rem)]">
         @for (recipe of markedRecipes; track recipe.id) {
-          <div class="relative shrink-0 cursor-pointer rounded-2xl transition-shadow duration-150"
-               [class.ring-2]="selectedRecipe() === recipe"
-               [class.ring-primary]="selectedRecipe() === recipe"
+          <div class="ms-1 my-1 relative shrink-0 cursor-pointer rounded-2xl transition-shadow duration-150"
                (click)="selectRecipe(recipe)">
-            <app-recipe-compact-card [recipe]="recipe"/>
+            <app-recipe-compact-card [recipe]="recipe" [selected]="selectedRecipe() === recipe"/>
             <!-- Transparent overlay to capture clicks instead of following the card's links -->
             <div class="absolute inset-0 rounded-2xl"></div>
           </div>
@@ -55,11 +53,11 @@
     </div>
 
     <!-- Day columns -->
-    <div class="w-full overflow-x-auto">
+    <div class="ps-2 pt-1 w-full overflow-x-auto">
       <div class="flex flex-col lg:flex-row gap-3 pb-2 lg:min-w-max">
         @for (recipes of menuDays(); track $index; let i = $index) {
           <div class="card w-full lg:w-80 bg-base-200 transition-colors duration-150"
-               [class.border-2]="selectedRecipe() !== null"
+               [class.border-4]="selectedRecipe() !== null"
                [class.border-primary]="selectedRecipe() !== null"
                [class.cursor-pointer]="selectedRecipe() !== null"
                (click)="placeInDay(i)">
