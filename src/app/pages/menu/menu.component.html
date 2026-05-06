@@ -4,11 +4,11 @@
   <div class="flex flex-wrap items-center gap-4">
     <h1 class="text-2xl font-bold">Menu Planner</h1>
     <div class="join">
-      <button class="join-item btn btn-sm" (click)="decreaseDays()" [disabled]="numDays() <= 1">
+      <button class="join-item btn btn-sm btn-text" (click)="decreaseDays()" [disabled]="numDays() <= 1">
         <span class="icon-[tabler--minus] size-4"></span>
       </button>
-      <span class="join-item btn btn-sm btn-ghost pointer-events-none">{{ numDays() }} days</span>
-      <button class="join-item btn btn-sm" (click)="increaseDays()">
+      <span class="join-item btn btn-sm btn-text pointer-events-none">{{ numDays() }} days</span>
+      <button class="join-item btn btn-sm btn-text" (click)="increaseDays()">
         <span class="icon-[tabler--plus] size-4"></span>
       </button>
     </div>
@@ -16,16 +16,16 @@
 
   <!-- Status bar -->
   @if (selectedRecipe() !== null) {
-    <div role="alert" class="alert alert-info py-2 flex items-center gap-2">
-      <span class="icon-[tabler--hand-click] size-5"></span>
+    <div role="alert" class="alert alert-soft bg-vanilla-cream-300 flex items-center py-2 gap-2 h-10">
+      <span class="icon-[tabler--hand-click] shrink-0 size-5"></span>
       <span class="flex-1 text-sm"><strong>{{ selectedRecipe()!.name }}</strong> selected — tap a day column to place it</span>
-      <button class="btn btn-sm btn-ghost btn-circle" (click)="selectedRecipe.set(null)">
+      <button class="btn btn-xs btn-text btn-circle" (click)="selectedRecipe.set(null)">
         <span class="icon-[tabler--x] size-4"></span>
       </button>
     </div>
   } @else {
-    <div role="alert" class="alert py-2">
-      <span class="icon-[tabler--info-circle] size-5"></span>
+    <div role="alert" class="alert alert-soft flex items-center gap-2 py-2 h-10">
+      <span class="icon-[tabler--info-circle] shrink-0 size-5"></span>
       <span class="text-sm">Select a recipe from the pool, then tap a day column to place it</span>
     </div>
   }
@@ -57,8 +57,8 @@
       <div class="flex flex-col lg:flex-row gap-3 pb-2 lg:min-w-max">
         @for (recipes of menuDays(); track $index; let i = $index) {
           <div class="card w-full lg:w-80 bg-base-200 transition-colors duration-150"
-               [class.border-4]="selectedRecipe() !== null"
-               [class.border-primary]="selectedRecipe() !== null"
+               [class.inset-ring-4]="selectedRecipe() !== null"
+               [class.inset-ring-primary]="selectedRecipe() !== null"
                [class.cursor-pointer]="selectedRecipe() !== null"
                (click)="placeInDay(i)">
             <div class="card-body p-3 gap-2">
