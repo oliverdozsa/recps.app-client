@@ -17,13 +17,21 @@
   </figure>
 
   <div class="card-body px-3 py-1.5 gap-0.5">
-    <div class="flex min-w-0">
-      <div class="font-semibold shrink min-w-0"><a class="block truncate max-w-54" [href]="recipe.url"
+    <div class="flex items-center min-w-0 max-w-66">
+      <div class="font-semibold grow min-w-0"><a class="block truncate" [href]="recipe.url"
                                                  target="_blank">{{ recipe.name }}</a></div>
       <div>
-        <a [href]="recipe.url" target="_blank" class="link link-primary"><span
-          class="icon-[tabler--external-link] size-5"></span></a>
+        <a [href]="recipe.url" target="_blank" class="link link-primary flex item-center">
+          <div
+          class="icon-[tabler--external-link] size-5"></div></a>
       </div>
+      @if (editMode) {
+        <div>
+          <button class="btn btn-circle btn-soft btn-xs btn-error ms-1" (click)="onDeleteClicked.emit()">
+            <span class="icon-[tabler--trash] size-4"></span>
+          </button>
+        </div>
+      }
     </div>
 
     @if (recipe.cookingTime) {

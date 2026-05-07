@@ -1,4 +1,4 @@
-import {Component, computed, inject, OnInit, signal} from '@angular/core';
+import {Component, computed, inject, model, OnInit, signal} from '@angular/core';
 import {LanguageService} from '../../services/language.service';
 import {RecipeSearchResponse} from '../../services/responses';
 import {RecipeCompactCardComponent} from '../recipe-compact-card/recipe-compact-card.component';
@@ -57,10 +57,18 @@ const MOCK_RECIPES: RecipeSearchResponse[] = [
 export class MenuViewerEditorComponent implements OnInit {
   languageService = inject(LanguageService);
 
+  isEditMode = model(false);
   markedRecipes: RecipeSearchResponse[] = MOCK_RECIPES;
   menuDays = signal<RecipeSearchResponse[][]>([[], [], []]);
   numDays = computed(() => this.menuDays().length);
   selectedRecipe = signal<RecipeSearchResponse | null>(null);
+
+  toggleMode(): void {
+    this.isEditMode.update(v => !v);
+    if (!this.isEditMode()) {
+      this.selectedRecipe.set(null);
+    }
+  }
 
   ngOnInit(): void {
     this.languageService.getAllIfNeeded();
@@ -79,8 +87,7 @@ export class MenuViewerEditorComponent implements OnInit {
     this.selectedRecipe.set(null);
   }
 
-  removeFromDay(dayIndex: number, recipeIndex: number, event: Event): void {
-    event.stopPropagation();
+  removeFromDay(dayIndex: number, recipeIndex: number): void {
     this.menuDays.update(days =>
       days.map((d, i) => i === dayIndex ? d.filter((_, j) => j !== recipeIndex) : d)
     );
