@@ -43,6 +43,7 @@ export class MenuViewerEditorComponent implements OnInit {
       days.map((d, i) => i === dayIndex ? [...d, recipe] : d)
     );
     this.selectedRecipe.set(null);
+    this.markedRecipesService.remove(recipe);
   }
 
   removeFromDay(dayIndex: number, recipeIndex: number): void {

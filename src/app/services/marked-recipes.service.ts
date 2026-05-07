@@ -23,6 +23,12 @@ export class MarkedRecipesService {
     });
   }
 
+  remove(recipe: RecipeSearchResponse) {
+    this._markedRecipes.update(recipes => {
+      return recipes.filter(r => r.id != recipe.id)
+    });
+  }
+
   private loadFromStorage(): RecipeSearchResponse[] {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);

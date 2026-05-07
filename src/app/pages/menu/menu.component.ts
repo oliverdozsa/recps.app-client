@@ -1,5 +1,6 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {MenuViewerEditorComponent} from '../../components/menu-viewer-editor/menu-viewer-editor.component';
+import {MarkedRecipesService} from '../../services/marked-recipes.service';
 
 
 @Component({
@@ -11,4 +12,5 @@ import {MenuViewerEditorComponent} from '../../components/menu-viewer-editor/men
   styleUrl: './menu.component.css'
 })
 export class MenuComponent {
+  markedRecipesService = inject(MarkedRecipesService)
 }
