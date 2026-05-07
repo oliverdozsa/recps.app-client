@@ -2,6 +2,8 @@ import {Component, computed, inject, Input, input, signal} from '@angular/core';
 import {RecipeSearchResponse, unionIds} from '../../services/responses';
 import {TranslatePipe} from '@ngx-translate/core';
 import {RecipeService} from '../../services/recipe.service';
+import {MarkedRecipesService} from '../../services/marked-recipes.service';
+import {AuthService} from '../../services/auth.service';
 import {Ingredient} from '../../services/common.data';
 import {NgClass} from '@angular/common';
 
@@ -16,6 +18,8 @@ import {NgClass} from '@angular/common';
 })
 export class RecipeCardComponent {
   private recipeService = inject(RecipeService);
+  protected markedRecipesService = inject(MarkedRecipesService);
+  protected authService = inject(AuthService);
 
   @Input()
   recipe!: RecipeSearchResponse;
