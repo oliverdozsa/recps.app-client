@@ -16,7 +16,7 @@ export class MenuViewerEditorComponent implements OnInit {
   languageService = inject(LanguageService);
   markedRecipesService = inject(MarkedRecipesService);
 
-  isEditMode = model(false);
+  isEditMode = signal(false);
   menuDays = signal<RecipeSearchResponse[][]>([[], [], []]);
   numDays = computed(() => this.menuDays().length);
   selectedRecipe = signal<RecipeSearchResponse | null>(null);
@@ -32,6 +32,7 @@ export class MenuViewerEditorComponent implements OnInit {
 
   ngOnInit(): void {
     this.languageService.getAllIfNeeded();
+    this.isEditMode.set(this.markedRecipesService.markedRecipes().length > 0);
   }
 
   selectRecipe(recipe: RecipeSearchResponse): void {
@@ -65,6 +66,15 @@ export class MenuViewerEditorComponent implements OnInit {
   }
 
   removeFromDay(dayIndex: number, recipeIndex: number): void {
+    const recipe = this.menuDays()[dayIndex][recipeIndex];
+
+    console.log(`id = ${this.selectedRecipe()?.id}`)
+
+    if(this.selectedRecipe() && this.selectedRecipe()?.id === recipe.id) {
+      console.log("selected to nuk");
+      this.selectedRecipe.set(null);
+    }
+
     this.menuDays.update(days =>
       days.map((d, i) => i === dayIndex ? d.filter((_, j) => j !== recipeIndex) : d)
     );
