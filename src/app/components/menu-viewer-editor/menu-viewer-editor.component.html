@@ -18,7 +18,7 @@
       <span class="text-sm text-base-content/60">{{ numDays() }} days</span>
     }
 
-    <button class="btn btn-sm ms-auto" [class.btn-primary]="isEditMode()" [class.btn-ghost]="!isEditMode()" (click)="toggleMode()">
+    <button class="btn btn-sm ms-auto" [class.btn-primary]="isEditMode()" (click)="toggleMode()">
       @if (isEditMode()) {
         <span class="icon-[tabler--device-floppy] size-4"></span>
         Save
@@ -48,17 +48,17 @@
   }
 
   <!-- Main layout -->
-  <div class="flex flex-col lg:flex-row gap-6 items-start">
+  <div class="flex flex-col md:flex-row gap-6 items-start">
 
     @if (isEditMode()) {
       <!-- Pool: marked recipes -->
-      <div class="w-full lg:w-80 shrink-0 flex flex-col gap-2">
+      <div class="w-full md:w-70 shrink-0 flex flex-col gap-2">
         <h2 class="font-semibold text-base-content/70">
           Marked Recipes
           <span class="badge badge-neutral ml-1">{{ markedRecipes.length }}</span>
         </h2>
         <!-- Horizontal scroll on mobile, vertical list on desktop -->
-        <div class="py-1 flex flex-row lg:flex-col overflow-x-auto lg:overflow-y-auto pb-1 lg:pb-0 lg:max-h-[calc(100vh-18rem)]">
+        <div class="py-1 flex flex-row md:flex-col overflow-x-auto md:overflow-y-auto pb-1 md:pb-0 md:max-h-[calc(100vh-18rem)]">
           @for (recipe of markedRecipes; track recipe.id) {
             <div class="ms-1 my-1 relative shrink-0 cursor-pointer rounded-2xl transition-shadow duration-150"
                  (click)="selectRecipe(recipe)">
@@ -73,9 +73,9 @@
 
     <!-- Day columns -->
     <div class="ps-2 pt-1 w-full overflow-x-auto">
-      <div class="flex flex-col lg:flex-row gap-3 pb-2 lg:min-w-max">
+      <div class="flex flex-col md:flex-row gap-3 pb-2 md:min-w-max">
         @for (recipes of menuDays(); track $index; let i = $index) {
-          <div class="card w-full lg:w-80 bg-base-200 transition-colors duration-150"
+          <div class="card w-72 bg-base-200 transition-colors duration-150"
                [class.inset-ring-4]="isEditMode() && selectedRecipe() !== null"
                [class.inset-ring-primary]="isEditMode() && selectedRecipe() !== null"
                [class.cursor-pointer]="isEditMode() && selectedRecipe() !== null"
