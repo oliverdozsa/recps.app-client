@@ -20,11 +20,13 @@ export class MenuViewerEditorComponent implements OnInit {
   menuDays = signal<RecipeSearchResponse[][]>([[], [], []]);
   numDays = computed(() => this.menuDays().length);
   selectedRecipe = signal<RecipeSearchResponse | null>(null);
+  selectedFromDay = signal<{ recipe: RecipeSearchResponse; dayIndex: number; recipeIndex: number } | null>(null);
 
   toggleMode(): void {
     this.isEditMode.update(v => !v);
     if (!this.isEditMode()) {
       this.selectedRecipe.set(null);
+      this.selectedFromDay.set(null);
     }
   }
 
@@ -33,7 +35,15 @@ export class MenuViewerEditorComponent implements OnInit {
   }
 
   selectRecipe(recipe: RecipeSearchResponse): void {
+    this.selectedFromDay.set(null);
     this.selectedRecipe.update(current => current === recipe ? null : recipe);
+  }
+
+  selectFromDay(recipe: RecipeSearchResponse, dayIndex: number, recipeIndex: number): void {
+    this.selectedRecipe.set(null);
+    this.selectedFromDay.update(current =>
+      current?.recipe === recipe ? null : { recipe, dayIndex, recipeIndex }
+    );
   }
 
   placeInDay(dayIndex: number): void {
@@ -44,6 +54,14 @@ export class MenuViewerEditorComponent implements OnInit {
     );
     this.selectedRecipe.set(null);
     this.markedRecipesService.remove(recipe);
+  }
+
+  moveBackToPool(): void {
+    const sel = this.selectedFromDay();
+    if (!sel) return;
+    this.removeFromDay(sel.dayIndex, sel.recipeIndex);
+    this.markedRecipesService.toggle(sel.recipe);
+    this.selectedFromDay.set(null);
   }
 
   removeFromDay(dayIndex: number, recipeIndex: number): void {

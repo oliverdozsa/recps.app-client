@@ -27,7 +27,7 @@
       </div>
       @if (editMode) {
         <div>
-          <button class="btn btn-circle btn-soft btn-xs btn-error ms-1" (click)="onDeleteClicked.emit()">
+          <button class="btn btn-circle btn-soft btn-xs btn-error ms-1" (click)="$event.stopPropagation(); onDeleteClicked.emit()">
             <span class="icon-[tabler--trash] size-4"></span>
           </button>
         </div>

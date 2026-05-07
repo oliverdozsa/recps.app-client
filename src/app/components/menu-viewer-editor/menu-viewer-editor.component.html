@@ -31,7 +31,15 @@
 
   @if (isEditMode()) {
     <!-- Status bar -->
-    @if (selectedRecipe() !== null) {
+    @if (selectedFromDay() !== null) {
+      <div role="alert" class="alert alert-soft bg-vanilla-cream-300 flex items-center py-2 gap-2 h-10">
+        <span class="icon-[tabler--hand-click] shrink-0 size-5"></span>
+        <span class="flex-1 text-sm"><strong>{{ selectedFromDay()!.recipe.name }}</strong> — Day {{ selectedFromDay()!.dayIndex + 1 }}</span>
+        <button class="btn btn-xs btn-text btn-circle" (click)="selectedFromDay.set(null)">
+          <span class="icon-[tabler--x] size-4"></span>
+        </button>
+      </div>
+    } @else if (selectedRecipe() !== null) {
       <div role="alert" class="alert alert-soft bg-vanilla-cream-300 flex items-center py-2 gap-2 h-10">
         <span class="icon-[tabler--hand-click] shrink-0 size-5"></span>
         <span class="flex-1 text-sm"><strong>{{ selectedRecipe()!.name }}</strong> selected — tap a day column to place it</span>
@@ -86,9 +94,19 @@
               <!-- Placed recipes -->
               <div class="flex flex-col gap-1.5">
                 @for (recipe of recipes; track $index; let j = $index) {
-                  <div class="relative shrink-0" (click)="$event.stopPropagation()">
-                    <app-recipe-compact-card [recipe]="recipe" [editMode]="isEditMode()" (onDeleteClicked)="removeFromDay(i, j)"/>
+                  <div class="relative shrink-0"
+                       (click)="$event.stopPropagation(); isEditMode() && selectFromDay(recipe, i, j)">
+                    <app-recipe-compact-card [recipe]="recipe" [editMode]="isEditMode()"
+                                             [selected]="selectedFromDay()?.recipe === recipe"
+                                             (onDeleteClicked)="removeFromDay(i, j)"/>
                   </div>
+                  @if (selectedFromDay()?.recipe === recipe) {
+                    <button class="btn btn-xs btn-soft btn-primary w-full mt-1"
+                            (click)="$event.stopPropagation(); moveBackToPool()">
+                      <span class="icon-[tabler--arrow-back-up] size-4"></span>
+                      Move to pool
+                    </button>
+                  }
                 }
               </div>
 
