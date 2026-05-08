@@ -34,7 +34,7 @@
     @if (selectedFromDay() !== null) {
       <div role="alert" class="alert alert-soft bg-vanilla-cream-300 flex items-center py-2 gap-2 h-10">
         <span class="icon-[tabler--hand-click] shrink-0 size-5"></span>
-        <span class="flex-1 text-sm"><strong>{{ selectedFromDay()!.recipe.name }}</strong> — Day {{ selectedFromDay()!.dayIndex + 1 }}</span>
+        <span class="flex-1 text-sm"><strong>{{ selectedFromDay()!.recipe.name }}</strong> — tap a day column to move it there</span>
         <button class="btn btn-xs btn-text btn-circle" (click)="selectedFromDay.set(null)">
           <span class="icon-[tabler--x] size-4"></span>
         </button>
@@ -84,10 +84,12 @@
       <div class="flex flex-col md:flex-row gap-3 pb-2 md:min-w-max">
         @for (recipes of menuDays(); track $index; let i = $index) {
           <div class="card w-72 bg-base-100 transition-colors duration-150"
-               [class.inset-ring-4]="isEditMode() && selectedRecipe() !== null"
+               [class.inset-ring-4]="isEditMode() && (selectedRecipe() !== null || selectedFromDay() !== null)"
                [class.inset-ring-primary]="isEditMode() && selectedRecipe() !== null"
-               [class.cursor-pointer]="isEditMode() && selectedRecipe() !== null"
-               (click)="isEditMode() && placeInDay(i)">
+               [class.inset-ring-warning]="isEditMode() && selectedFromDay() !== null"
+               [class.opacity-50]="isEditMode() && selectedFromDay() !== null && selectedFromDay()!.dayIndex === i"
+               [class.cursor-pointer]="isEditMode() && (selectedRecipe() !== null || selectedFromDay() !== null)"
+               (click)="onDayCardClick(i)">
             <div class="card-body p-3 gap-2">
               <h3 class="card-title text-base">Day {{ i + 1 }}</h3>
 

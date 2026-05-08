@@ -65,14 +65,33 @@ export class MenuViewerEditorComponent implements OnInit {
     this.selectedFromDay.set(null);
   }
 
+  moveToDay(targetDayIndex: number): void {
+    const sel = this.selectedFromDay();
+    if (!sel || sel.dayIndex === targetDayIndex) return;
+    this.menuDays.update(days =>
+      days.map((d, i) => {
+        if (i === sel.dayIndex) return d.filter((_, j) => j !== sel.recipeIndex);
+        if (i === targetDayIndex) return [...d, sel.recipe];
+        return d;
+      })
+    );
+    this.selectedFromDay.set(null);
+  }
+
+  onDayCardClick(dayIndex: number): void {
+    if (!this.isEditMode()) return;
+    if (this.selectedRecipe() !== null) {
+      this.placeInDay(dayIndex);
+    } else if (this.selectedFromDay() !== null) {
+      this.moveToDay(dayIndex);
+    }
+  }
+
   removeFromDay(dayIndex: number, recipeIndex: number): void {
     const recipe = this.menuDays()[dayIndex][recipeIndex];
 
-    console.log(`id = ${this.selectedRecipe()?.id}`)
-
-    if(this.selectedRecipe() && this.selectedRecipe()?.id === recipe.id) {
-      console.log("selected to nuk");
-      this.selectedRecipe.set(null);
+    if(this.selectedFromDay() && this.selectedFromDay()?.recipe.id === recipe.id) {
+      this.selectedFromDay.set(null);
     }
 
     this.menuDays.update(days =>
