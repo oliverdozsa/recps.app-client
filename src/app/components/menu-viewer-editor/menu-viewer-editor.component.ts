@@ -17,6 +17,7 @@ export class MenuViewerEditorComponent implements OnInit {
   markedRecipesService = inject(MarkedRecipesService);
 
   isEditMode = signal(false);
+  menuName = signal('');
   menuDays = signal<RecipeSearchResponse[][]>([[], [], []]);
   numDays = computed(() => this.menuDays().length);
   selectedRecipe = signal<RecipeSearchResponse | null>(null);

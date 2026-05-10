@@ -2,7 +2,14 @@
 
   <!-- Header -->
   <div class="flex flex-wrap items-center gap-4">
-    <h1 class="text-2xl font-bold">Menu Planner</h1>
+    @if (isEditMode()) {
+      <input class="input input-sm text-2xl font-bold w-auto max-w-xs"
+             placeholder="Menu name…"
+             [value]="menuName()"
+             (input)="menuName.set($any($event.target).value)" />
+    } @else {
+      <h1 class="text-2xl font-bold">{{ menuName() || 'Menu Planner' }}</h1>
+    }
 
     @if (isEditMode()) {
       <div class="join">
@@ -87,7 +94,6 @@
                [class.inset-ring-4]="isEditMode() && (selectedRecipe() !== null || selectedFromDay() !== null)"
                [class.inset-ring-primary]="isEditMode() && selectedRecipe() !== null"
                [class.inset-ring-warning]="isEditMode() && selectedFromDay() !== null"
-               [class.opacity-50]="isEditMode() && selectedFromDay() !== null && selectedFromDay()!.dayIndex === i"
                [class.cursor-pointer]="isEditMode() && (selectedRecipe() !== null || selectedFromDay() !== null)"
                (click)="onDayCardClick(i)">
             <div class="card-body p-3 gap-2">
@@ -97,6 +103,7 @@
               <div class="flex flex-col gap-1.5">
                 @for (recipe of recipes; track $index; let j = $index) {
                   <div class="relative shrink-0"
+                       [class.opacity-50]="isEditMode() && selectedFromDay() !== null && selectedFromDay()!.dayIndex === i"
                        (click)="$event.stopPropagation(); isEditMode() && selectFromDay(recipe, i, j)">
                     <app-recipe-compact-card [recipe]="recipe" [editMode]="isEditMode()"
                                              [selected]="selectedFromDay()?.recipe === recipe"
