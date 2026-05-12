@@ -110,6 +110,13 @@ export class MenuViewerEditorComponent implements OnInit {
   }
 
   decreaseDays(): void {
-    this.menuDays.update(days => days.length > 1 ? days.slice(0, -1) : days);
+    const days = this.menuDays();
+    if (days.length <= 1) return;
+    const removedDay = days[days.length - 1];
+    removedDay.forEach(recipe => this.markedRecipesService.toggle(recipe));
+    if (this.selectedFromDay()?.dayIndex === days.length - 1) {
+      this.selectedFromDay.set(null);
+    }
+    this.menuDays.update(d => d.slice(0, -1));
   }
 }
