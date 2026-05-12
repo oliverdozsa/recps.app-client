@@ -21,12 +21,14 @@ export class MenuViewerEditorComponent implements OnInit {
 
   isEditMode = signal(false);
   menuName = signal('');
+  menuNameValid = computed(() => this.menuName().trim().length >= 2);
   menuDays = signal<RecipeSearchResponse[][]>([[], [], []]);
   numDays = computed(() => this.menuDays().length);
   selectedRecipe = signal<RecipeSearchResponse | null>(null);
   selectedFromDay = signal<{ recipe: RecipeSearchResponse; dayIndex: number; recipeIndex: number } | null>(null);
 
   toggleMode(): void {
+    if (this.isEditMode() && !this.menuNameValid()) return;
     this.isEditMode.update(v => !v);
     if (!this.isEditMode()) {
       this.selectedRecipe.set(null);

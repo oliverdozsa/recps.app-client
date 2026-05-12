@@ -3,10 +3,16 @@
   <!-- Header -->
   <div class="flex flex-wrap items-center gap-4">
     @if (isEditMode()) {
-      <input class="input input-sm text-2xl font-bold w-auto max-w-xs"
-             placeholder="Menu name…"
-             [value]="menuName()"
-             (input)="menuName.set($any($event.target).value)" />
+      <div class="flex flex-col gap-1">
+        <input class="input input-sm text-2xl font-bold w-auto max-w-xs"
+               [class.is-invalid]="!menuNameValid()"
+               placeholder="Menu name…"
+               [value]="menuName()"
+               (input)="menuName.set($any($event.target).value)" />
+        @if (!menuNameValid()) {
+          <span class="text-xs text-error">Name must be at least 2 characters.</span>
+        }
+      </div>
     } @else {
       <h1 class="text-2xl font-bold">{{ menuName() || 'Menu Planner' }}</h1>
     }
@@ -25,7 +31,7 @@
       <span class="text-sm text-base-content/60">{{ numDays() }} days</span>
     }
 
-    <button class="btn btn-sm ms-auto" [class.btn-primary]="isEditMode()" (click)="toggleMode()">
+    <button class="btn btn-sm ms-auto" [class.btn-primary]="isEditMode()" [disabled]="isEditMode() && !menuNameValid()" (click)="toggleMode()">
       @if (isEditMode()) {
         <span class="icon-[tabler--device-floppy] size-4"></span>
         Save
