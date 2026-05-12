@@ -1,14 +1,35 @@
-import {Component} from '@angular/core';
-import {MenuViewerEditorComponent} from '../../components/menu-viewer-editor/menu-viewer-editor.component';
-
+import {Component, inject, OnInit, signal} from '@angular/core';
+import {Router, RouterLink} from '@angular/router';
+import {MenuService} from '../../services/menu.service';
+import {AuthService} from '../../services/auth.service';
+import {MenuPlanSimplifiedResponse} from '../../services/responses';
 
 @Component({
   selector: 'app-menu',
-  imports: [
-    MenuViewerEditorComponent
-  ],
+  imports: [RouterLink],
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.css'
 })
-export class MenuComponent {
+export class MenuComponent implements OnInit {
+  menus = signal<MenuPlanSimplifiedResponse[]>([]);
+  loading = signal(false);
+
+  private menuService = inject(MenuService);
+  protected authService = inject(AuthService);
+  private router = inject(Router);
+
+  ngOnInit(): void {
+    if (!this.authService.isLoggedIn) return;
+
+    this.loading.set(true);
+    this.menuService.getAll().subscribe({
+      next: menus => this.menus.set(menus),
+      complete: () => this.loading.set(false),
+      error: () => this.loading.set(false),
+    });
+  }
+
+  navigateToCreate(): void {
+    this.router.navigate(['/menu/new']);
+  }
 }

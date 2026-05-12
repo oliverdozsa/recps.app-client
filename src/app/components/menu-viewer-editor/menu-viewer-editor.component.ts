@@ -1,4 +1,4 @@
-import {Component, computed, inject, OnInit, signal} from '@angular/core';
+import {Component, computed, inject, Input, OnInit, signal} from '@angular/core';
 import {LanguageService} from '../../services/language.service';
 import {RecipeSearchResponse} from '../../services/responses';
 import {RecipeCompactCardComponent} from '../recipe-compact-card/recipe-compact-card.component';
@@ -13,6 +13,9 @@ import {MarkedRecipesService} from '../../services/marked-recipes.service';
   styleUrl: './menu-viewer-editor.component.css'
 })
 export class MenuViewerEditorComponent implements OnInit {
+  @Input()
+  startInViewMode = false;
+
   languageService = inject(LanguageService);
   markedRecipesService = inject(MarkedRecipesService);
 
@@ -33,7 +36,7 @@ export class MenuViewerEditorComponent implements OnInit {
 
   ngOnInit(): void {
     this.languageService.getAllIfNeeded();
-    this.isEditMode.set(this.markedRecipesService.markedRecipes().length > 0);
+    this.isEditMode.set(this.markedRecipesService.markedRecipes().length > 0 && !this.startInViewMode);
   }
 
   selectRecipe(recipe: RecipeSearchResponse): void {
