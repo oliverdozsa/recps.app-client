@@ -5,12 +5,13 @@
     @if (isEditMode()) {
       <div class="flex flex-col gap-1">
         <input class="input input-sm text-2xl font-bold w-auto max-w-xs"
-               [class.is-invalid]="!menuNameValid()"
+               [class.is-invalid]="menuNameError() !== null"
                placeholder="Menu name…"
+               maxlength="250"
                [value]="menuName()"
                (input)="menuName.set($any($event.target).value)" />
-        @if (!menuNameValid()) {
-          <span class="text-xs text-error">Name must be at least 2 characters.</span>
+        @if (menuNameError() !== null) {
+          <span class="text-xs text-error">{{ menuNameError() }}</span>
         }
       </div>
     } @else {
@@ -23,7 +24,7 @@
           <span class="icon-[tabler--minus] size-4"></span>
         </button>
         <span class="join-item btn btn-sm btn-text pointer-events-none">{{ numDays() }} days</span>
-        <button class="join-item btn btn-sm btn-text" (click)="increaseDays()">
+        <button class="join-item btn btn-sm btn-text" (click)="increaseDays()" [disabled]="numDays() >= 15">
           <span class="icon-[tabler--plus] size-4"></span>
         </button>
       </div>
@@ -31,7 +32,7 @@
       <span class="text-sm text-base-content/60">{{ numDays() }} days</span>
     }
 
-    <button class="btn btn-sm ms-auto" [class.btn-primary]="isEditMode()" [disabled]="isEditMode() && !menuNameValid()" (click)="toggleMode()">
+    <button class="btn btn-sm ms-auto" [class.btn-primary]="isEditMode()" [disabled]="isEditMode() && !canSave()" (click)="toggleMode()">
       @if (isEditMode()) {
         <span class="icon-[tabler--device-floppy] size-4"></span>
         Save
@@ -127,10 +128,15 @@
 
               <!-- Empty state / placement hint -->
               @if (recipes.length === 0) {
-                <div class="flex flex-col items-center justify-center py-6 text-base-content/40 gap-1">
+                <div class="flex flex-col items-center justify-center py-6 gap-1"
+                     [class.text-error]="isEditMode()"
+                     [class.text-base-content/40]="!isEditMode()">
                   @if (isEditMode() && (selectedRecipe() !== null || selectedFromDay() !== null)) {
                     <span class="icon-[tabler--circle-plus] size-8"></span>
                     <span class="text-sm">Tap to place here</span>
+                  } @else if (isEditMode()) {
+                    <span class="icon-[tabler--alert-circle] size-8"></span>
+                    <span class="text-sm">At least 1 recipe required</span>
                   } @else {
                     <span class="icon-[tabler--bowl-spoon] size-8"></span>
                     <span class="text-sm">No recipes yet</span>
@@ -138,7 +144,9 @@
                 </div>
               }
 
-              @if (isEditMode() && recipes.length > 0 && selectedRecipe() !== null) {
+              @if (isEditMode() && recipes.length >= 10) {
+                <div class="text-center text-warning text-xs py-1">Day full (10/10)</div>
+              } @else if (isEditMode() && recipes.length > 0 && selectedRecipe() !== null) {
                 <div class="text-center text-primary text-xs py-1">Tap to add another</div>
               }
             </div>

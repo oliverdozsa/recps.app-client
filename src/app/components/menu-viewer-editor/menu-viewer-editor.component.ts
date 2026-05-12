@@ -22,9 +22,17 @@ export class MenuViewerEditorComponent implements OnInit {
 
   isEditMode = signal(false);
   menuName = signal('');
-  menuNameValid = computed(() => this.menuName().trim().length >= 2);
+  menuNameError = computed(() => {
+    const len = this.menuName().trim().length;
+    if (len < 2) return 'Name must be at least 2 characters.';
+    if (len > 250) return 'Name must be at most 250 characters.';
+    return null;
+  });
+  menuNameValid = computed(() => this.menuNameError() === null);
   menuDays = signal<RecipeSearchResponse[][]>([[], [], []]);
   numDays = computed(() => this.menuDays().length);
+  daysValid = computed(() => this.menuDays().every(d => d.length >= 1 && d.length <= 10));
+  canSave = computed(() => this.menuNameValid() && this.daysValid());
   selectedRecipe = signal<RecipeSearchResponse | null>(null);
   selectedFromDay = signal<{ recipe: RecipeSearchResponse; dayIndex: number; recipeIndex: number } | null>(null);
 
@@ -38,7 +46,7 @@ export class MenuViewerEditorComponent implements OnInit {
   }
 
   toggleMode(): void {
-    if (this.isEditMode() && !this.menuNameValid()) return;
+    if (this.isEditMode() && !this.canSave()) return;
     this.isEditMode.update(v => !v);
     if (!this.isEditMode()) {
       this.selectedRecipe.set(null);
@@ -66,6 +74,7 @@ export class MenuViewerEditorComponent implements OnInit {
   placeInDay(dayIndex: number): void {
     const recipe = this.selectedRecipe();
     if (!recipe) return;
+    if (this.menuDays()[dayIndex].length >= 10) return;
     this.menuDays.update(days =>
       days.map((d, i) => i === dayIndex ? [...d, recipe] : d)
     );
@@ -116,6 +125,7 @@ export class MenuViewerEditorComponent implements OnInit {
   }
 
   increaseDays(): void {
+    if (this.numDays() >= 15) return;
     this.menuDays.update(days => [...days, []]);
   }
 
