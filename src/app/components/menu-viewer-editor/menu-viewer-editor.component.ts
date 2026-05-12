@@ -1,4 +1,4 @@
-import {Component, computed, inject, model, OnInit, signal} from '@angular/core';
+import {Component, computed, inject, OnInit, signal} from '@angular/core';
 import {LanguageService} from '../../services/language.service';
 import {RecipeSearchResponse} from '../../services/responses';
 import {RecipeCompactCardComponent} from '../recipe-compact-card/recipe-compact-card.component';

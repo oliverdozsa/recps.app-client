@@ -33,6 +33,11 @@ export interface CountIngredients {
   max?: number;
 }
 
+export interface CreateUpdateMenuPlanRequest {
+  name: string;
+  recipeIds: number[][];
+}
+
 export interface RecipeSearchRequest {
   includedIngredientGroups?: IngredientGroupWithRelation[];
   excludedIngredients?: number[];

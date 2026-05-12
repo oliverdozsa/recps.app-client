@@ -59,3 +59,14 @@ export function unionKey(u: IngredientSearchAndCategoryUnion): string {
 export function isCategory(u: IngredientSearchAndCategoryUnion): boolean {
   return u.category !== undefined;
 }
+
+export interface MenuPlanSimplifiedResponse {
+  id?: number;
+  name?: string;
+}
+
+export interface MenuPlanDetailedResponse {
+  id?: number;
+  name?: string;
+  recipes?: RecipeSearchResponse[][];
+}
