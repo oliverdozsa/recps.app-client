@@ -1,8 +1,9 @@
-import {Component, computed, inject, Input, OnInit, signal} from '@angular/core';
+import {Component, computed, effect, inject, Input, OnInit, signal} from '@angular/core';
 import {LanguageService} from '../../services/language.service';
 import {RecipeSearchResponse} from '../../services/responses';
 import {RecipeCompactCardComponent} from '../recipe-compact-card/recipe-compact-card.component';
 import {MarkedRecipesService} from '../../services/marked-recipes.service';
+import {loadFromStorage, saveToStorage} from './menu-viewer-editor-persisted';
 
 @Component({
   selector: 'app-menu-viewer-editor',
@@ -26,6 +27,15 @@ export class MenuViewerEditorComponent implements OnInit {
   numDays = computed(() => this.menuDays().length);
   selectedRecipe = signal<RecipeSearchResponse | null>(null);
   selectedFromDay = signal<{ recipe: RecipeSearchResponse; dayIndex: number; recipeIndex: number } | null>(null);
+
+  constructor() {
+    const saved = loadFromStorage();
+    if (saved) {
+      this.menuName.set(saved.menuName);
+      this.menuDays.set(saved.menuDays);
+    }
+    effect(() => saveToStorage(this.menuName(), this.menuDays()));
+  }
 
   toggleMode(): void {
     if (this.isEditMode() && !this.menuNameValid()) return;

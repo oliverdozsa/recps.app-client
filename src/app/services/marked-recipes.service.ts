@@ -25,7 +25,9 @@ export class MarkedRecipesService {
 
   remove(recipe: RecipeSearchResponse) {
     this._markedRecipes.update(recipes => {
-      return recipes.filter(r => r.id != recipe.id)
+      const updated = recipes.filter(r => r.id !== recipe.id);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      return updated;
     });
   }
 
