@@ -1,8 +1,10 @@
 import {Component, computed, effect, inject, Input, OnInit, signal} from '@angular/core';
+import {Router} from '@angular/router';
 import {LanguageService} from '../../services/language.service';
 import {RecipeSearchResponse} from '../../services/responses';
 import {RecipeCompactCardComponent} from '../recipe-compact-card/recipe-compact-card.component';
 import {MarkedRecipesService} from '../../services/marked-recipes.service';
+import {MenuService} from '../../services/menu.service';
 import {loadFromStorage, saveToStorage} from './menu-viewer-editor-persisted';
 
 @Component({
@@ -19,6 +21,8 @@ export class MenuViewerEditorComponent implements OnInit {
 
   languageService = inject(LanguageService);
   markedRecipesService = inject(MarkedRecipesService);
+  private menuService = inject(MenuService);
+  private router = inject(Router);
 
   isEditMode = signal(false);
   menuName = signal('');
@@ -35,6 +39,7 @@ export class MenuViewerEditorComponent implements OnInit {
   canSave = computed(() => this.menuNameValid() && this.daysValid());
   selectedRecipe = signal<RecipeSearchResponse | null>(null);
   selectedFromDay = signal<{ recipe: RecipeSearchResponse; dayIndex: number; recipeIndex: number } | null>(null);
+  saving = signal(false);
 
   constructor() {
     const saved = loadFromStorage();
@@ -46,12 +51,23 @@ export class MenuViewerEditorComponent implements OnInit {
   }
 
   toggleMode(): void {
-    if (this.isEditMode() && !this.canSave()) return;
     this.isEditMode.update(v => !v);
     if (!this.isEditMode()) {
       this.selectedRecipe.set(null);
       this.selectedFromDay.set(null);
     }
+  }
+
+  save(): void {
+    if (!this.canSave()) return;
+    this.saving.set(true);
+    this.menuService.create({
+      name: this.menuName().trim(),
+      recipeIds: this.menuDays().map(day => day.map(r => r.id!)),
+    }).subscribe({
+      next: () => this.router.navigate(['/menu']),
+      error: () => this.saving.set(false),
+    });
   }
 
   ngOnInit(): void {

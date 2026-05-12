@@ -1,4 +1,10 @@
-<div class="p-4 flex flex-col gap-4">
+@if (saving()) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-base-100/60">
+    <span class="loading loading-spinner loading-xl"></span>
+  </div>
+}
+
+<div class="p-4 flex flex-col gap-4" [class.pointer-events-none]="saving()">
 
   <!-- Header -->
   <div class="flex flex-wrap items-center gap-4">
@@ -32,7 +38,7 @@
       <span class="text-sm text-base-content/60">{{ numDays() }} days</span>
     }
 
-    <button class="btn btn-sm ms-auto" [class.btn-primary]="isEditMode()" [disabled]="isEditMode() && !canSave()" (click)="toggleMode()">
+    <button class="btn btn-sm ms-auto" [class.btn-primary]="isEditMode()" [disabled]="isEditMode() && !canSave()" (click)="isEditMode() ? save() : toggleMode()">
       @if (isEditMode()) {
         <span class="icon-[tabler--device-floppy] size-4"></span>
         Save
@@ -128,18 +134,16 @@
 
               <!-- Empty state / placement hint -->
               @if (recipes.length === 0) {
-                <div class="flex flex-col items-center justify-center py-6 gap-1"
-                     [class.text-error]="isEditMode()"
-                     [class.text-base-content/40]="!isEditMode()">
+                <div class="flex flex-col items-center justify-center py-6 gap-1">
                   @if (isEditMode() && (selectedRecipe() !== null || selectedFromDay() !== null)) {
-                    <span class="icon-[tabler--circle-plus] size-8"></span>
-                    <span class="text-sm">Tap to place here</span>
+                    <span class="icon-[tabler--circle-plus] size-8 text-base-content/40"></span>
+                    <span class="text-sm text-base-content/40">Tap to place here</span>
                   } @else if (isEditMode()) {
-                    <span class="icon-[tabler--alert-circle] size-8"></span>
-                    <span class="text-sm">At least 1 recipe required</span>
+                    <span class="icon-[tabler--alert-circle] size-8 text-error"></span>
+                    <span class="text-sm text-error">At least 1 recipe required</span>
                   } @else {
-                    <span class="icon-[tabler--bowl-spoon] size-8"></span>
-                    <span class="text-sm">No recipes yet</span>
+                    <span class="icon-[tabler--bowl-spoon] size-8 text-base-content/40"></span>
+                    <span class="text-sm text-base-content/40">No recipes yet</span>
                   }
                 </div>
               }
