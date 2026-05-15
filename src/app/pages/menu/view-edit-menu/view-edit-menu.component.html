@@ -1,1 +1,20 @@
-<p>view-edit-menu works!</p>
+@if (!authService.isLoggedIn) {
+  <div class="flex flex-col items-center justify-center mt-20 gap-4">
+    <p class="text-lg">You need to be logged in to view this menu.</p>
+  </div>
+} @else {
+  @if (loading()) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-base-100/60">
+      <span class="loading loading-spinner loading-xl"></span>
+    </div>
+  }
+
+  @if (menu(); as m) {
+    <app-menu-viewer-editor
+      [startInViewMode]="true"
+      [menuId]="m.id!"
+      [initialMenuName]="m.name ?? ''"
+      [initialMenuDays]="m.recipes ?? []">
+    </app-menu-viewer-editor>
+  }
+}

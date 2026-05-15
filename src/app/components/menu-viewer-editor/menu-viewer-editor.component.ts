@@ -16,8 +16,10 @@ import {loadFromStorage, saveToStorage} from './menu-viewer-editor-persisted';
   styleUrl: './menu-viewer-editor.component.css'
 })
 export class MenuViewerEditorComponent implements OnInit {
-  @Input()
-  startInViewMode = false;
+  @Input() startInViewMode = false;
+  @Input() menuId: number | null = null;
+  @Input() initialMenuName = '';
+  @Input() initialMenuDays: RecipeSearchResponse[][] | null = null;
 
   languageService = inject(LanguageService);
   markedRecipesService = inject(MarkedRecipesService);
@@ -42,12 +44,11 @@ export class MenuViewerEditorComponent implements OnInit {
   saving = signal(false);
 
   constructor() {
-    const saved = loadFromStorage();
-    if (saved) {
-      this.menuName.set(saved.menuName);
-      this.menuDays.set(saved.menuDays);
-    }
-    effect(() => saveToStorage(this.menuName(), this.menuDays()));
+    effect(() => {
+      if (this.menuId === null) {
+        saveToStorage(this.menuName(), this.menuDays());
+      }
+    });
   }
 
   toggleMode(): void {
@@ -61,17 +62,37 @@ export class MenuViewerEditorComponent implements OnInit {
   save(): void {
     if (!this.canSave()) return;
     this.saving.set(true);
-    this.menuService.create({
+    const request = {
       name: this.menuName().trim(),
       recipeIds: this.menuDays().map(day => day.map(r => r.id!)),
-    }).subscribe({
-      next: () => this.router.navigate(['/menu']),
+    };
+    const obs = this.menuId !== null
+      ? this.menuService.update(this.menuId, request)
+      : this.menuService.create(request);
+    obs.subscribe({
+      next: () => {
+        this.toggleMode();
+        this.saving.set(false);
+        if (this.menuId == null) {
+          this.router.navigate(['/menu'])
+        }
+      },
       error: () => this.saving.set(false),
     });
   }
 
   ngOnInit(): void {
     this.languageService.getAllIfNeeded();
+    if (this.initialMenuDays !== null) {
+      this.menuName.set(this.initialMenuName);
+      this.menuDays.set(this.initialMenuDays);
+    } else {
+      const saved = loadFromStorage();
+      if (saved) {
+        this.menuName.set(saved.menuName);
+        this.menuDays.set(saved.menuDays);
+      }
+    }
     this.isEditMode.set(this.markedRecipesService.markedRecipes().length > 0 && !this.startInViewMode);
   }
 
@@ -83,7 +104,7 @@ export class MenuViewerEditorComponent implements OnInit {
   selectFromDay(recipe: RecipeSearchResponse, dayIndex: number, recipeIndex: number): void {
     this.selectedRecipe.set(null);
     this.selectedFromDay.update(current =>
-      current?.recipe === recipe ? null : { recipe, dayIndex, recipeIndex }
+      current?.recipe === recipe ? null : {recipe, dayIndex, recipeIndex}
     );
   }
 
@@ -131,7 +152,7 @@ export class MenuViewerEditorComponent implements OnInit {
   removeFromDay(dayIndex: number, recipeIndex: number): void {
     const recipe = this.menuDays()[dayIndex][recipeIndex];
 
-    if(this.selectedFromDay() && this.selectedFromDay()?.recipe.id === recipe.id) {
+    if (this.selectedFromDay() && this.selectedFromDay()?.recipe.id === recipe.id) {
       this.selectedFromDay.set(null);
     }
 
