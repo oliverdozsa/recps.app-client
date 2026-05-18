@@ -13,6 +13,7 @@ import {MenuPlanSimplifiedResponse} from '../../services/responses';
 export class MenuComponent implements OnInit {
   menus = signal<MenuPlanSimplifiedResponse[]>([]);
   loading = signal(false);
+  menuToDelete: MenuPlanSimplifiedResponse | null = null;
 
   private menuService = inject(MenuService);
   protected authService = inject(AuthService);
@@ -33,7 +34,14 @@ export class MenuComponent implements OnInit {
     this.router.navigate(['/menu/new']);
   }
 
-  deleteMenu(id: number): void {
+  confirmDelete(menu: MenuPlanSimplifiedResponse): void {
+    this.menuToDelete = menu;
+  }
+
+  confirmDeleteConfirmed(): void {
+    if (!this.menuToDelete) return;
+    const id = this.menuToDelete.id;
+    this.menuToDelete = null;
     this.loading.set(true);
     this.menuService.delete(id).subscribe({
       next: () => this.menus.update(menus => menus.filter(m => m.id !== id)),
