@@ -30,4 +30,10 @@ export class MarkedRecipesComponent {
     this.selected = recipe == this.selected ? null : recipe;
     this.onRecipeSelected.emit(this.selected);
   }
+
+  clearAll() {
+    this.markedRecipesService.clear();
+    this.selected = null;
+    this.onRecipeSelected.emit(null);
+  }
 }
