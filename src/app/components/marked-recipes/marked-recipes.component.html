@@ -1,0 +1,25 @@
+<div class="w-full md:w-70 shrink-0 flex flex-col gap-2">
+  <h2 class="font-semibold text-base-content/70">
+    Marked Recipes
+    <span class="badge badge-neutral ml-1">{{ markedRecipesService.markedRecipes().length }}</span>
+  </h2>
+  <!-- Horizontal scroll on mobile, vertical list on desktop -->
+  <div
+    class="py-1 flex flex-row md:flex-col overflow-x-auto md:overflow-y-auto pb-1 md:pb-0 md:max-h-[calc(100vh-18rem)]">
+    @for (recipe of markedRecipesService.markedRecipes(); track recipe.id) {
+      <div class="ms-1 my-1 relative shrink-0 cursor-pointer rounded-2xl transition-shadow duration-150"
+           (click)="onRecipeClicked(recipe)">
+        <app-recipe-compact-card [recipe]="recipe" [selected]="selected === recipe"/>
+        <!-- Transparent overlay to capture clicks instead of following the card's links -->
+        <div class="absolute inset-0 rounded-2xl"></div>
+      </div>
+    }
+    @if (markedRecipesService.markedRecipes().length == 0) {
+      <div class="flex justify-center text-sm text-base-content/40">
+        <div class="text-center">
+          No marked recipes yet. Open the recipe browser and mark some recipes to get started.
+        </div>
+      </div>
+    }
+  </div>
+</div>

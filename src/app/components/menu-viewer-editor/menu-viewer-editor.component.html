@@ -15,7 +15,7 @@
                placeholder="Menu name…"
                maxlength="250"
                [value]="menuName()"
-               (input)="menuName.set($any($event.target).value)" />
+               (input)="menuName.set($any($event.target).value)"/>
         @if (menuNameError() !== null) {
           <span class="text-xs text-error">{{ menuNameError() }}</span>
         }
@@ -38,7 +38,8 @@
       <span class="text-sm text-base-content/60">{{ numDays() }} days</span>
     }
 
-    <button class="btn btn-sm ms-auto" [class.btn-primary]="isEditMode()" [disabled]="isEditMode() && !canSave()" (click)="isEditMode() ? save() : toggleMode()">
+    <button class="btn btn-sm ms-auto" [class.btn-primary]="isEditMode()" [disabled]="isEditMode() && !canSave()"
+            (click)="isEditMode() ? save() : toggleMode()">
       @if (isEditMode()) {
         <span class="icon-[tabler--device-floppy] size-4"></span>
         Save
@@ -80,23 +81,7 @@
 
     @if (isEditMode()) {
       <!-- Pool: marked recipes -->
-      <div class="w-full md:w-70 shrink-0 flex flex-col gap-2">
-        <h2 class="font-semibold text-base-content/70">
-          Marked Recipes
-          <span class="badge badge-neutral ml-1">{{ markedRecipesService.markedRecipes().length }}</span>
-        </h2>
-        <!-- Horizontal scroll on mobile, vertical list on desktop -->
-        <div class="py-1 flex flex-row md:flex-col overflow-x-auto md:overflow-y-auto pb-1 md:pb-0 md:max-h-[calc(100vh-18rem)]">
-          @for (recipe of markedRecipesService.markedRecipes(); track recipe.id) {
-            <div class="ms-1 my-1 relative shrink-0 cursor-pointer rounded-2xl transition-shadow duration-150"
-                 (click)="selectRecipe(recipe)">
-              <app-recipe-compact-card [recipe]="recipe" [selected]="selectedRecipe() === recipe"/>
-              <!-- Transparent overlay to capture clicks instead of following the card's links -->
-              <div class="absolute inset-0 rounded-2xl"></div>
-            </div>
-          }
-        </div>
-      </div>
+      <app-marked-recipes (onRecipeSelected)="selectRecipe($event)"></app-marked-recipes>
     }
 
     <!-- Day columns -->
@@ -120,15 +105,8 @@
                        (click)="$event.stopPropagation(); isEditMode() && selectFromDay(recipe, i, j)">
                     <app-recipe-compact-card [recipe]="recipe" [editMode]="isEditMode()"
                                              [selected]="selectedFromDay()?.recipe === recipe"
-                                             (onDeleteClicked)="removeFromDay(i, j)"/>
+                                             (onBackClick)="moveBackToPool(recipe, i, j)"/>
                   </div>
-                  @if (selectedFromDay()?.recipe === recipe) {
-                    <button class="btn btn-xs btn-soft btn-primary w-full mt-1"
-                            (click)="$event.stopPropagation(); moveBackToPool()">
-                      <span class="icon-[tabler--arrow-back-up] size-4"></span>
-                      Move to pool
-                    </button>
-                  }
                 }
               </div>
 

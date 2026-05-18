@@ -5,12 +5,14 @@ import {RecipeSearchResponse} from '../../services/responses';
 import {RecipeCompactCardComponent} from '../recipe-compact-card/recipe-compact-card.component';
 import {MarkedRecipesService} from '../../services/marked-recipes.service';
 import {MenuService} from '../../services/menu.service';
-import {loadFromStorage, saveToStorage} from './menu-viewer-editor-persisted';
+import {loadFromStorage, saveToStorage, clearFromStorage} from './menu-viewer-editor-persisted';
+import {MarkedRecipesComponent} from '../marked-recipes/marked-recipes.component';
 
 @Component({
   selector: 'app-menu-viewer-editor',
   imports: [
-    RecipeCompactCardComponent
+    RecipeCompactCardComponent,
+    MarkedRecipesComponent
   ],
   templateUrl: './menu-viewer-editor.component.html',
   styleUrl: './menu-viewer-editor.component.css'
@@ -49,6 +51,12 @@ export class MenuViewerEditorComponent implements OnInit {
         saveToStorage(this.menuName(), this.menuDays());
       }
     });
+
+    effect(() => {
+      if(this.selectedRecipe() === null) {
+        this.markedRecipesService.selectedRecipeCleared$.next();
+      }
+    })
   }
 
   toggleMode(): void {
@@ -74,6 +82,8 @@ export class MenuViewerEditorComponent implements OnInit {
         this.toggleMode();
         this.saving.set(false);
         if (this.menuId == null) {
+          this.markedRecipesService.clear();
+          clearFromStorage();
           this.router.navigate(['/menu'])
         }
       },
@@ -93,12 +103,12 @@ export class MenuViewerEditorComponent implements OnInit {
         this.menuDays.set(saved.menuDays);
       }
     }
-    this.isEditMode.set(this.markedRecipesService.markedRecipes().length > 0 && !this.startInViewMode);
+    this.isEditMode.set(!this.startInViewMode);
   }
 
-  selectRecipe(recipe: RecipeSearchResponse): void {
+  selectRecipe(recipe: RecipeSearchResponse | null): void {
     this.selectedFromDay.set(null);
-    this.selectedRecipe.update(current => current === recipe ? null : recipe);
+    this.selectedRecipe.set(recipe);
   }
 
   selectFromDay(recipe: RecipeSearchResponse, dayIndex: number, recipeIndex: number): void {
@@ -119,11 +129,9 @@ export class MenuViewerEditorComponent implements OnInit {
     this.markedRecipesService.remove(recipe);
   }
 
-  moveBackToPool(): void {
-    const sel = this.selectedFromDay();
-    if (!sel) return;
-    this.removeFromDay(sel.dayIndex, sel.recipeIndex);
-    this.markedRecipesService.toggle(sel.recipe);
+  moveBackToPool(recipe: RecipeSearchResponse, dayIndex: number, recipeIndex: number): void {
+    this.removeFromDay(dayIndex, recipeIndex);
+    this.markedRecipesService.toggle(recipe);
     this.selectedFromDay.set(null);
   }
 
