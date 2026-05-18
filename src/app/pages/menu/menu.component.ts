@@ -32,4 +32,13 @@ export class MenuComponent implements OnInit {
   navigateToCreate(): void {
     this.router.navigate(['/menu/new']);
   }
+
+  deleteMenu(id: number): void {
+    this.loading.set(true);
+    this.menuService.delete(id).subscribe({
+      next: () => this.menus.update(menus => menus.filter(m => m.id !== id)),
+      complete: () => this.loading.set(false),
+      error: () => this.loading.set(false),
+    });
+  }
 }

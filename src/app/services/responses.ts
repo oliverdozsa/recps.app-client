@@ -61,8 +61,8 @@ export function isCategory(u: IngredientSearchAndCategoryUnion): boolean {
 }
 
 export interface MenuPlanSimplifiedResponse {
-  id?: number;
-  name?: string;
+  id: number;
+  name: string;
 }
 
 export interface MenuPlanDetailedResponse {

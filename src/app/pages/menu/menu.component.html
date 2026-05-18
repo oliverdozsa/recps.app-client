@@ -20,10 +20,15 @@
     } @else {
       <ul class="flex flex-col gap-2">
         @for (menu of menus(); track menu.id) {
-          <li>
-            <a [routerLink]="['/menu', menu.id]" class="flex items-center justify-between p-4 rounded-lg border border-base-300 hover:bg-base-200 transition-colors cursor-pointer">
+          <li class="flex items-center gap-2 p-4 rounded-lg border border-base-300 hover:bg-base-200 transition-colors">
+            <a [routerLink]="['/menu', menu.id]" class="flex-1 flex items-center justify-between cursor-pointer">
               <span class="font-medium">{{ menu.name }}</span>
-              <span class="text-base-content/40">›</span>
+              <div class="flex items-center gap-2">
+                <button class="btn btn-sm btn-ghost text-error shrink-0" (click)="$event.preventDefault(); deleteMenu(menu.id)">
+                  <span class="icon-[tabler--trash] size-4"></span>
+                </button>
+                <span class="text-base-content/40">›</span>
+              </div>
             </a>
           </li>
         }
