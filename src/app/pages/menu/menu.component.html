@@ -1,0 +1,52 @@
+@if (!authService.isLoggedIn) {
+  <div class="flex flex-col items-center justify-center mt-20 gap-4">
+    <p class="text-lg">{{ "menu.loginNeeded" | translate }}</p>
+  </div>
+} @else {
+  @if (loading() || languageService.loading()) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-base-100/60">
+      <span class="loading loading-spinner loading-xl"></span>
+    </div>
+  }
+
+  <div class="max-w-2xl mx-auto mt-10 px-4">
+    <div class="flex items-center justify-between mb-6">
+      <h1 class="text-2xl font-bold">{{ "menu.title" | translate }}</h1>
+      <button class="btn btn-primary btn-outline" (click)="navigateToCreate()">{{ "menu.new" | translate }}</button>
+    </div>
+
+    @if (menus().length === 0 && !loading()) {
+      <p class="text-base-content/60">{{ "menu.empty" | translate }}</p>
+    } @else {
+      <ul class="flex flex-col gap-2">
+        @for (menu of menus(); track menu.id) {
+          <li class="flex items-center gap-2 p-4 rounded-lg border border-base-300 hover:bg-base-100 transition-colors">
+            <a [routerLink]="['/menu', menu.id]" class="flex-1 flex items-center gap-2 cursor-pointer">
+              <span class="font-medium flex-1">{{ menu.name }}</span>
+              <span class="text-base-content/40">›</span>
+            </a>
+            <button class="btn btn-sm btn-text text-error shrink-0" (click)="confirmDelete(menu)">
+              <span class="icon-[tabler--trash] size-4"></span>
+            </button>
+          </li>
+        }
+      </ul>
+    }
+  </div>
+}
+
+
+@if (menuToDelete !== null) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-base-300/60" (click)="menuToDelete = null">
+    <div class="bg-base-100 rounded-lg shadow-xl p-6 w-full max-w-sm mx-4 flex flex-col gap-4"
+         (click)="$event.stopPropagation()">
+      <h3 class="text-lg font-bold">{{ "menu.deleteModalTitle" | translate }}</h3>
+      <p>{{ "menu.deleteModalQuestion" | translate }}<strong>{{ menuToDelete.name }}</strong>?</p>
+      <div class="flex justify-end gap-2">
+        <button class="btn" (click)="menuToDelete = null">{{ "menu.deleteModalCancel" | translate }}</button>
+        <button class="btn btn-error" (click)="confirmDeleteConfirmed()">{{ "menu.deleteModalYes" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

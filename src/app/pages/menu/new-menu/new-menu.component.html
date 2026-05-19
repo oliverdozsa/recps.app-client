@@ -1,0 +1,8 @@
+@if (!authService.isLoggedIn) {
+  <div class="flex flex-col items-center justify-center mt-20 gap-4">
+    <p class="text-lg">{{ "menu.loginNeeded" | translate }}</p>
+  </div>
+} @else {
+  <app-menu-viewer-editor></app-menu-viewer-editor>
+}
+

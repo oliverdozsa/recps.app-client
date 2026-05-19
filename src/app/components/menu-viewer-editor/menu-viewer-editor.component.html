@@ -1,0 +1,141 @@
+@if (saving()) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-base-100/60">
+    <span class="loading loading-spinner loading-xl"></span>
+  </div>
+}
+
+<div class="p-4 flex flex-col gap-4" [class.pointer-events-none]="saving()">
+
+  <!-- Header -->
+  <div class="flex flex-wrap items-center gap-4">
+    @if (isEditMode()) {
+      <div class="flex flex-col gap-1">
+        <input class="input input-sm text-2xl font-bold w-auto max-w-xs"
+               [class.is-invalid]="menuNameError() !== null"
+               [placeholder]="'menuEditor.menuNamePlaceholder' | translate"
+               maxlength="250"
+               [value]="menuName()"
+               (input)="menuName.set($any($event.target).value)"/>
+        @if (menuNameError() !== null) {
+          <span class="text-xs text-error">{{ menuNameError()! | translate }}</span>
+        }
+      </div>
+    } @else {
+      <h1 class="text-2xl font-bold">{{ menuName() || ('menuEditor.defaultTitle' | translate) }}</h1>
+    }
+
+    @if (isEditMode()) {
+      <div class="join">
+        <button class="join-item btn btn-sm btn-text" (click)="decreaseDays()" [disabled]="numDays() <= 1">
+          <span class="icon-[tabler--minus] size-4"></span>
+        </button>
+        <span class="join-item btn btn-sm btn-text pointer-events-none">{{ numDays() }} {{ "menuEditor.days" | translate }}</span>
+        <button class="join-item btn btn-sm btn-text" (click)="increaseDays()" [disabled]="numDays() >= 15">
+          <span class="icon-[tabler--plus] size-4"></span>
+        </button>
+      </div>
+    } @else {
+      <span class="text-sm text-base-content/60">{{ numDays() }} {{ "menuEditor.days" | translate }}</span>
+    }
+
+    <button class="btn btn-sm btn-outline ms-auto" [class.btn-primary]="isEditMode()" [disabled]="isEditMode() && !canSave()"
+            (click)="isEditMode() ? save() : toggleMode()">
+      @if (isEditMode()) {
+        <span class="icon-[tabler--device-floppy] size-4"></span>
+        {{ "menuEditor.save" | translate }}
+      } @else {
+        <span class="icon-[tabler--pencil] size-4"></span>
+        {{ "menuEditor.edit" | translate }}
+      }
+    </button>
+  </div>
+
+  @if (isEditMode()) {
+    <!-- Status bar -->
+    @if (selectedFromDay() !== null) {
+      <div role="alert" class="alert alert-soft bg-vanilla-cream-300 flex items-center py-2 gap-2 h-10">
+        <span class="icon-[tabler--hand-click] shrink-0 size-5"></span>
+        <span class="flex-1 text-sm"><strong>{{ selectedFromDay()!.recipe.name }}</strong> — {{ "menuEditor.moveTip" | translate }}</span>
+        <button class="btn btn-xs btn-text btn-circle" (click)="selectedFromDay.set(null)">
+          <span class="icon-[tabler--x] size-4"></span>
+        </button>
+      </div>
+    } @else if (selectedRecipe() !== null) {
+      <div role="alert" class="alert alert-soft bg-vanilla-cream-300 flex items-center py-2 gap-2 h-10">
+        <span class="icon-[tabler--hand-click] shrink-0 size-5"></span>
+        <span class="flex-1 text-sm"><strong>{{ selectedRecipe()!.name }}</strong> — {{ "menuEditor.placeTip" | translate }}</span>
+        <button class="btn btn-xs btn-text btn-circle" (click)="selectedRecipe.set(null)">
+          <span class="icon-[tabler--x] size-4"></span>
+        </button>
+      </div>
+    } @else {
+      <div role="alert" class="alert alert-soft flex items-center gap-2 py-2 h-10">
+        <span class="icon-[tabler--info-circle] shrink-0 size-5"></span>
+        <span class="text-sm">{{ "menuEditor.infoTip" | translate }}</span>
+      </div>
+    }
+  }
+
+  <!-- Main layout -->
+  <div class="flex flex-col md:flex-row gap-6 items-start">
+
+    @if (isEditMode()) {
+      <!-- Pool: marked recipes -->
+      <app-marked-recipes (onRecipeSelected)="selectRecipe($event)"></app-marked-recipes>
+    }
+
+    <!-- Day columns -->
+    <div class="ps-2 pt-1 w-full overflow-x-auto">
+      <div class="flex flex-col md:flex-row gap-3 pb-2 md:min-w-max">
+        @for (recipes of menuDays(); track $index; let i = $index) {
+          <div class="card w-72 bg-base-100 transition-colors duration-150"
+               [class.inset-ring-4]="isEditMode() && (selectedRecipe() !== null || selectedFromDay() !== null)"
+               [class.inset-ring-primary]="isEditMode() && selectedRecipe() !== null"
+               [class.inset-ring-warning]="isEditMode() && selectedFromDay() !== null"
+               [class.cursor-pointer]="isEditMode() && (selectedRecipe() !== null || selectedFromDay() !== null)"
+               (click)="onDayCardClick(i)">
+            <div class="card-body p-3 gap-2">
+              <h3 class="card-title text-base">{{ "menuEditor.day" | translate }} #{{ i + 1 }}</h3>
+
+              <!-- Placed recipes -->
+              <div class="flex flex-col gap-1.5">
+                @for (recipe of recipes; track $index; let j = $index) {
+                  <div class="relative shrink-0"
+                       [class.opacity-50]="isEditMode() && selectedFromDay() !== null && selectedFromDay()!.dayIndex === i"
+                       (click)="$event.stopPropagation(); isEditMode() && selectFromDay(recipe, i, j)">
+                    <app-recipe-compact-card [recipe]="recipe" [editMode]="isEditMode()"
+                                             [selected]="selectedFromDay()?.recipe === recipe"
+                                             (onBackClick)="moveBackToPool(recipe, i, j)"/>
+                  </div>
+                }
+              </div>
+
+              <!-- Empty state / placement hint -->
+              @if (recipes.length === 0) {
+                <div class="flex flex-col items-center justify-center py-6 gap-1">
+                  @if (isEditMode() && (selectedRecipe() !== null || selectedFromDay() !== null)) {
+                    <span class="icon-[tabler--circle-plus] size-8 text-base-content/40"></span>
+                    <span class="text-sm text-base-content/40">{{ "menuEditor.tapToPlace" | translate }}</span>
+                  } @else if (isEditMode()) {
+                    <span class="icon-[tabler--alert-circle] size-8 text-error"></span>
+                    <span class="text-sm text-error">{{ "menuEditor.recipeRequired" | translate }}</span>
+                  } @else {
+                    <span class="icon-[tabler--bowl-spoon] size-8 text-base-content/40"></span>
+                    <span class="text-sm text-base-content/40">{{ "menuEditor.noRecipes" | translate }}</span>
+                  }
+                </div>
+              }
+
+              @if (isEditMode() && recipes.length >= 10) {
+                <div class="text-center text-warning text-xs py-1">{{ "menuEditor.dayFull" | translate }}</div>
+              } @else if (isEditMode() && recipes.length > 0 && selectedRecipe() !== null) {
+                <div class="text-center text-primary text-xs py-1">{{ "menuEditor.tapToAddAnother" | translate }}</div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+  </div>
+</div>
