@@ -46,6 +46,29 @@
     "orderDesc": "csökkenő",
     "sourcePages": "oldalak"
   },
+  "markedRecipes": {
+    "title": "megjelölt receptek",
+    "clearAll": "összes törlése",
+    "empty": "még nincsenek megjelölt receptek. nyisd meg a receptböngészőt és jelölj meg néhány receptet a kezdéshez."
+  },
+  "menuEditor": {
+    "menuNamePlaceholder": "menü neve…",
+    "defaultTitle": "menü tervező",
+    "days": "nap",
+    "save": "mentés",
+    "edit": "szerkesztés",
+    "moveTip": "koppints egy nap oszlopra az áthelyezéshez",
+    "placeTip": "koppints egy nap oszlopra az elhelyezéshez",
+    "infoTip": "válassz egy receptet a gyűjteményből, majd koppints egy nap oszlopra az elhelyezéshez",
+    "day": "nap",
+    "tapToPlace": "koppints ide az elhelyezéshez",
+    "recipeRequired": "legalább 1 recept szükséges",
+    "noRecipes": "még nincsenek receptek",
+    "dayFull": "a nap tele van (10/10)",
+    "tapToAddAnother": "koppints egy másik hozzáadásához",
+    "nameTooShort": "a névnek legalább 2 karakternek kell lennie.",
+    "nameTooLong": "a név legfeljebb 250 karakter lehet."
+  },
   "menu": {
     "title": "menü tervező",
     "loginNeeded": "a menü tervező használatához be kell jelentkezned",

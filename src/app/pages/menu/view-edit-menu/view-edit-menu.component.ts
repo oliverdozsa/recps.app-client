@@ -5,10 +5,11 @@ import {AuthService} from '../../../services/auth.service';
 import {LanguageService} from '../../../services/language.service';
 import {MenuPlanDetailedResponse} from '../../../services/responses';
 import {MenuViewerEditorComponent} from '../../../components/menu-viewer-editor/menu-viewer-editor.component';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-view-edit-menu',
-  imports: [MenuViewerEditorComponent],
+  imports: [MenuViewerEditorComponent, TranslatePipe],
   templateUrl: './view-edit-menu.component.html',
   styleUrl: './view-edit-menu.component.css'
 })

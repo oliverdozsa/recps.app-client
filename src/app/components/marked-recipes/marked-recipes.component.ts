@@ -3,11 +3,13 @@ import {RecipeCompactCardComponent} from "../recipe-compact-card/recipe-compact-
 import {MarkedRecipesService} from '../../services/marked-recipes.service';
 import {RecipeSearchResponse} from '../../services/responses';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-marked-recipes',
   imports: [
-    RecipeCompactCardComponent
+    RecipeCompactCardComponent,
+    TranslatePipe
   ],
   templateUrl: './marked-recipes.component.html',
   styleUrl: './marked-recipes.component.css'

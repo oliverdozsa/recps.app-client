@@ -7,12 +7,14 @@ import {MarkedRecipesService} from '../../services/marked-recipes.service';
 import {MenuService} from '../../services/menu.service';
 import {loadFromStorage, saveToStorage, clearFromStorage} from './menu-viewer-editor-persisted';
 import {MarkedRecipesComponent} from '../marked-recipes/marked-recipes.component';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-menu-viewer-editor',
   imports: [
     RecipeCompactCardComponent,
-    MarkedRecipesComponent
+    MarkedRecipesComponent,
+    TranslatePipe
   ],
   templateUrl: './menu-viewer-editor.component.html',
   styleUrl: './menu-viewer-editor.component.css'
@@ -32,8 +34,8 @@ export class MenuViewerEditorComponent implements OnInit {
   menuName = signal('');
   menuNameError = computed(() => {
     const len = this.menuName().trim().length;
-    if (len < 2) return 'Name must be at least 2 characters.';
-    if (len > 250) return 'Name must be at most 250 characters.';
+    if (len < 2) return 'menuEditor.nameTooShort';
+    if (len > 250) return 'menuEditor.nameTooLong';
     return null;
   });
   menuNameValid = computed(() => this.menuNameError() === null);

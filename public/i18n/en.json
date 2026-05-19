@@ -46,6 +46,29 @@
     "orderDesc": "descending",
     "sourcePages": "source pages"
   },
+  "markedRecipes": {
+    "title": "marked recipes",
+    "clearAll": "clear all",
+    "empty": "no marked recipes yet. open the recipe browser and mark some recipes to get started."
+  },
+  "menuEditor": {
+    "menuNamePlaceholder": "menu name…",
+    "defaultTitle": "menu planner",
+    "days": "days",
+    "save": "save",
+    "edit": "edit",
+    "moveTip": "tap a day column to move it there",
+    "placeTip": "tap a day column to place it",
+    "infoTip": "select a recipe from the pool, then tap a day column to place it",
+    "day": "day",
+    "tapToPlace": "tap to place here",
+    "recipeRequired": "at least 1 recipe required",
+    "noRecipes": "no recipes yet",
+    "dayFull": "day full (10/10)",
+    "tapToAddAnother": "tap to add another",
+    "nameTooShort": "name must be at least 2 characters.",
+    "nameTooLong": "name must be at most 250 characters."
+  },
   "menu": {
     "title": "menu planner",
     "loginNeeded": "you need to be logged in to view your menus.",
