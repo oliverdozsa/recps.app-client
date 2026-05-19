@@ -47,6 +47,13 @@
     "sourcePages": "oldalak"
   },
   "menu": {
-    "title": "menü tervező"
+    "title": "menü tervező",
+    "loginNeeded": "a menü tervező használatához be kell jelentkezned",
+    "new": "új menü",
+    "empty": "Nincsenek még menüid. Hozz létre egyet a kezdéshez!",
+    "deleteModalTitle": "menü törlése",
+    "deleteModalQuestion": "Biztosan törlöd ezt: ",
+    "deleteModalCancel": "mégse",
+    "deleteModalYes": "törlés"
   }
 }

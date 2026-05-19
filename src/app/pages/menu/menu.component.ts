@@ -3,10 +3,12 @@ import {Router, RouterLink} from '@angular/router';
 import {MenuService} from '../../services/menu.service';
 import {AuthService} from '../../services/auth.service';
 import {MenuPlanSimplifiedResponse} from '../../services/responses';
+import {TranslatePipe} from '@ngx-translate/core';
+import {LanguageService} from '../../services/language.service';
 
 @Component({
   selector: 'app-menu',
-  imports: [RouterLink],
+  imports: [RouterLink, TranslatePipe],
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.css'
 })
@@ -17,12 +19,14 @@ export class MenuComponent implements OnInit {
 
   private menuService = inject(MenuService);
   protected authService = inject(AuthService);
+  protected languageService = inject(LanguageService);
   private router = inject(Router);
 
   ngOnInit(): void {
     if (!this.authService.isLoggedIn) return;
 
     this.loading.set(true);
+    this.languageService.getAllIfNeeded();
     this.menuService.getAll().subscribe({
       next: menus => this.menus.set(menus),
       complete: () => this.loading.set(false),

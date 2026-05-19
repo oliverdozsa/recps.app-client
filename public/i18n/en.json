@@ -47,6 +47,13 @@
     "sourcePages": "source pages"
   },
   "menu": {
-    "title": "menu planner"
+    "title": "menu planner",
+    "loginNeeded": "you need to be logged in to view your menus.",
+    "new": "new menu",
+    "empty": "No menus yet. Create one to get started!",
+    "deleteModalTitle": "delete menu",
+    "deleteModalQuestion": "Are you sure you want to delete ",
+    "deleteModalCancel": "cancel",
+    "deleteModalYes": "delete"
   }
 }
