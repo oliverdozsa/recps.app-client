@@ -1,6 +1,6 @@
 <div class="card bg-base-100 p-4 w-72 relative">
   @if (authService.isLoggedIn) {
-    <button class="btn btn-circle btn-sm absolute top-5 right-5 z-10"
+    <button class="btn ring-2 ring-yellow-green-600 btn-soft btn-circle btn-sm absolute top-5 right-5 z-10"
             [class.btn-primary]="markedRecipesService.isMarked(recipe)"
             [class.btn-ghost]="!markedRecipesService.isMarked(recipe)"
             (click)="$event.preventDefault(); markedRecipesService.toggle(recipe)"
@@ -12,18 +12,18 @@
       }
     </button>
   }
-  <a [href]="recipe.url" target="_blank">
-    @if (recipe.imageUrl && !imageError()) {
-      <img [src]="recipe.imageUrl" [alt]="recipe.name" class="my-2 rounded w-full object-cover h-40"
-           (error)="imageError.set(true)"/>
-    } @else {
-      <div class="my-2 rounded w-full object-cover h-40 flex justify-center items-center">
-        <div>
-          <span class="icon-[tabler--bowl-spoon] size-20 text-neutral-500"></span>
-        </div>
+
+  @if (recipe.imageUrl && !imageError()) {
+    <img [src]="recipe.imageUrl" [alt]="recipe.name" class="my-2 rounded w-full object-cover h-40"
+         (error)="imageError.set(true)"/>
+  } @else {
+    <div class="my-2 rounded w-full object-cover h-40 flex justify-center items-center">
+      <div>
+        <span class="icon-[tabler--bowl-spoon] size-20 text-neutral-500"></span>
       </div>
-    }
-  </a>
+    </div>
+  }
+
   <div class="flex">
     <div class="font-semibold grow"><a [href]="recipe.url" target="_blank">{{ recipe.name }}</a></div>
     <div>
@@ -43,6 +43,6 @@
   </div>
 
   <div class="card-footer text-sm text-base-content/50 p-0 mt-2">
-    {{recipe.sourcePage}}
+    {{ recipe.sourcePage }}
   </div>
 </div>

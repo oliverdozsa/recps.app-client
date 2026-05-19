@@ -38,7 +38,7 @@
       <span class="text-sm text-base-content/60">{{ numDays() }} {{ "menuEditor.days" | translate }}</span>
     }
 
-    <button class="btn btn-sm ms-auto" [class.btn-primary]="isEditMode()" [disabled]="isEditMode() && !canSave()"
+    <button class="btn btn-sm btn-outline ms-auto" [class.btn-primary]="isEditMode()" [disabled]="isEditMode() && !canSave()"
             (click)="isEditMode() ? save() : toggleMode()">
       @if (isEditMode()) {
         <span class="icon-[tabler--device-floppy] size-4"></span>
