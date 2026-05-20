@@ -18,15 +18,16 @@
 
   <div class="card-body px-3 py-1.5 gap-0.5">
     <div class="flex items-center min-w-0 max-w-59">
-      <div class="font-semibold text-sm grow min-w-0 block truncate cursor-default">{{recipe.name}}</div>
+      <div class="font-semibold text-sm grow min-w-0 block truncate cursor-default">{{ recipe.name }}</div>
       <div>
         <a [href]="recipe.url" target="_blank" class="link link-primary flex item-center">
-          <div
-          class="icon-[tabler--external-link] size-5"></div></a>
+          <div class="icon-[tabler--external-link] size-5"></div>
+        </a>
       </div>
       @if (editMode) {
         <div>
-          <button class="btn btn-circle btn-soft btn-xs btn-primary ms-1" (click)="$event.stopPropagation(); onBackClick.emit()">
+          <button class="btn btn-circle btn-soft btn-xs btn-primary ms-1"
+                  (click)="$event.stopPropagation(); onBackClick.emit()">
             <span class="icon-[tabler--arrow-back-up] size-4"></span>
           </button>
         </div>

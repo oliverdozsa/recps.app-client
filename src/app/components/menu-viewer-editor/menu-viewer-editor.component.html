@@ -29,7 +29,8 @@
         <button class="join-item btn btn-sm btn-text" (click)="decreaseDays()" [disabled]="numDays() <= 1">
           <span class="icon-[tabler--minus] size-4"></span>
         </button>
-        <span class="join-item btn btn-sm btn-text pointer-events-none">{{ numDays() }} {{ "menuEditor.days" | translate }}</span>
+        <span
+          class="join-item btn btn-sm btn-text pointer-events-none">{{ numDays() }} {{ "menuEditor.days" | translate }}</span>
         <button class="join-item btn btn-sm btn-text" (click)="increaseDays()" [disabled]="numDays() >= 15">
           <span class="icon-[tabler--plus] size-4"></span>
         </button>
@@ -38,7 +39,8 @@
       <span class="text-sm text-base-content/60">{{ numDays() }} {{ "menuEditor.days" | translate }}</span>
     }
 
-    <button class="btn btn-sm btn-outline ms-auto" [class.btn-primary]="isEditMode()" [disabled]="isEditMode() && !canSave()"
+    <button class="btn btn-sm btn-outline ms-auto" [class.btn-primary]="isEditMode()"
+            [disabled]="isEditMode() && !canSave()"
             (click)="isEditMode() ? save() : toggleMode()">
       @if (isEditMode()) {
         <span class="icon-[tabler--device-floppy] size-4"></span>
@@ -55,7 +57,8 @@
     @if (selectedFromDay() !== null) {
       <div role="alert" class="alert alert-soft bg-vanilla-cream-300 flex items-center py-2 gap-2">
         <span class="icon-[tabler--hand-click] shrink-0 size-5"></span>
-        <span class="flex-1 text-sm"><strong>{{ selectedFromDay()!.recipe.name }}</strong> — {{ "menuEditor.moveTip" | translate }}</span>
+        <span
+          class="flex-1 text-sm"><strong>{{ selectedFromDay()!.recipe.name }}</strong> — {{ "menuEditor.moveTip" | translate }}</span>
         <button class="btn btn-xs btn-text btn-circle" (click)="selectedFromDay.set(null)">
           <span class="icon-[tabler--x] size-4"></span>
         </button>
@@ -63,7 +66,8 @@
     } @else if (selectedRecipe() !== null) {
       <div role="alert" class="alert alert-soft bg-vanilla-cream-300 flex items-center py-2 gap-2">
         <span class="icon-[tabler--hand-click] shrink-0 size-5"></span>
-        <span class="flex-1 text-sm"><strong>{{ selectedRecipe()!.name }}</strong> — {{ "menuEditor.placeTip" | translate }}</span>
+        <span
+          class="flex-1 text-sm"><strong>{{ selectedRecipe()!.name }}</strong> — {{ "menuEditor.placeTip" | translate }}</span>
         <button class="btn btn-xs btn-text btn-circle" (click)="selectedRecipe.set(null)">
           <span class="icon-[tabler--x] size-4"></span>
         </button>
@@ -102,7 +106,7 @@
                 @for (recipe of recipes; track $index; let j = $index) {
                   <div class="relative shrink-0"
                        [class.opacity-50]="isEditMode() && selectedFromDay() !== null && selectedFromDay()!.dayIndex === i"
-                       (click)="$event.stopPropagation(); isEditMode() && selectFromDay(recipe, i, j)">
+                       (click)="isEditMode() ? selectFromDay(recipe, i, j) : true">
                     <app-recipe-compact-card [recipe]="recipe" [editMode]="isEditMode()"
                                              [selected]="selectedFromDay()?.recipe === recipe"
                                              (onBackClick)="moveBackToPool(recipe, i, j)"/>
