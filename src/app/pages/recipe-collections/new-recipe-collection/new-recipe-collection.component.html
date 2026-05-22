@@ -9,21 +9,28 @@
     </div>
   }
 
-  <div class="flex flex-col md:flex-row gap-6 mt-6">
-    <div class="flex-1 flex flex-col gap-4">
-      <h1 class="text-2xl font-bold">{{ "recipeCollections.new" | translate }}</h1>
-      <input class="input input-bordered w-full max-w-md"
-             [(ngModel)]="name"
-             [placeholder]="'recipeCollections.collectionNamePlaceholder' | translate"
-             maxlength="250"/>
-      @if (markedRecipesService.markedRecipes().length === 0) {
-        <p class="text-sm text-base-content/60">{{ "recipeCollections.noMarkedRecipes" | translate }}</p>
-      }
-      <button class="btn btn-primary w-fit" [disabled]="!canSave" (click)="save()">
-        {{ "recipeCollections.save" | translate }}
-      </button>
+  <div class="flex flex-col gap-4">
+    <div class="flex w-full items-end gap-2">
+      <div class="grow">
+        <h1 class="text-2xl font-bold">{{ "recipeCollections.new" | translate }}</h1>
+        <input class="input input-bordered w-full"
+               [(ngModel)]="name"
+               [placeholder]="'recipeCollections.collectionNamePlaceholder' | translate"
+               maxlength="250"/>
+      </div>
+      <div>
+        <button class="btn btn-primary w-fit" [disabled]="!canSave" (click)="save()">
+          {{ "recipeCollections.save" | translate }}
+        </button>
+      </div>
     </div>
 
-    <app-marked-recipes></app-marked-recipes>
+    @if (markedRecipesService.markedRecipes().length === 0) {
+      <div>
+        <p class="text-sm text-base-content/60">{{ "recipeCollections.noMarkedRecipes" | translate }}</p>
+      </div>
+    }
+
+    <app-marked-recipes [displayFully]="true" [disableSelection]="true"></app-marked-recipes>
   </div>
 }

@@ -1,4 +1,4 @@
-import {Component, EventEmitter, inject, Output} from '@angular/core';
+import {Component, EventEmitter, inject, Input, Output} from '@angular/core';
 import {RecipeCompactCardComponent} from "../recipe-compact-card/recipe-compact-card.component";
 import {MarkedRecipesService} from '../../services/marked-recipes.service';
 import {RecipeSearchResponse} from '../../services/responses';
@@ -17,6 +17,12 @@ import {TranslatePipe} from '@ngx-translate/core';
 export class MarkedRecipesComponent {
   markedRecipesService = inject(MarkedRecipesService);
 
+  @Input()
+  displayFully = false;
+
+  @Input()
+  disableSelection = false;
+
   @Output()
   onRecipeSelected = new EventEmitter<RecipeSearchResponse | null>();
 
@@ -29,8 +35,14 @@ export class MarkedRecipesComponent {
   }
 
   onRecipeClicked(recipe: RecipeSearchResponse) {
+    if (this.disableSelection) return;
+
     this.selected = recipe == this.selected ? null : recipe;
     this.onRecipeSelected.emit(this.selected);
+  }
+
+  onRecipeDeleteClicked(recipe: RecipeSearchResponse) {
+    this.markedRecipesService.remove(recipe);
   }
 
   clearAll() {

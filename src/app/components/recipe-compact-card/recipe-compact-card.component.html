@@ -32,6 +32,14 @@
           </button>
         </div>
       }
+      @if (deleteMode) {
+        <div>
+          <button class="btn btn-circle btn-soft btn-xs btn-error ms-1"
+                  (click)="$event.stopPropagation(); onDeleteClicked.emit()">
+            <span class="icon-[tabler--trash] size-4"></span>
+          </button>
+        </div>
+      }
     </div>
 
     @if (recipe.cookingTime) {

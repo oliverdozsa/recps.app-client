@@ -18,8 +18,14 @@ export class RecipeCompactCardComponent {
   @Input()
   editMode: boolean = false;
 
+  @Input()
+  deleteMode: boolean = false;
+
   @Output()
   onBackClick= new EventEmitter<void>();
+
+  @Output()
+  onDeleteClicked = new EventEmitter<void>();
 
   imageError = signal(false);
 
