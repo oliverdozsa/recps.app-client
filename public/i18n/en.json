@@ -69,6 +69,24 @@
     "nameTooShort": "name must be at least 2 characters.",
     "nameTooLong": "name must be at most 250 characters."
   },
+  "recipeCollections": {
+    "title": "collections",
+    "loginNeeded": "you need to be logged in to view your recipe collections.",
+    "new": "new collection",
+    "empty": "no collections yet. create one to get started!",
+    "deleteModalTitle": "delete collection",
+    "deleteModalQuestion": "are you sure you want to delete ",
+    "deleteModalCancel": "cancel",
+    "deleteModalYes": "delete",
+    "collectionNamePlaceholder": "collection name…",
+    "save": "save",
+    "edit": "edit",
+    "cancel": "cancel",
+    "addMarkedRecipes": "add marked recipes",
+    "noMarkedRecipes": "no marked recipes. browse recipes and mark some first.",
+    "markedAlreadyAdded": "all marked recipes are already in this collection.",
+    "noRecipes": "no recipes in this collection."
+  },
   "menu": {
     "title": "menu planner",
     "loginNeeded": "you need to be logged in to view your menus.",

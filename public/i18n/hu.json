@@ -69,6 +69,24 @@
     "nameTooShort": "a névnek legalább 2 karakternek kell lennie.",
     "nameTooLong": "a név legfeljebb 250 karakter lehet."
   },
+  "recipeCollections": {
+    "title": "gyűjtemények",
+    "loginNeeded": "a receptgyűjtemények megtekintéséhez be kell jelentkezned.",
+    "new": "új gyűjtemény",
+    "empty": "még nincsenek gyűjteményeid. hozz létre egyet a kezdéshez!",
+    "deleteModalTitle": "gyűjtemény törlése",
+    "deleteModalQuestion": "biztosan törlöd ezt: ",
+    "deleteModalCancel": "mégse",
+    "deleteModalYes": "törlés",
+    "collectionNamePlaceholder": "gyűjtemény neve…",
+    "save": "mentés",
+    "edit": "szerkesztés",
+    "cancel": "mégse",
+    "addMarkedRecipes": "megjelölt receptek hozzáadása",
+    "noMarkedRecipes": "nincsenek megjelölt receptek. böngéssz recepteket és jelölj meg néhányat.",
+    "markedAlreadyAdded": "az összes megjelölt recept már szerepel ebben a gyűjteményben.",
+    "noRecipes": "nincsenek receptek ebben a gyűjteményben."
+  },
   "menu": {
     "title": "menü tervező",
     "loginNeeded": "a menü tervező használatához be kell jelentkezned",
