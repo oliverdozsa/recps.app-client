@@ -8,10 +8,11 @@ import {LanguageService} from '../../../services/language.service';
 import {MarkedRecipesService} from '../../../services/marked-recipes.service';
 import {RecipeCollectionDetailedResponse, RecipeSearchResponse} from '../../../services/responses';
 import {RecipeCompactCardComponent} from '../../../components/recipe-compact-card/recipe-compact-card.component';
+import {MarkedRecipesComponent} from '../../../components/marked-recipes/marked-recipes.component';
 
 @Component({
   selector: 'app-view-edit-recipe-collection',
-  imports: [TranslatePipe, RecipeCompactCardComponent, FormsModule],
+  imports: [TranslatePipe, RecipeCompactCardComponent, FormsModule, MarkedRecipesComponent],
   templateUrl: './view-edit-recipe-collection.component.html',
   styleUrl: './view-edit-recipe-collection.component.css'
 })
