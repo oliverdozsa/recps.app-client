@@ -109,7 +109,7 @@
                        (click)="isEditMode() ? selectFromDay(recipe, i, j) : true">
                     <app-recipe-compact-card [recipe]="recipe" [editMode]="isEditMode()"
                                              [selected]="selectedFromDay()?.recipe === recipe"
-                                             (onBackClick)="moveBackToPool(recipe, i, j)"/>
+                                             (onBackClicked)="moveBackToPool(recipe, i, j)"/>
                   </div>
                 }
               </div>

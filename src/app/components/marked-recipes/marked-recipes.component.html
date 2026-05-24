@@ -1,4 +1,4 @@
-<div [class.md:w-70]="!displayFully" class="w-full shrink-0 flex flex-col gap-2">
+<div [class.md:w-75]="!displayFully" class="w-full shrink-0 flex flex-col gap-2">
   <div class="flex items-center gap-2">
     <h2 class="font-semibold text-base-content/70">
       {{ "markedRecipes.title" | translate }}
@@ -17,7 +17,8 @@
       <div class="ms-1 my-1 relative shrink-0 cursor-pointer rounded-2xl transition-shadow duration-150"
            (click)="onRecipeClicked(recipe)">
         <app-recipe-compact-card [recipe]="recipe" [selected]="selected === recipe"
-        [deleteMode]="true" (onDeleteClicked)="onRecipeDeleteClicked(recipe)"/>
+        [deleteMode]="true" (onDeleteClicked)="onRecipeDeleteClicked(recipe)"
+        [addMode]="showAddButton" (onAddClicked)="onRecipeAddClicked(recipe)"/>
       </div>
     }
     @if (markedRecipesService.markedRecipes().length == 0) {

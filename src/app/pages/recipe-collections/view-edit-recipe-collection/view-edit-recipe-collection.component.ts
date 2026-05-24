@@ -56,6 +56,13 @@ export class ViewEditRecipeCollectionComponent implements OnInit {
     this.isEditing.set(false);
   }
 
+  addRecipeToCollection(recipe: RecipeSearchResponse): void {
+    if (!this.editRecipes.some(r => r.id === recipe.id)) {
+      this.editRecipes = [...this.editRecipes, recipe];
+    }
+    this.markedRecipesService.remove(recipe);
+  }
+
   removeRecipe(recipe: RecipeSearchResponse): void {
     this.editRecipes = this.editRecipes.filter(r => r.id !== recipe.id);
   }
@@ -106,5 +113,10 @@ export class ViewEditRecipeCollectionComponent implements OnInit {
       next: () => this.router.navigate(['/recipe-collections']),
       error: () => this.loading.set(false),
     });
+  }
+
+  onBackClicked(recipe: RecipeSearchResponse) {
+    this.removeRecipe(recipe);
+    this.markedRecipesService.mark(recipe);
   }
 }

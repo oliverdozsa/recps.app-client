@@ -1,4 +1,4 @@
-<div class="card image-full bg-base-100 w-65 h-17 overflow-hidden"
+<div class="card image-full bg-base-100 w-70 h-17 overflow-hidden"
      [class.ring-4]="selected"
      [class.ring-primary]="selected">
   <figure>
@@ -17,29 +17,40 @@
   </figure>
 
   <div class="card-body px-3 py-1.5 gap-0.5">
-    <div class="flex items-center min-w-0 max-w-59">
+    <div class="flex items-center min-w-0 max-w-65">
       <div class="font-semibold text-sm grow min-w-0 block truncate cursor-default">{{ recipe.name }}</div>
-      <div>
-        <a [href]="recipe.url" target="_blank" class="link link-primary flex item-center">
-          <div class="icon-[tabler--external-link] size-5"></div>
-        </a>
+      <div class="flex flex-row shrink items-center">
+        <div>
+          <a [href]="recipe.url" target="_blank" class="link link-primary flex item-center">
+            <div class="icon-[tabler--external-link] size-5"></div>
+          </a>
+        </div>
+        @if (editMode) {
+          <div>
+            <button class="btn btn-circle btn-soft btn-xs btn-primary ms-1"
+                    (click)="$event.stopPropagation(); onBackClicked.emit()">
+              <span class="icon-[tabler--arrow-back-up] size-4"></span>
+            </button>
+          </div>
+        }
+        @if (addMode) {
+          <div>
+            <button class="btn btn-circle btn-soft btn-xs btn-success ms-1"
+                    (click)="$event.stopPropagation(); onAddClicked.emit()">
+              <span class="icon-[tabler--plus] size-4"></span>
+            </button>
+          </div>
+        }
+        @if (deleteMode) {
+          <div>
+            <button class="btn btn-circle btn-soft btn-xs btn-error ms-1"
+                    (click)="$event.stopPropagation(); onDeleteClicked.emit()">
+              <span class="icon-[tabler--trash] size-4"></span>
+            </button>
+          </div>
+        }
       </div>
-      @if (editMode) {
-        <div>
-          <button class="btn btn-circle btn-soft btn-xs btn-primary ms-1"
-                  (click)="$event.stopPropagation(); onBackClick.emit()">
-            <span class="icon-[tabler--arrow-back-up] size-4"></span>
-          </button>
-        </div>
-      }
-      @if (deleteMode) {
-        <div>
-          <button class="btn btn-circle btn-soft btn-xs btn-error ms-1"
-                  (click)="$event.stopPropagation(); onDeleteClicked.emit()">
-            <span class="icon-[tabler--trash] size-4"></span>
-          </button>
-        </div>
-      }
+
     </div>
 
     @if (recipe.cookingTime) {

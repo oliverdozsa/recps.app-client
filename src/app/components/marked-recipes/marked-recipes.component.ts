@@ -23,8 +23,14 @@ export class MarkedRecipesComponent {
   @Input()
   disableSelection = false;
 
+  @Input()
+  showAddButton = false;
+
   @Output()
   onRecipeSelected = new EventEmitter<RecipeSearchResponse | null>();
+
+  @Output()
+  onRecipeAdded = new EventEmitter<RecipeSearchResponse>();
 
   selected: RecipeSearchResponse | null = null;
 
@@ -43,6 +49,10 @@ export class MarkedRecipesComponent {
 
   onRecipeDeleteClicked(recipe: RecipeSearchResponse) {
     this.markedRecipesService.remove(recipe);
+  }
+
+  onRecipeAddClicked(recipe: RecipeSearchResponse) {
+    this.onRecipeAdded.emit(recipe);
   }
 
   clearAll() {

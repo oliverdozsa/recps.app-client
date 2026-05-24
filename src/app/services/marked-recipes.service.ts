@@ -28,6 +28,11 @@ export class MarkedRecipesService {
     });
   }
 
+  mark(recipe: RecipeSearchResponse) {
+    if (this.isMarked(recipe)) return;
+    this.toggle(recipe);
+  }
+
   remove(recipe: RecipeSearchResponse) {
     this._markedRecipes.update(recipes => {
       const updated = recipes.filter(r => r.id !== recipe.id);
