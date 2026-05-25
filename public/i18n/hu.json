@@ -44,7 +44,8 @@
     "orderByIngredientCount": "hozzávalók száma",
     "orderAsc": "növekvő",
     "orderDesc": "csökkenő",
-    "sourcePages": "oldalak"
+    "sourcePages": "oldalak",
+    "collections": "gyűjtemények"
   },
   "markedRecipes": {
     "title": "megjelölt receptek",

@@ -2,6 +2,7 @@ import {inject, Injectable} from '@angular/core';
 import {OAuthService} from 'angular-oauth2-oidc';
 import {Router} from '@angular/router';
 import {NotificationsService} from './notifications.service';
+import {RecipeService} from './recipe.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,7 @@ export class AuthService {
   private oauthService = inject(OAuthService);
   private router = inject(Router);
   private notifications = inject(NotificationsService);
+  private recipeService = inject(RecipeService);
 
   get isLoggedIn() {
     return this.oauthService.hasValidIdToken();
@@ -36,6 +38,7 @@ export class AuthService {
   }
 
   logout() {
+    this.recipeService.clearCollections();
     this.oauthService.revokeTokenAndLogout();
     this.oauthService.logOut();
   }

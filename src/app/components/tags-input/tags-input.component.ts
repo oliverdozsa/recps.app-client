@@ -21,6 +21,7 @@ export class TagsInputComponent implements OnInit {
   @Input() initialTags: any[] = [];
   @Input() selectOptions: SelectOption[] = [];
   @Input() tagTemplate?: TemplateRef<{ $implicit: any; remove: () => void }>;
+  @Input() showAllOnFocus = false;
   @Output() tagsChange = new EventEmitter<any[]>();
   @Output() queryChange = new EventEmitter<string>();
   @Output() selectOptionChange = new EventEmitter<any>();

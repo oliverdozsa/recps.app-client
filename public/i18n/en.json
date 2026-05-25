@@ -44,7 +44,8 @@
     "orderByIngredientCount": "ingredient count",
     "orderAsc": "ascending",
     "orderDesc": "descending",
-    "sourcePages": "source pages"
+    "sourcePages": "source pages",
+    "collections": "collections"
   },
   "markedRecipes": {
     "title": "marked recipes",

@@ -60,4 +60,5 @@ export interface RecipeSearchRequest {
   prepTime?: PrepTime;
   countIngredients?: CountIngredients;
   sourcePages?: number[];
+  collections?: number[];
 }

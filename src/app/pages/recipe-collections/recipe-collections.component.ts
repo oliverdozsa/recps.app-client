@@ -4,11 +4,10 @@ import {TranslatePipe} from '@ngx-translate/core';
 import {RecipeCollectionService} from '../../services/recipe-collection.service';
 import {AuthService} from '../../services/auth.service';
 import {RecipeCollectionSimplifiedResponse} from '../../services/responses';
-import {CollectionInputComponent} from '../../components/collection-input/collection-input.component';
 
 @Component({
   selector: 'app-recipe-collections',
-  imports: [RouterLink, TranslatePipe, CollectionInputComponent],
+  imports: [RouterLink, TranslatePipe],
   templateUrl: './recipe-collections.component.html',
   styleUrl: './recipe-collections.component.css'
 })

@@ -4,17 +4,20 @@ import {RecipeOrderBy, RecipeOrderDirection} from '../../services/requests';
 import {FormsModule} from '@angular/forms';
 import {TranslatePipe} from '@ngx-translate/core';
 import {DualRangeComponent} from '../dual-range/dual-range.component';
+import {CollectionInputComponent} from '../collection-input/collection-input.component';
 import {LanguageService} from '../../services/language.service';
-import {SourcePageResponse} from '../../services/responses';
+import {RecipeCollectionSimplifiedResponse, SourcePageResponse} from '../../services/responses';
+import {AuthService} from '../../services/auth.service';
 
 @Component({
   selector: 'app-recipe-advanced-search-params',
-  imports: [FormsModule, TranslatePipe, DualRangeComponent],
+  imports: [FormsModule, TranslatePipe, DualRangeComponent, CollectionInputComponent],
   templateUrl: './recipe-advanced-search-params.component.html',
   styleUrl: './recipe-advanced-search-params.component.css'
 })
 export class RecipeAdvancedSearchParamsComponent {
   recipeService = inject(RecipeService);
+  authService = inject(AuthService);
   private languageService = inject(LanguageService);
 
   sourcePageGroups = computed(() => {
@@ -122,6 +125,12 @@ export class RecipeAdvancedSearchParamsComponent {
     const current = this.recipeService.queryParams.sourcePages ?? [];
     const updated = checked ? [...current, id] : current.filter(x => x !== id);
     this.recipeService.queryParams.sourcePages = updated.length > 0 ? updated : undefined;
+    this.recipeService.resetPage();
+    this.recipeService.queryParamsChanged$.next();
+  }
+
+  onCollectionsChange(collections: RecipeCollectionSimplifiedResponse[]): void {
+    this.recipeService.selectedCollections = collections;
     this.recipeService.resetPage();
     this.recipeService.queryParamsChanged$.next();
   }
