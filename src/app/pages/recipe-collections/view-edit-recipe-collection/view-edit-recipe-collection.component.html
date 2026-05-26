@@ -38,15 +38,15 @@
 
       <!-- Edit toolbar -->
       @if (isEditing()) {
-        <div class="flex items-center gap-2">
+        <div class="flex flex-col gap-2">
           <button class="btn btn-sm btn-outline" [disabled]="!canAddMarked" (click)="addMarkedRecipes()">
             <span class="icon-[tabler--plus] size-4"></span>
             {{ "recipeCollections.addMarkedRecipes" | translate }}
           </button>
           @if (markedRecipesService.markedRecipes().length === 0) {
-            <span class="text-xs text-base-content/50">{{ "recipeCollections.noMarkedRecipes" | translate }}</span>
+            <div class="text-xs text-base-content/50">{{ "recipeCollections.noMarkedRecipes" | translate }}</div>
           } @else if (!canAddMarked) {
-            <span class="text-xs text-base-content/50">{{ "recipeCollections.markedAlreadyAdded" | translate }}</span>
+            <div class="text-xs text-base-content/50">{{ "recipeCollections.markedAlreadyAdded" | translate }}</div>
           }
         </div>
       }
