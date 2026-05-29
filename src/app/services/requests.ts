@@ -38,6 +38,16 @@ export interface CreateUpdateMenuPlanRequest {
   recipeIds: number[][];
 }
 
+export interface CreateRecipeCollectionRequest {
+  name: string;
+  recipeIds: number[];
+}
+
+export interface UpdateRecipeCollectionRequest {
+  name: string;
+  recipeIds: number[];
+}
+
 export interface RecipeSearchRequest {
   includedIngredientGroups?: IngredientGroupWithRelation[];
   excludedIngredients?: number[];
@@ -50,4 +60,5 @@ export interface RecipeSearchRequest {
   prepTime?: PrepTime;
   countIngredients?: CountIngredients;
   sourcePages?: number[];
+  collections?: number[];
 }

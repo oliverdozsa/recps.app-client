@@ -44,6 +44,16 @@
       }
     </div>
 
+    @if (authService.isLoggedIn) {
+      <div>
+        <label class="label text-sm">{{ "recipeAdvancedSearchParams.collections" | translate }}</label>
+        <app-collection-input
+          [initialCollections]="recipeService.selectedCollections"
+          (selectedCollectionsChange)="onCollectionsChange($event)">
+        </app-collection-input>
+      </div>
+    }
+
     @if (recipeService.sourcePages().length > 0) {
       <div>
         <label class="label text-sm">{{ "recipeAdvancedSearchParams.sourcePages" | translate }}</label>

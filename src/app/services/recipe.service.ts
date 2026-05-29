@@ -1,7 +1,7 @@
 import {inject, Injectable, signal} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable, Subject, tap} from 'rxjs';
-import {IngredientSearchAndCategoryUnion, PageResponseRecipeSearchResponse, SourcePageResponse} from './responses';
+import {IngredientSearchAndCategoryUnion, PageResponseRecipeSearchResponse, RecipeCollectionSimplifiedResponse, SourcePageResponse} from './responses';
 import {RecipeSearchRequest} from './requests';
 import {environment} from '../../environments/environment';
 import {IngredientGroupRelation} from './common.data';
@@ -15,6 +15,7 @@ interface PersistedRecipeQuery {
   excludedIngredients: IngredientSearchAndCategoryUnion[];
   categoryMinMatch: Record<number, number>;
   categoryAsPercent: Record<number, boolean>;
+  selectedCollections: RecipeCollectionSimplifiedResponse[];
 }
 
 const STORAGE_KEY = 'recps.queryState';
@@ -35,6 +36,7 @@ export class RecipeService {
   includedIngredientGroups: IngredientSearchAndCategoryUnion[][] = [[]];
   laneRelations: IngredientGroupRelation[] = [];
   excludedIngredients: IngredientSearchAndCategoryUnion[] = [];
+  selectedCollections: RecipeCollectionSimplifiedResponse[] = [];
   categoryMinMatch: Record<number, number> = {};
   categoryAsPercent: Record<number, boolean> = {};
 
@@ -52,6 +54,9 @@ export class RecipeService {
 
   search(): Observable<PageResponseRecipeSearchResponse> {
     this.setDefaultSourcePagesIfNeeded();
+    this.queryParams.collections = this.selectedCollections.length > 0
+      ? this.selectedCollections.map(c => c.id)
+      : undefined;
     return this.http.post<PageResponseRecipeSearchResponse>(`${this.baseUrl}/recipes/search`, this.queryParams);
   }
 
@@ -71,6 +76,12 @@ export class RecipeService {
         this.conflictingIngredients.add(id);
       }
     });
+  }
+
+  clearCollections(): void {
+    this.selectedCollections = [];
+    this.queryParams.collections = undefined;
+    this.persistQuery();
   }
 
   resetPage() {
@@ -108,6 +119,7 @@ export class RecipeService {
       this.excludedIngredients = parsed.excludedIngredients ?? [];
       this.categoryMinMatch = parsed.categoryMinMatch ?? {};
       this.categoryAsPercent = parsed.categoryAsPercent ?? {};
+      this.selectedCollections = parsed.selectedCollections ?? [];
       this.determineConflictingIngredients();
     } catch {
       try { localStorage.removeItem(STORAGE_KEY); } catch { /* ignore */ }
@@ -123,6 +135,7 @@ export class RecipeService {
       excludedIngredients: this.excludedIngredients,
       categoryMinMatch: this.categoryMinMatch,
       categoryAsPercent: this.categoryAsPercent,
+      selectedCollections: this.selectedCollections,
     };
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));

@@ -1,0 +1,36 @@
+@if (!authService.isLoggedIn) {
+  <div class="flex flex-col items-center justify-center mt-20 gap-4">
+    <p class="text-lg">{{ "recipeCollections.loginNeeded" | translate }}</p>
+  </div>
+} @else {
+  @if (saving()) {
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-base-100/60">
+      <span class="loading loading-spinner loading-xl"></span>
+    </div>
+  }
+
+  <div class="flex flex-col gap-4">
+    <div class="flex w-full items-end gap-2">
+      <div class="grow">
+        <h1 class="text-2xl font-bold">{{ "recipeCollections.new" | translate }}</h1>
+        <input class="input input-bordered w-full"
+               [(ngModel)]="name"
+               [placeholder]="'recipeCollections.collectionNamePlaceholder' | translate"
+               maxlength="250"/>
+      </div>
+      <div>
+        <button class="btn btn-primary w-fit" [disabled]="!canSave" (click)="save()">
+          {{ "recipeCollections.save" | translate }}
+        </button>
+      </div>
+    </div>
+
+    @if (markedRecipesService.markedRecipes().length === 0) {
+      <div>
+        <p class="text-sm text-base-content/60">{{ "recipeCollections.noMarkedRecipes" | translate }}</p>
+      </div>
+    }
+
+    <app-marked-recipes [displayFully]="true" [disableSelection]="true"></app-marked-recipes>
+  </div>
+}

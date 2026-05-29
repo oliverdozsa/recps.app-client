@@ -1,0 +1,15 @@
+<div class="relative">
+  <app-tags-input
+    [externalOptions]="filteredOptions"
+    [displayFunction]="display"
+    [badgeClass]="badgeClass"
+    [initialTags]="initialCollections"
+    [showAllOnFocus]="true"
+    (queryChange)="onQueryChange($event)"
+    (tagsChange)="onCollectionsChange($event)">
+  </app-tags-input>
+
+  @if (isLoading) {
+    <span class="loading loading-spinner loading-sm absolute right-3 top-3 pointer-events-none"></span>
+  }
+</div>

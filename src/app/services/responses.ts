@@ -65,6 +65,17 @@ export interface MenuPlanSimplifiedResponse {
   name: string;
 }
 
+export interface RecipeCollectionSimplifiedResponse {
+  id: number;
+  name: string;
+}
+
+export interface RecipeCollectionDetailedResponse {
+  id?: number;
+  name?: string;
+  recipes?: RecipeSearchResponse[];
+}
+
 export interface MenuPlanDetailedResponse {
   id?: number;
   name?: string;
