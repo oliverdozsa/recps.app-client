@@ -58,7 +58,7 @@ export class MenuViewerEditorComponent implements OnInit {
     });
 
     effect(() => {
-      if(this.selectedRecipe() === null) {
+      if (this.selectedRecipe() === null) {
         this.markedRecipesService.selectedRecipeCleared$.next();
       }
     })
@@ -136,7 +136,11 @@ export class MenuViewerEditorComponent implements OnInit {
 
   moveBackToPool(recipe: RecipeSearchResponse, dayIndex: number, recipeIndex: number): void {
     this.removeFromDay(dayIndex, recipeIndex);
-    this.markedRecipesService.toggle(recipe);
+
+    if (!this.markedRecipesService.isMarked(recipe)) {
+      this.markedRecipesService.toggle(recipe);
+    }
+
     this.selectedFromDay.set(null);
   }
 
