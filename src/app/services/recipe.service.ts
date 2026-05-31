@@ -89,6 +89,19 @@ export class RecipeService {
     this.pageReset$.next();
   }
 
+  resetSearchParams() {
+    this.queryParams.filterByName = undefined;
+    this.queryParams.includedIngredientGroups = undefined;
+    this.queryParams.excludedIngredients = undefined;
+    this.includedIngredientGroups = [[]];
+    this.laneRelations = [];
+    this.excludedIngredients = [];
+    this.categoryMinMatch = {};
+    this.categoryAsPercent = {};
+    this.conflictingIngredients.clear();
+    this.resetPage();
+  }
+
   private loadPersistedQuery() {
     let raw: string | null;
     try {

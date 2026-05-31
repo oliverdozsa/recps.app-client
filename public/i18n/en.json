@@ -5,6 +5,7 @@
     "byIngredients": "by ingredients",
     "excluded": "exclude",
     "addGroup": "add group",
+    "resetParams": "reset",
     "laneRelation": {
       "or": "OR",
       "and": "AND"

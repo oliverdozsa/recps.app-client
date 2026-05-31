@@ -118,6 +118,11 @@ export class RecipeMainSearchParamsComponent {
     this.queryParamsChanged$.next();
   }
 
+  resetSearchParams(): void {
+    this.recipeService.resetSearchParams();
+    this.queryParamsChanged$.next();
+  }
+
   private rebuildQueryGroups(): void {
     const result: IngredientGroupWithRelation[] = [];
     const numOfGroups = this.recipeService.includedIngredientGroups.length;

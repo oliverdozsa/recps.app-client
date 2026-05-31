@@ -5,6 +5,7 @@
     "byIngredients": "hozzávalók",
     "excluded": "ne legyen benne",
     "addGroup": "új csoport",
+    "resetParams": "alaphelyzet",
     "laneRelation": {
       "or": "VAGY",
       "and": "ÉS"
