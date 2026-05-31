@@ -8,13 +8,15 @@ import {MenuService} from '../../services/menu.service';
 import {loadFromStorage, saveToStorage, clearFromStorage} from './menu-viewer-editor-persisted';
 import {MarkedRecipesComponent} from '../marked-recipes/marked-recipes.component';
 import {TranslatePipe} from '@ngx-translate/core';
+import {MenuGenerateModalComponent} from '../menu-generate-modal/menu-generate-modal.component';
 
 @Component({
   selector: 'app-menu-viewer-editor',
   imports: [
     RecipeCompactCardComponent,
     MarkedRecipesComponent,
-    TranslatePipe
+    TranslatePipe,
+    MenuGenerateModalComponent
   ],
   templateUrl: './menu-viewer-editor.component.html',
   styleUrl: './menu-viewer-editor.component.css'
@@ -46,6 +48,7 @@ export class MenuViewerEditorComponent implements OnInit {
   selectedRecipe = signal<RecipeSearchResponse | null>(null);
   selectedFromDay = signal<{ recipe: RecipeSearchResponse; dayIndex: number; recipeIndex: number } | null>(null);
   saving = signal(false);
+  showGenerateModal = signal(false);
 
   constructor() {
     effect(() => {
@@ -168,6 +171,17 @@ export class MenuViewerEditorComponent implements OnInit {
 
     this.menuDays.update(days =>
       days.map((d, i) => i === dayIndex ? d.filter((_, j) => j !== recipeIndex) : d)
+    );
+  }
+
+  onGenerated(recipes: (RecipeSearchResponse | null)[]): void {
+    this.showGenerateModal.set(false);
+    this.menuDays.update(days =>
+      days.map((day, i) => {
+        const recipe = recipes[i];
+        if (!recipe || day.length >= 10) return day;
+        return [...day, recipe];
+      })
     );
   }
 

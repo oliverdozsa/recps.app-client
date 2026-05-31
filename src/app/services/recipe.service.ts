@@ -1,6 +1,6 @@
 import {inject, Injectable, signal} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable, Subject, tap} from 'rxjs';
+import {Observable, Subject, switchMap, tap} from 'rxjs';
 import {IngredientSearchAndCategoryUnion, PageResponseRecipeSearchResponse, RecipeCollectionSimplifiedResponse, SourcePageResponse} from './responses';
 import {RecipeSearchRequest} from './requests';
 import {environment} from '../../environments/environment';
@@ -58,6 +58,18 @@ export class RecipeService {
       ? this.selectedCollections.map(c => c.id)
       : undefined;
     return this.http.post<PageResponseRecipeSearchResponse>(`${this.baseUrl}/recipes/search`, this.queryParams);
+  }
+
+  searchRandomPage(queryParams: RecipeSearchRequest): Observable<PageResponseRecipeSearchResponse> {
+    queryParams.ingredientLanguageId = this.languageService.selectedLanguage()!.id;
+    return this.http.post<PageResponseRecipeSearchResponse>(`${this.baseUrl}/recipes/search`, queryParams)
+      .pipe(
+        switchMap(p => {
+          const totalPages = Math.ceil(p.totalCount! / queryParams.limit);
+          queryParams.page = Math.floor(Math.random() * totalPages);
+          return this.http.post<PageResponseRecipeSearchResponse>(`${this.baseUrl}/recipes/search`, queryParams);
+        })
+      );
   }
 
   getSourcePages(): Observable<SourcePageResponse[]> {

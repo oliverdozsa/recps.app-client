@@ -39,7 +39,14 @@
       <span class="text-sm text-base-content/60">{{ numDays() }} {{ "menuEditor.days" | translate }}</span>
     }
 
-    <button class="btn btn-sm btn-outline ms-auto" [class.btn-primary]="isEditMode()"
+    @if (isEditMode()) {
+      <button class="btn btn-sm btn-outline ms-auto" (click)="showGenerateModal.set(true)">
+        <span class="icon-[tabler--wand] size-4"></span>
+        {{ "menuEditor.generateFromCollection" | translate }}
+      </button>
+    }
+
+    <button class="btn btn-sm btn-outline" [class.btn-primary]="isEditMode()" [class.ms-auto]="!isEditMode()"
             [disabled]="isEditMode() && !canSave()"
             (click)="isEditMode() ? save() : toggleMode()">
       @if (isEditMode()) {
@@ -81,7 +88,7 @@
   }
 
   <!-- Main layout -->
-  <div class="flex flex-col md:flex-row gap-6 md:items-start">
+  <div class="flex flex-col md:flex-row gap-4 md:items-start">
 
     @if (isEditMode()) {
       <!-- Pool: marked recipes -->
@@ -92,7 +99,7 @@
     <div class="ps-2 pt-1 w-full overflow-x-auto">
       <div class="flex flex-col md:flex-row gap-3 pb-2 md:min-w-max">
         @for (recipes of menuDays(); track $index; let i = $index) {
-          <div class="card w-72 bg-base-100 transition-colors duration-150"
+          <div class="card w-76 bg-base-100 transition-colors duration-150"
                [class.inset-ring-4]="isEditMode() && (selectedRecipe() !== null || selectedFromDay() !== null)"
                [class.inset-ring-primary]="isEditMode() && selectedRecipe() !== null"
                [class.inset-ring-warning]="isEditMode() && selectedFromDay() !== null"
@@ -143,3 +150,11 @@
 
   </div>
 </div>
+
+@if (showGenerateModal()) {
+  <app-menu-generate-modal
+    [numDays]="numDays()"
+    (closed)="showGenerateModal.set(false)"
+    (generated)="onGenerated($event)">
+  </app-menu-generate-modal>
+}

@@ -1,0 +1,49 @@
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-base-300/60" (click)="closed.emit()">
+  <div class="bg-base-100 rounded-lg shadow-xl p-6 w-full max-w-sm mx-4 flex flex-col gap-4"
+       (click)="$event.stopPropagation()">
+
+    @if (generating()) {
+      <div class="flex items-center justify-center py-8">
+        <span class="loading loading-spinner loading-lg"></span>
+      </div>
+    } @else {
+      <h3 class="text-lg font-bold">{{ "menuEditor.generateModal.title" | translate }}</h3>
+
+      @if (loading()) {
+        <div class="flex items-center justify-center py-4">
+          <span class="loading loading-spinner loading-md"></span>
+        </div>
+      } @else if (collections().length === 0) {
+        <p class="text-base-content/60 text-sm">{{ "menuEditor.generateModal.noCollections" | translate }}</p>
+      } @else {
+        <p class="text-sm text-base-content/60">{{ "menuEditor.generateModal.selectCollection" | translate }}</p>
+        <ul class="flex flex-col gap-1 max-h-60 overflow-y-auto">
+          @for (collection of collections(); track collection.id) {
+            <li class="flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-colors"
+                [class.bg-primary]="selectedCollection()?.id === collection.id"
+                [class.text-primary-content]="selectedCollection()?.id === collection.id"
+                [class.hover:bg-base-200]="selectedCollection()?.id !== collection.id"
+                (click)="selectCollection(collection)">
+              <span class="flex-1 font-medium">{{ collection.name }}</span>
+              @if (selectedCollection()?.id === collection.id) {
+                <span class="icon-[tabler--check] size-4 shrink-0"></span>
+              }
+            </li>
+          }
+        </ul>
+      }
+
+      <div class="flex justify-end gap-2">
+        <button class="btn btn-sm" (click)="closed.emit()">
+          {{ "menuEditor.generateModal.cancel" | translate }}
+        </button>
+        <button class="btn btn-sm btn-primary" [disabled]="selectedCollection() === null || loading()"
+                (click)="generate()">
+          <span class="icon-[tabler--wand] size-4 shrink-0"></span>
+          {{ "menuEditor.generateModal.generate" | translate }}
+        </button>
+      </div>
+    }
+
+  </div>
+</div>
