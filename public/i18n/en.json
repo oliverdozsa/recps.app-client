@@ -5,6 +5,7 @@
     "byIngredients": "by ingredients",
     "excluded": "exclude",
     "addGroup": "add group",
+    "resetParams": "reset",
     "laneRelation": {
       "or": "OR",
       "and": "AND"
@@ -68,7 +69,23 @@
     "dayFull": "day full (10/10)",
     "tapToAddAnother": "tap to add another",
     "nameTooShort": "name must be at least 2 characters.",
-    "nameTooLong": "name must be at most 250 characters."
+    "nameTooLong": "name must be at most 250 characters.",
+    "generateFromCollection": "generate",
+    "showIngredients": "ingredients",
+    "generateModal": {
+      "title": "generate from collection",
+      "selectCollection": "select a collection",
+      "noCollections": "no collections available",
+      "generate": "generate",
+      "cancel": "cancel"
+    },
+    "ingredientsModal": {
+      "title": "ingredients",
+      "noIngredients": "no ingredients yet",
+      "copy": "copy to clipboard",
+      "copied": "copied!",
+      "close": "close"
+    }
   },
   "recipeCollections": {
     "title": "collections",

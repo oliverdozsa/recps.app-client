@@ -5,6 +5,7 @@
     "byIngredients": "hozzávalók",
     "excluded": "ne legyen benne",
     "addGroup": "új csoport",
+    "resetParams": "alaphelyzet",
     "laneRelation": {
       "or": "VAGY",
       "and": "ÉS"
@@ -68,7 +69,23 @@
     "dayFull": "a nap tele van (10/10)",
     "tapToAddAnother": "koppints egy másik hozzáadásához",
     "nameTooShort": "a névnek legalább 2 karakternek kell lennie.",
-    "nameTooLong": "a név legfeljebb 250 karakter lehet."
+    "nameTooLong": "a név legfeljebb 250 karakter lehet.",
+    "generateFromCollection": "generálás",
+    "showIngredients": "hozzávalók",
+    "generateModal": {
+      "title": "generálás gyűjteményből",
+      "selectCollection": "válassz gyűjteményt",
+      "noCollections": "nincsenek elérhető gyűjtemények",
+      "generate": "generálás",
+      "cancel": "mégse"
+    },
+    "ingredientsModal": {
+      "title": "hozzávalók",
+      "noIngredients": "még nincsenek hozzávalók",
+      "copy": "másolás vágólapra",
+      "copied": "másolva!",
+      "close": "bezárás"
+    }
   },
   "recipeCollections": {
     "title": "gyűjtemények",

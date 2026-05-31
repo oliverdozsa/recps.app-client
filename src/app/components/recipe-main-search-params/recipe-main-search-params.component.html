@@ -33,9 +33,17 @@
     <button class="btn btn-text btn-primary btn-sm mt-2" (click)="addGroup()">+ {{"recipeMainSearchParams.addGroup" | translate}}</button>
   </div>
 
+
   <div class="md:col-span-1">
     <h2 class="text-lg font-semibold">{{"recipeMainSearchParams.excluded" | translate}}</h2>
     <app-ingredients-input badgeClass="badge-warning" [initialIngredients]="excludedIngredients"
                            (selectedIngredientsChange)="excludedIngredientsChange($event)"></app-ingredients-input>
   </div>
+</div>
+
+<div class="flex justify-end mt-1">
+  <button class="btn btn-outline btn-error btn-sm" (click)="resetSearchParams()">
+    <span class="icon-[tabler--restore] size-4.5 shrink-0"></span>
+    {{"recipeMainSearchParams.resetParams" | translate}}
+  </button>
 </div>

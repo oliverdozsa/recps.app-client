@@ -1,6 +1,6 @@
 import {inject, Injectable, signal} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable, Subject, tap} from 'rxjs';
+import {Observable, Subject, switchMap, tap} from 'rxjs';
 import {IngredientSearchAndCategoryUnion, PageResponseRecipeSearchResponse, RecipeCollectionSimplifiedResponse, SourcePageResponse} from './responses';
 import {RecipeSearchRequest} from './requests';
 import {environment} from '../../environments/environment';
@@ -60,6 +60,18 @@ export class RecipeService {
     return this.http.post<PageResponseRecipeSearchResponse>(`${this.baseUrl}/recipes/search`, this.queryParams);
   }
 
+  searchRandomPage(queryParams: RecipeSearchRequest): Observable<PageResponseRecipeSearchResponse> {
+    queryParams.ingredientLanguageId = this.languageService.selectedLanguage()!.id;
+    return this.http.post<PageResponseRecipeSearchResponse>(`${this.baseUrl}/recipes/search`, queryParams)
+      .pipe(
+        switchMap(p => {
+          const totalPages = Math.ceil(p.totalCount! / queryParams.limit);
+          queryParams.page = Math.floor(Math.random() * totalPages);
+          return this.http.post<PageResponseRecipeSearchResponse>(`${this.baseUrl}/recipes/search`, queryParams);
+        })
+      );
+  }
+
   getSourcePages(): Observable<SourcePageResponse[]> {
     return this.http.get<SourcePageResponse[]>(`${this.baseUrl}/recipes/sourcePages`).pipe(
       tap(pages => this.sourcePages.set(pages))
@@ -87,6 +99,19 @@ export class RecipeService {
   resetPage() {
     this.queryParams.page = 0;
     this.pageReset$.next();
+  }
+
+  resetSearchParams() {
+    this.queryParams.filterByName = undefined;
+    this.queryParams.includedIngredientGroups = undefined;
+    this.queryParams.excludedIngredients = undefined;
+    this.includedIngredientGroups = [[]];
+    this.laneRelations = [];
+    this.excludedIngredients = [];
+    this.categoryMinMatch = {};
+    this.categoryAsPercent = {};
+    this.conflictingIngredients.clear();
+    this.resetPage();
   }
 
   private loadPersistedQuery() {

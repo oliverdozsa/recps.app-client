@@ -8,13 +8,15 @@ import {MenuService} from '../../services/menu.service';
 import {loadFromStorage, saveToStorage, clearFromStorage} from './menu-viewer-editor-persisted';
 import {MarkedRecipesComponent} from '../marked-recipes/marked-recipes.component';
 import {TranslatePipe} from '@ngx-translate/core';
+import {MenuGenerateModalComponent} from '../menu-generate-modal/menu-generate-modal.component';
 
 @Component({
   selector: 'app-menu-viewer-editor',
   imports: [
     RecipeCompactCardComponent,
     MarkedRecipesComponent,
-    TranslatePipe
+    TranslatePipe,
+    MenuGenerateModalComponent
   ],
   templateUrl: './menu-viewer-editor.component.html',
   styleUrl: './menu-viewer-editor.component.css'
@@ -46,6 +48,18 @@ export class MenuViewerEditorComponent implements OnInit {
   selectedRecipe = signal<RecipeSearchResponse | null>(null);
   selectedFromDay = signal<{ recipe: RecipeSearchResponse; dayIndex: number; recipeIndex: number } | null>(null);
   saving = signal(false);
+  showGenerateModal = signal(false);
+  showIngredientsModal = signal(false);
+  ingredientsCopied = signal(false);
+
+  allIngredients = computed(() => {
+    const result = new Set<string>();
+    for (const day of this.menuDays()) {
+      const ingredients = this.getIngredientsOfDay(day);
+      ingredients.forEach(i => result.add(i));
+    }
+    return Array.from(result).sort((a, b) => a.localeCompare(b));
+  });
 
   constructor() {
     effect(() => {
@@ -55,7 +69,7 @@ export class MenuViewerEditorComponent implements OnInit {
     });
 
     effect(() => {
-      if(this.selectedRecipe() === null) {
+      if (this.selectedRecipe() === null) {
         this.markedRecipesService.selectedRecipeCleared$.next();
       }
     })
@@ -133,7 +147,11 @@ export class MenuViewerEditorComponent implements OnInit {
 
   moveBackToPool(recipe: RecipeSearchResponse, dayIndex: number, recipeIndex: number): void {
     this.removeFromDay(dayIndex, recipeIndex);
-    this.markedRecipesService.toggle(recipe);
+
+    if (!this.markedRecipesService.isMarked(recipe)) {
+      this.markedRecipesService.toggle(recipe);
+    }
+
     this.selectedFromDay.set(null);
   }
 
@@ -171,6 +189,17 @@ export class MenuViewerEditorComponent implements OnInit {
     );
   }
 
+  onGenerated(recipes: (RecipeSearchResponse | null)[]): void {
+    this.showGenerateModal.set(false);
+    this.menuDays.update(days =>
+      days.map((day, i) => {
+        const recipe = recipes[i];
+        if (!recipe || day.length >= 10) return day;
+        return [...day, recipe];
+      })
+    );
+  }
+
   increaseDays(): void {
     if (this.numDays() >= 15) return;
     this.menuDays.update(days => [...days, []]);
@@ -185,5 +214,23 @@ export class MenuViewerEditorComponent implements OnInit {
       this.selectedFromDay.set(null);
     }
     this.menuDays.update(d => d.slice(0, -1));
+  }
+
+  copyIngredients(): void {
+    const text = this.allIngredients().join('\n');
+    navigator.clipboard.writeText(text).then(() => {
+      this.ingredientsCopied.set(true);
+      setTimeout(() => this.ingredientsCopied.set(false), 2000);
+    });
+  }
+
+  getIngredientsOfDay(day: RecipeSearchResponse[]): Set<string> {
+    const result = new Set<string>();
+
+    for (const recipe of day) {
+      recipe.ingredients.forEach(i => result.add(i.names[0].name!));
+    }
+
+    return result;
   }
 }
