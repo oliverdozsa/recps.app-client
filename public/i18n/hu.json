@@ -82,6 +82,8 @@
     "ingredientsModal": {
       "title": "hozzávalók",
       "noIngredients": "még nincsenek hozzávalók",
+      "copy": "másolás vágólapra",
+      "copied": "másolva!",
       "close": "bezárás"
     }
   },

@@ -82,6 +82,8 @@
     "ingredientsModal": {
       "title": "ingredients",
       "noIngredients": "no ingredients yet",
+      "copy": "copy to clipboard",
+      "copied": "copied!",
       "close": "close"
     }
   },

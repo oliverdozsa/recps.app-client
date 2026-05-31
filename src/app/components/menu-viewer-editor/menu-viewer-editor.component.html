@@ -185,7 +185,16 @@
         </ul>
       }
 
-      <div class="flex justify-end">
+      <div class="flex justify-between items-center">
+        <button class="btn btn-sm btn-outline" [disabled]="allIngredients().length === 0" (click)="copyIngredients()">
+          @if (ingredientsCopied()) {
+            <span class="icon-[tabler--check] size-4"></span>
+            {{ "menuEditor.ingredientsModal.copied" | translate }}
+          } @else {
+            <span class="icon-[tabler--clipboard] size-4"></span>
+            {{ "menuEditor.ingredientsModal.copy" | translate }}
+          }
+        </button>
         <button class="btn btn-sm" (click)="showIngredientsModal.set(false)">
           {{ "menuEditor.ingredientsModal.close" | translate }}
         </button>

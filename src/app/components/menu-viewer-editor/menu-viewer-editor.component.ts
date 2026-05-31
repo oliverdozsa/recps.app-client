@@ -50,6 +50,7 @@ export class MenuViewerEditorComponent implements OnInit {
   saving = signal(false);
   showGenerateModal = signal(false);
   showIngredientsModal = signal(false);
+  ingredientsCopied = signal(false);
 
   allIngredients = computed(() => {
     const result = new Set<string>();
@@ -213,6 +214,14 @@ export class MenuViewerEditorComponent implements OnInit {
       this.selectedFromDay.set(null);
     }
     this.menuDays.update(d => d.slice(0, -1));
+  }
+
+  copyIngredients(): void {
+    const text = this.allIngredients().join('\n');
+    navigator.clipboard.writeText(text).then(() => {
+      this.ingredientsCopied.set(true);
+      setTimeout(() => this.ingredientsCopied.set(false), 2000);
+    });
   }
 
   getIngredientsOfDay(day: RecipeSearchResponse[]): Set<string> {
