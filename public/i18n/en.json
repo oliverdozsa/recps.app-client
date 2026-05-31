@@ -71,12 +71,18 @@
     "nameTooShort": "name must be at least 2 characters.",
     "nameTooLong": "name must be at most 250 characters.",
     "generateFromCollection": "generate",
+    "showIngredients": "ingredients",
     "generateModal": {
       "title": "generate from collection",
       "selectCollection": "select a collection",
       "noCollections": "no collections available",
       "generate": "generate",
       "cancel": "cancel"
+    },
+    "ingredientsModal": {
+      "title": "ingredients",
+      "noIngredients": "no ingredients yet",
+      "close": "close"
     }
   },
   "recipeCollections": {

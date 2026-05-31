@@ -49,6 +49,16 @@ export class MenuViewerEditorComponent implements OnInit {
   selectedFromDay = signal<{ recipe: RecipeSearchResponse; dayIndex: number; recipeIndex: number } | null>(null);
   saving = signal(false);
   showGenerateModal = signal(false);
+  showIngredientsModal = signal(false);
+
+  allIngredients = computed(() => {
+    const result = new Set<string>();
+    for (const day of this.menuDays()) {
+      const ingredients = this.getIngredientsOfDay(day);
+      ingredients.forEach(i => result.add(i));
+    }
+    return Array.from(result).sort((a, b) => a.localeCompare(b));
+  });
 
   constructor() {
     effect(() => {
@@ -203,5 +213,15 @@ export class MenuViewerEditorComponent implements OnInit {
       this.selectedFromDay.set(null);
     }
     this.menuDays.update(d => d.slice(0, -1));
+  }
+
+  getIngredientsOfDay(day: RecipeSearchResponse[]): Set<string> {
+    const result = new Set<string>();
+
+    for (const recipe of day) {
+      recipe.ingredients.forEach(i => result.add(i.names[0].name!));
+    }
+
+    return result;
   }
 }

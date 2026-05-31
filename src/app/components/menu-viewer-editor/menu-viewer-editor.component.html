@@ -39,24 +39,31 @@
       <span class="text-sm text-base-content/60">{{ numDays() }} {{ "menuEditor.days" | translate }}</span>
     }
 
-    @if (isEditMode()) {
-      <button class="btn btn-sm btn-outline ms-auto" (click)="showGenerateModal.set(true)">
-        <span class="icon-[tabler--wand] size-4"></span>
-        {{ "menuEditor.generateFromCollection" | translate }}
-      </button>
-    }
-
-    <button class="btn btn-sm btn-outline" [class.btn-primary]="isEditMode()" [class.ms-auto]="!isEditMode()"
-            [disabled]="isEditMode() && !canSave()"
-            (click)="isEditMode() ? save() : toggleMode()">
+    <div class="ms-auto flex items-center gap-2">
       @if (isEditMode()) {
-        <span class="icon-[tabler--device-floppy] size-4"></span>
-        {{ "menuEditor.save" | translate }}
-      } @else {
-        <span class="icon-[tabler--pencil] size-4"></span>
-        {{ "menuEditor.edit" | translate }}
+        <button class="btn btn-sm btn-outline" (click)="showGenerateModal.set(true)">
+          <span class="icon-[tabler--wand] size-4"></span>
+          {{ "menuEditor.generateFromCollection" | translate }}
+        </button>
       }
-    </button>
+
+      <button class="btn btn-sm btn-outline" (click)="showIngredientsModal.set(true)">
+        <span class="icon-[tabler--basket] size-4"></span>
+        {{ "menuEditor.showIngredients" | translate }}
+      </button>
+
+      <button class="btn btn-sm btn-outline" [class.btn-primary]="isEditMode()"
+              [disabled]="isEditMode() && !canSave()"
+              (click)="isEditMode() ? save() : toggleMode()">
+        @if (isEditMode()) {
+          <span class="icon-[tabler--device-floppy] size-4"></span>
+          {{ "menuEditor.save" | translate }}
+        } @else {
+          <span class="icon-[tabler--pencil] size-4"></span>
+          {{ "menuEditor.edit" | translate }}
+        }
+      </button>
+    </div>
   </div>
 
   @if (isEditMode()) {
@@ -157,4 +164,32 @@
     (closed)="showGenerateModal.set(false)"
     (generated)="onGenerated($event)">
   </app-menu-generate-modal>
+}
+
+@if (showIngredientsModal()) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-base-300/60" (click)="showIngredientsModal.set(false)">
+    <div class="bg-base-100 rounded-lg shadow-xl p-6 w-full max-w-sm mx-4 flex flex-col gap-4"
+         (click)="$event.stopPropagation()">
+      <h3 class="text-lg font-bold">{{ "menuEditor.ingredientsModal.title" | translate }}</h3>
+
+      @if (allIngredients().length === 0) {
+        <p class="text-base-content/60 text-sm">{{ "menuEditor.ingredientsModal.noIngredients" | translate }}</p>
+      } @else {
+        <ul class="flex flex-col gap-1 max-h-72 overflow-y-auto">
+          @for (ingredient of allIngredients(); track ingredient) {
+            <li class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm">
+              <span class="icon-[tabler--circle-filled] size-2 text-primary shrink-0"></span>
+              {{ ingredient }}
+            </li>
+          }
+        </ul>
+      }
+
+      <div class="flex justify-end">
+        <button class="btn btn-sm" (click)="showIngredientsModal.set(false)">
+          {{ "menuEditor.ingredientsModal.close" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
 }
