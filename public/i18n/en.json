@@ -76,6 +76,8 @@
       "title": "generate from collection",
       "selectCollection": "select a collection",
       "noCollections": "no collections available",
+      "selectDays": "select days to generate",
+      "allDays": "all",
       "generate": "generate",
       "cancel": "cancel"
     },

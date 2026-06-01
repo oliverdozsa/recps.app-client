@@ -76,6 +76,8 @@
       "title": "generálás gyűjteményből",
       "selectCollection": "válassz gyűjteményt",
       "noCollections": "nincsenek elérhető gyűjtemények",
+      "selectDays": "napok kiválasztása",
+      "allDays": "összes",
       "generate": "generálás",
       "cancel": "mégse"
     },

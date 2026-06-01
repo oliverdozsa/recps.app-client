@@ -1,4 +1,4 @@
-import {Component, DestroyRef, EventEmitter, inject, Input, OnInit, Output, signal} from '@angular/core';
+import {Component, computed, DestroyRef, EventEmitter, inject, Input, OnInit, Output, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {forkJoin} from 'rxjs';
 import {TranslatePipe} from '@ngx-translate/core';
@@ -24,6 +24,13 @@ export class MenuGenerateModalComponent implements OnInit {
   selectedCollection = signal<RecipeCollectionSimplifiedResponse | null>(null);
   loading = signal(true);
   generating = signal(false);
+  selectedDayIndices = signal<Set<number>>(new Set());
+
+  dayIndices = computed(() => Array.from({length: this.numDays}, (_, i) => i));
+  allDaysSelected = computed(() => this.selectedDayIndices().size === this.numDays);
+  canGenerate = computed(() =>
+    this.selectedCollection() !== null && !this.loading() && this.selectedDayIndices().size > 0
+  );
 
   ngOnInit(): void {
     this.collectionService.getAll()
@@ -38,12 +45,33 @@ export class MenuGenerateModalComponent implements OnInit {
     this.selectedCollection.set(collection);
   }
 
+  toggleDay(index: number): void {
+    this.selectedDayIndices.update(set => {
+      const next = new Set(set);
+      if (next.has(index)) {
+        next.delete(index);
+      } else {
+        next.add(index);
+      }
+      return next;
+    });
+  }
+
+  toggleAllDays(): void {
+    if (this.allDaysSelected()) {
+      this.selectedDayIndices.set(new Set());
+    } else {
+      this.selectedDayIndices.set(new Set(this.dayIndices()));
+    }
+  }
+
   generate(): void {
     const collection = this.selectedCollection();
-    if (!collection) return;
+    if (!collection || this.selectedDayIndices().size === 0) return;
     this.generating.set(true);
 
-    const requests = Array.from({length: this.numDays}, () =>
+    const selectedArr = Array.from(this.selectedDayIndices());
+    const requests = selectedArr.map(() =>
       this.recipeService.searchRandomPage({
         collections: [collection.id],
         limit: 15,
@@ -56,10 +84,13 @@ export class MenuGenerateModalComponent implements OnInit {
       .subscribe({
         next: results => {
           this.generating.set(false);
-          this.generated.emit(results.map(r => {
+          const output: (RecipeSearchResponse | null)[] = Array(this.numDays).fill(null);
+          selectedArr.forEach((dayIdx, i) => {
+            const r = results[i];
             const randomIndex = Math.floor(Math.random() * r.items!.length);
-            return r.items?.[randomIndex] ?? null;
-          }));
+            output[dayIdx] = r.items?.[randomIndex] ?? null;
+          });
+          this.generated.emit(output);
         },
         error: () => {
           this.generating.set(false);

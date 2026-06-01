@@ -33,11 +33,33 @@
         </ul>
       }
 
+      @if (numDays > 1) {
+        <div class="flex flex-col gap-2">
+          <p class="text-sm text-base-content/60">{{ "menuEditor.generateModal.selectDays" | translate }}</p>
+          <div class="flex flex-wrap gap-1">
+            <button class="btn btn-xs"
+                    [class.btn-primary]="allDaysSelected()"
+                    [class.btn-outline]="!allDaysSelected()"
+                    (click)="toggleAllDays()">
+              {{ "menuEditor.generateModal.allDays" | translate }}
+            </button>
+            @for (i of dayIndices(); track i) {
+              <button class="btn btn-xs"
+                      [class.btn-primary]="selectedDayIndices().has(i)"
+                      [class.btn-outline]="!selectedDayIndices().has(i)"
+                      (click)="toggleDay(i)">
+                {{ i + 1 }}
+              </button>
+            }
+          </div>
+        </div>
+      }
+
       <div class="flex justify-end gap-2">
         <button class="btn btn-sm" (click)="closed.emit()">
           {{ "menuEditor.generateModal.cancel" | translate }}
         </button>
-        <button class="btn btn-sm btn-primary" [disabled]="selectedCollection() === null || loading()"
+        <button class="btn btn-sm btn-primary" [disabled]="!canGenerate()"
                 (click)="generate()">
           <span class="icon-[tabler--wand] size-4 shrink-0"></span>
           {{ "menuEditor.generateModal.generate" | translate }}
