@@ -41,18 +41,18 @@
 
     <div class="ms-auto flex items-center gap-2">
       @if (isEditMode()) {
-        <button class="btn btn-sm btn-outline" (click)="showGenerateModal.set(true)">
+        <button class="btn btn-xs md:btn-sm btn-outline" (click)="showGenerateModal.set(true)">
           <span class="icon-[tabler--wand] size-4"></span>
           {{ "menuEditor.generateFromCollection" | translate }}
         </button>
       }
 
-      <button class="btn btn-sm btn-outline" (click)="showIngredientsModal.set(true)">
+      <button class="btn btn-xs md:btn-sm btn-outline" (click)="showIngredientsModal.set(true)">
         <span class="icon-[tabler--basket] size-4"></span>
         {{ "menuEditor.showIngredients" | translate }}
       </button>
 
-      <button class="btn btn-sm btn-outline" [class.btn-primary]="isEditMode()"
+      <button class="btn btn-xs md:btn-sm btn-outline" [class.btn-primary]="isEditMode()"
               [disabled]="isEditMode() && !canSave()"
               (click)="isEditMode() ? save() : toggleMode()">
         @if (isEditMode()) {
