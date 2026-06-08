@@ -4,10 +4,11 @@ import {AuthService} from './services/auth.service';
 import {LoginComponent} from './components/login/login.component';
 import {LanguageSwitcherComponent} from './components/language-switcher/language-switcher.component';
 import {TranslatePipe} from '@ngx-translate/core';
+import {NgOptimizedImage} from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, LoginComponent, LanguageSwitcherComponent, RouterLink, TranslatePipe],
+  imports: [RouterOutlet, LoginComponent, LanguageSwitcherComponent, RouterLink, TranslatePipe, NgOptimizedImage],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
