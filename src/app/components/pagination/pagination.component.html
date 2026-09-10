@@ -1,0 +1,35 @@
+<nav class="flex items-center justify-center gap-1.5 py-6 font-mono text-[13px]" aria-label="lapozás">
+  <button
+    type="button"
+    class="grid h-8 w-8 place-items-center rounded-lg text-ink/62 transition-colors hover:bg-ink/6 disabled:opacity-30"
+    [disabled]="page() === 0"
+    (click)="prev()"
+    aria-label="előző oldal">
+    «
+  </button>
+
+  <span class="hidden items-center gap-1.5 sm:flex">
+    @for (p of pages(); track p) {
+      <button
+        type="button"
+        class="grid h-8 w-8 place-items-center rounded-lg transition-colors"
+        [class]="p === page() ? 'bg-accent text-white' : 'text-ink/62 hover:bg-ink/6'"
+        [attr.aria-current]="p === page() ? 'page' : null"
+        [attr.aria-label]="'oldal ' + (p + 1)"
+        (click)="goTo(p)">
+        {{ p + 1 }}
+      </button>
+    }
+  </span>
+
+  <span class="sm:hidden text-ink/65 px-2">{{ page() + 1 }} / {{ totalPages() }}</span>
+
+  <button
+    type="button"
+    class="grid h-8 w-8 place-items-center rounded-lg text-ink/62 transition-colors hover:bg-ink/6 disabled:opacity-30"
+    [disabled]="page() >= totalPages() - 1"
+    (click)="next()"
+    aria-label="következő oldal">
+    »
+  </button>
+</nav>

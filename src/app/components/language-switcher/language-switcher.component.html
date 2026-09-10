@@ -1,0 +1,26 @@
+<div class="relative inline-flex" appClickOutside (appClickOutside)="close()">
+  <button
+    type="button"
+    class="rounded-lg border border-ink/14 px-2.5 py-1.5 text-[13px] font-medium uppercase text-ink transition-colors"
+    aria-haspopup="menu" [attr.aria-expanded]="open()" aria-label="Nyelv váltása"
+    (click)="toggle()">
+    {{ languageService.selectedLanguage()?.isoName ?? '—' }}
+  </button>
+
+  @if (open()) {
+    <ul class="absolute right-0 top-[calc(100%+6px)] z-30 min-w-28 rounded-[11px] border border-ink/10 bg-surface p-1 shadow-lg" role="menu">
+      @for (lang of languageService.languages(); track lang.id) {
+        <li>
+          <button
+            type="button"
+            class="w-full rounded-lg px-2.5 py-1.5 text-left text-[13px] font-medium uppercase text-ink transition-colors hover:bg-accent-tint"
+            [class.text-accent-ink]="lang.id === languageService.selectedLanguage()?.id"
+            [class.bg-accent-tint]="lang.id === languageService.selectedLanguage()?.id"
+            (click)="select(lang)">
+            {{ lang.isoName }}
+          </button>
+        </li>
+      }
+    </ul>
+  }
+</div>

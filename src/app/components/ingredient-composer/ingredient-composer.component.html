@@ -1,0 +1,59 @@
+<div class="border-b border-ink/8 bg-canvas px-4 py-4 sm:px-7">
+  <div class="mx-auto flex max-w-[1060px] flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
+
+    <div class="flex min-w-0 items-center gap-2 overflow-x-auto no-scrollbar sm:flex-wrap sm:overflow-visible">
+      <span class="shrink-0 font-mono text-[11.5px] font-semibold uppercase tracking-[0.06em] text-ink/65">
+        legyen benne
+      </span>
+
+      @for (chip of state.includeChips(); track chip.key) {
+        <span
+          class="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-accent px-2.75 py-1.5 text-[13px] font-medium text-white"
+          [class.ring-2]="isConflicting(chip)"
+          [class.ring-danger]="isConflicting(chip)">
+          {{ chip.label }}
+          <button
+            type="button"
+            class="opacity-70 transition-opacity hover:opacity-100"
+            [attr.aria-label]="'eltávolítás: ' + chip.label"
+            (click)="removeInclude(chip)">
+            ×
+          </button>
+        </span>
+      }
+
+      <app-add-ingredient-control
+        label="hozzávaló"
+        [existingKeys]="includeKeys()"
+        (chipSelected)="addInclude($event)"
+        (backspaceOnEmpty)="removeLastInclude()" />
+    </div>
+
+    <div class="hidden h-7 w-px shrink-0 bg-ink/10 sm:block"></div>
+
+    <div class="flex min-w-0 items-center gap-2 overflow-x-auto no-scrollbar sm:flex-wrap sm:overflow-visible">
+      <span class="shrink-0 font-mono text-[11.5px] font-semibold uppercase tracking-[0.06em] text-ink/65">
+        ne legyen
+      </span>
+
+      @for (chip of state.excludeChips(); track chip.key) {
+        <span class="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-danger-line bg-danger-tint px-2.75 py-1.5 text-[13px] font-medium text-danger">
+          <span class="line-through">{{ chip.label }}</span>
+          <button
+            type="button"
+            class="opacity-70 transition-opacity hover:opacity-100"
+            [attr.aria-label]="'eltávolítás: ' + chip.label"
+            (click)="removeExclude(chip)">
+            ×
+          </button>
+        </span>
+      }
+
+      <app-add-ingredient-control
+        label="hozzávaló"
+        [existingKeys]="excludeKeys()"
+        (chipSelected)="addExclude($event)"
+        (backspaceOnEmpty)="removeLastExclude()" />
+    </div>
+  </div>
+</div>

@@ -1,0 +1,81 @@
+@if (loading()) {
+  <div class="flex justify-center py-16">
+    <span class="loading loading-spinner loading-lg text-accent"></span>
+  </div>
+} @else if (collection()) {
+  @let c = collection()!;
+  <div class="mx-auto max-w-[1060px] px-4 py-6 sm:px-7">
+
+    <div class="mb-5 flex flex-wrap items-center gap-3">
+      @if (isEditMode()) {
+        <input
+          type="text"
+          class="min-w-0 flex-1 rounded-[9px] border border-ink/14 bg-surface px-3 py-2 text-[16px] font-semibold text-ink"
+          [placeholder]="'recipeCollections.collectionNamePlaceholder' | translate"
+          [ngModel]="editName()"
+          (ngModelChange)="editName.set($event)">
+        <button type="button" class="rounded-lg px-3 py-1.75 text-[13px] font-medium text-ink/65 hover:bg-ink/6" (click)="cancelEdit()">
+          {{ "recipeCollections.cancel" | translate }}
+        </button>
+        <button type="button" class="rounded-lg bg-accent px-3 py-1.75 text-[13px] font-medium text-white disabled:opacity-40" [disabled]="saving()" (click)="save()">
+          {{ "recipeCollections.save" | translate }}
+        </button>
+      } @else {
+        <h1 class="flex-1 text-[18px] font-semibold text-ink">{{ c.name }}</h1>
+        <button type="button" class="rounded-lg border border-ink/14 px-3 py-1.75 text-[13px] font-medium text-ink hover:bg-ink/6" (click)="startEdit()">
+          {{ "recipeCollections.edit" | translate }}
+        </button>
+        <button type="button" class="grid size-8 place-items-center rounded-lg text-ink/50 transition-colors hover:bg-danger-tint hover:text-danger" aria-label="törlés" (click)="confirmDelete()">
+          <span class="icon-[tabler--trash] size-4"></span>
+        </button>
+      }
+    </div>
+
+    @if (isEditMode()) {
+      <div class="flex flex-col gap-4 sm:flex-row sm:items-start">
+        <div class="flex flex-col gap-2">
+          <app-marked-recipes [showAddButton]="true" (recipeAdded)="addRecipeToCollection($event)" />
+          <button type="button" class="rounded-lg border border-ink/14 px-3 py-1.75 text-[13px] font-medium text-ink transition-colors hover:bg-ink/6 disabled:opacity-40" [disabled]="!canAddMarked()" (click)="addMarkedRecipes()">
+            {{ "recipeCollections.addMarkedRecipes" | translate }}
+          </button>
+        </div>
+
+        <div class="flex flex-1 flex-col gap-1.5">
+          @for (recipe of editRecipes(); track recipe.id) {
+            <app-recipe-compact-card
+              [recipe]="recipe"
+              [deleteMode]="true"
+              [editMode]="true"
+              (deleteClicked)="removeRecipe(recipe)"
+              (backClicked)="moveBackToPool(recipe)" />
+          }
+        </div>
+      </div>
+    } @else if ((c.recipes ?? []).length === 0) {
+      <p class="py-16 text-center text-[14px] text-ink/60">{{ "recipeCollections.noRecipes" | translate }}</p>
+    } @else {
+      <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
+        @for (recipe of c.recipes; track recipe.id) {
+          <app-recipe-compact-card [recipe]="recipe" />
+        }
+      </div>
+    }
+  </div>
+}
+
+@if (deleting()) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-ink/40 p-4" (click)="cancelDelete()">
+    <div class="w-full max-w-sm rounded-[14px] bg-surface p-5 shadow-lg" (click)="$event.stopPropagation()">
+      <h2 class="mb-2 text-[15px] font-semibold text-ink">{{ "recipeCollections.deleteModalTitle" | translate }}</h2>
+      <p class="mb-4 text-[13px] text-ink/65">{{ "recipeCollections.deleteModalQuestion" | translate }}{{ collection()?.name }}</p>
+      <div class="flex justify-end gap-2">
+        <button type="button" class="rounded-lg px-3 py-1.75 text-[13px] font-medium text-ink/65 hover:bg-ink/6" (click)="cancelDelete()">
+          {{ "recipeCollections.deleteModalCancel" | translate }}
+        </button>
+        <button type="button" class="rounded-lg bg-danger px-3 py-1.75 text-[13px] font-medium text-white" (click)="deleteConfirmed()">
+          {{ "recipeCollections.deleteModalYes" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

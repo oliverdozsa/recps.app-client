@@ -1,0 +1,97 @@
+<div class="sticky top-0 z-20 border-b border-ink/8 bg-canvas/95 backdrop-blur">
+  <div class="mx-auto flex max-w-[1060px] flex-wrap items-center gap-2 px-4 py-3 sm:px-7">
+
+    <div class="relative inline-flex" appClickOutside (appClickOutside)="openPanel() === 'time' && closePanel()">
+      <button type="button" class="flex items-center gap-1 rounded-[9px] border border-ink/14 bg-surface px-3 py-1.75 text-[13px] transition-colors"
+              [class]="(state.minTime() !== undefined || state.maxTime() !== undefined) ? 'font-medium text-ink' : 'text-ink/60'"
+              [attr.aria-expanded]="openPanel() === 'time'" (click)="togglePanel('time')">
+        {{ timeLabel() }} <span class="text-ink/35">⌄</span>
+      </button>
+      @if (openPanel() === 'time') {
+        <div class="absolute left-0 top-[calc(100%+6px)] z-30 w-72 rounded-[11px] border border-ink/10 bg-surface p-4 shadow-lg">
+          <app-dual-range [min]="0" [max]="120" [step]="5"
+                           [initialMinValue]="state.minTime()" [initialMaxValue]="state.maxTime()"
+                           (minValueChange)="onMinTime($event)" (maxValueChange)="onMaxTime($event)" />
+        </div>
+      }
+    </div>
+
+    <div class="relative inline-flex" appClickOutside (appClickOutside)="openPanel() === 'ingredients' && closePanel()">
+      <button type="button" class="flex items-center gap-1 rounded-[9px] border border-ink/14 bg-surface px-3 py-1.75 text-[13px] transition-colors"
+              [class]="(state.minIngredients() !== undefined || state.maxIngredients() !== undefined) ? 'font-medium text-ink' : 'text-ink/60'"
+              [attr.aria-expanded]="openPanel() === 'ingredients'" (click)="togglePanel('ingredients')">
+        {{ ingredientsLabel() }} <span class="text-ink/35">⌄</span>
+      </button>
+      @if (openPanel() === 'ingredients') {
+        <div class="absolute left-0 top-[calc(100%+6px)] z-30 w-72 rounded-[11px] border border-ink/10 bg-surface p-4 shadow-lg">
+          <app-dual-range [min]="0" [max]="25" [step]="1"
+                           [initialMinValue]="state.minIngredients()" [initialMaxValue]="state.maxIngredients()"
+                           (minValueChange)="onMinIngredients($event)" (maxValueChange)="onMaxIngredients($event)" />
+        </div>
+      }
+    </div>
+
+    <div class="relative inline-flex" appClickOutside (appClickOutside)="openPanel() === 'sites' && closePanel()">
+      <button type="button" class="flex items-center gap-1 rounded-[9px] border border-ink/14 bg-surface px-3 py-1.75 text-[13px] transition-colors"
+              [class]="state.sitesTouched() && state.sites().size > 0 ? 'font-medium text-ink' : 'text-ink/60'"
+              [attr.aria-expanded]="openPanel() === 'sites'" (click)="togglePanel('sites')">
+        {{ sitesLabel() }} <span class="text-ink/35">⌄</span>
+      </button>
+      @if (openPanel() === 'sites') {
+        <div class="absolute left-0 top-[calc(100%+6px)] z-30 max-h-80 w-64 overflow-y-auto rounded-[11px] border border-ink/10 bg-surface p-3 shadow-lg">
+          @for (group of sourcePagesByLanguage(); track group.languageId) {
+            <p class="mb-1 mt-2 font-mono text-[10.5px] font-semibold uppercase tracking-[0.06em] text-ink/50 first:mt-0">{{ group.isoName }}</p>
+            @for (page of group.pages; track page.id) {
+              <label class="flex cursor-pointer items-center gap-2 rounded-lg px-1.5 py-1.5 text-[13px] text-ink hover:bg-ink/6">
+                <input type="checkbox" class="checkbox checkbox-sm" [checked]="isSiteChecked(page.id)" (change)="toggleSite(page.id)">
+                {{ page.name }}
+              </label>
+            }
+          }
+        </div>
+      }
+    </div>
+
+    <div class="relative inline-flex" appClickOutside (appClickOutside)="openPanel() === 'sort' && closePanel()">
+      <button type="button" class="flex items-center gap-1 rounded-[9px] border border-ink/14 bg-surface px-3 py-1.75 text-[13px] transition-colors"
+              [class]="state.sort().orderBy ? 'font-medium text-ink' : 'text-ink/60'"
+              [attr.aria-expanded]="openPanel() === 'sort'" (click)="togglePanel('sort')">
+        {{ sortLabel() }} <span class="text-ink/35">⌄</span>
+      </button>
+      @if (openPanel() === 'sort') {
+        <ul class="absolute left-0 top-[calc(100%+6px)] z-30 min-w-52 rounded-[11px] border border-ink/10 bg-surface p-1 shadow-lg" role="menu">
+          <li><button type="button" class="w-full rounded-lg px-2.5 py-1.75 text-left text-[13px] text-ink hover:bg-ink/6" (click)="setSort(undefined, 'asc'); closePanel()">relevancia</button></li>
+          <li><button type="button" class="w-full rounded-lg px-2.5 py-1.75 text-left text-[13px] text-ink hover:bg-ink/6" (click)="setSort('prepTime', 'asc'); closePanel()">idő, növekvő</button></li>
+          <li><button type="button" class="w-full rounded-lg px-2.5 py-1.75 text-left text-[13px] text-ink hover:bg-ink/6" (click)="setSort('prepTime', 'desc'); closePanel()">idő, csökkenő</button></li>
+          <li><button type="button" class="w-full rounded-lg px-2.5 py-1.75 text-left text-[13px] text-ink hover:bg-ink/6" (click)="setSort('ingredientCount', 'asc'); closePanel()">hozzávalók, növekvő</button></li>
+          <li><button type="button" class="w-full rounded-lg px-2.5 py-1.75 text-left text-[13px] text-ink hover:bg-ink/6" (click)="setSort('ingredientCount', 'desc'); closePanel()">hozzávalók, csökkenő</button></li>
+        </ul>
+      }
+    </div>
+
+    @if (authService.isLoggedIn) {
+      <div class="relative inline-flex" appClickOutside (appClickOutside)="openPanel() === 'collections' && closePanel()">
+        <button type="button" class="flex items-center gap-1 rounded-[9px] border border-ink/14 bg-surface px-3 py-1.75 text-[13px] transition-colors"
+                [class]="state.selectedCollectionIds().length > 0 ? 'font-medium text-ink' : 'text-ink/60'"
+                [attr.aria-expanded]="openPanel() === 'collections'" (click)="togglePanel('collections')">
+        gyűjtemények <span class="text-ink/35">⌄</span>
+        </button>
+        @if (openPanel() === 'collections') {
+          <div class="absolute left-0 top-[calc(100%+6px)] z-30 w-72 rounded-[11px] border border-ink/10 bg-surface p-3 shadow-lg">
+            <app-collection-input (selectedCollectionsChange)="onCollectionsChange($event)" />
+          </div>
+        }
+      </div>
+    }
+
+    @if (state.isFilterDirty()) {
+      <button type="button" class="text-[13px] font-medium text-ink/60 transition-colors hover:text-ink" (click)="reset()">
+        alaphelyzet ↺
+      </button>
+    }
+
+    <span class="ml-auto font-mono text-[13px] text-ink/66" aria-live="polite">
+      {{ resultCountLabel() }} recept
+    </span>
+  </div>
+</div>

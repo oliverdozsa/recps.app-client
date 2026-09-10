@@ -1,0 +1,30 @@
+@if (loading()) {
+  <div class="grid grid-cols-1 gap-[22px] sm:grid-cols-2 lg:grid-cols-3">
+    @for (item of skeletonItems; track $index) {
+      <div class="animate-pulse rounded-[14px] bg-surface p-3 card-shadow">
+        <div class="mb-3 aspect-[16/10] w-full rounded-[9px] bg-ink/6"></div>
+        <div class="mb-2 h-4 w-4/5 rounded bg-ink/6"></div>
+        <div class="mb-3 h-4 w-3/5 rounded bg-ink/6"></div>
+        <div class="flex gap-1.5">
+          <div class="h-6 w-14 rounded-[7px] bg-ink/6"></div>
+          <div class="h-6 w-14 rounded-[7px] bg-ink/6"></div>
+          <div class="h-6 w-14 rounded-[7px] bg-ink/6"></div>
+        </div>
+      </div>
+    }
+  </div>
+} @else if (recipes().length === 0) {
+  <app-empty-state
+    [excludeChips]="excludeChips()"
+    (removeExclude)="removeExclude.emit($event)"
+    (clearFilters)="clearFilters.emit()" />
+} @else {
+  <div class="grid grid-cols-1 gap-[22px] sm:grid-cols-2 lg:grid-cols-3">
+    @for (recipe of recipes(); track recipe.id) {
+      <app-recipe-card
+        [recipe]="recipe"
+        [matchedIngredientIds]="matchedIngredientIds()"
+        [languageIso]="languageIso()" />
+    }
+  </div>
+}

@@ -1,0 +1,60 @@
+<div class="fixed inset-0 z-50 flex items-center justify-center bg-ink/40 p-4" (click)="closed.emit()">
+  <div class="w-full max-w-md rounded-[14px] bg-surface p-5 shadow-lg" (click)="$event.stopPropagation()">
+    <h2 class="mb-4 text-[16px] font-semibold text-ink">{{ "menuEditor.generateModal.title" | translate }}</h2>
+
+    @if (generating()) {
+      <div class="flex justify-center py-10">
+        <span class="loading loading-spinner loading-lg text-accent"></span>
+      </div>
+    } @else {
+      @if (loading()) {
+        <div class="flex justify-center py-6">
+          <span class="loading loading-spinner text-accent"></span>
+        </div>
+      } @else if (collections().length === 0) {
+        <p class="py-4 text-center text-[13px] text-ink/60">{{ "menuEditor.generateModal.noCollections" | translate }}</p>
+      } @else {
+        <p class="mb-2 text-[12px] font-medium text-ink/65">{{ "menuEditor.generateModal.selectCollection" | translate }}</p>
+        <ul class="mb-4 max-h-40 overflow-y-auto rounded-[9px] border border-ink/10">
+          @for (c of collections(); track c.id) {
+            <li>
+              <button
+                type="button"
+                class="flex w-full items-center justify-between px-3 py-2 text-left text-[13px] text-ink hover:bg-ink/6"
+                [class.bg-accent-tint]="selectedCollection()?.id === c.id"
+                (click)="selectCollection(c)">
+                {{ c.name }}
+                @if (selectedCollection()?.id === c.id) {
+                  <span class="icon-[tabler--check] size-4 text-accent"></span>
+                }
+              </button>
+            </li>
+          }
+        </ul>
+
+        @if (numDays() > 1) {
+          <p class="mb-2 text-[12px] font-medium text-ink/65">{{ "menuEditor.generateModal.selectDays" | translate }}</p>
+          <div class="mb-4 flex flex-wrap gap-1.5">
+            <button type="button" class="rounded-full border px-2.5 py-1 text-[12px]" [class]="selectedDayIndices().size === numDays() ? 'border-accent bg-accent text-white' : 'border-ink/14 text-ink/70'" (click)="toggleAllDays()">
+              {{ "menuEditor.generateModal.allDays" | translate }}
+            </button>
+            @for (i of [].constructor(numDays()); track $index) {
+              <button type="button" class="rounded-full border px-2.5 py-1 text-[12px]" [class]="selectedDayIndices().has($index) ? 'border-accent bg-accent text-white' : 'border-ink/14 text-ink/70'" (click)="toggleDay($index)">
+                {{ $index + 1 }}
+              </button>
+            }
+          </div>
+        }
+      }
+
+      <div class="flex justify-end gap-2">
+        <button type="button" class="rounded-lg px-3 py-1.75 text-[13px] font-medium text-ink/65 hover:bg-ink/6" (click)="closed.emit()">
+          {{ "menuEditor.generateModal.cancel" | translate }}
+        </button>
+        <button type="button" class="rounded-lg bg-accent px-3 py-1.75 text-[13px] font-medium text-white disabled:opacity-40" [disabled]="!canGenerate()" (click)="generate()">
+          {{ "menuEditor.generateModal.generate" | translate }}
+        </button>
+      </div>
+    }
+  </div>
+</div>

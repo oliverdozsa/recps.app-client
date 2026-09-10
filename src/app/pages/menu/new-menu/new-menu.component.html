@@ -1,0 +1,5 @@
+@if (!authService.isLoggedIn) {
+  <p class="py-16 text-center text-[14px] text-ink/65">{{ "menu.loginNeeded" | translate }}</p>
+} @else {
+  <app-menu-viewer-editor />
+}

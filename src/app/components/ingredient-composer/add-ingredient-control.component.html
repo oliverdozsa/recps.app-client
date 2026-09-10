@@ -1,0 +1,48 @@
+@if (!open()) {
+  <button
+    type="button"
+    class="shrink-0 rounded-full border border-dashed border-ink/25 px-2.75 py-1.5 text-[13px] text-ink/60 transition-colors hover:border-ink/40 hover:text-ink/80"
+    (click)="startAdding()">
+    + {{ label() }}
+  </button>
+} @else {
+  <div class="relative shrink-0">
+    <input
+      #inputEl
+      type="text"
+      class="w-36 rounded-full border border-ink/20 bg-surface px-2.75 py-1.5 text-[13px] text-ink placeholder:text-ink/40 focus-visible:outline-none"
+      placeholder="keresés…"
+      [ngModel]="query()"
+      (ngModelChange)="onInput($event)"
+      (keydown)="onKeydown($event)"
+      (blur)="onBlur()"
+      role="combobox"
+      aria-expanded="true"
+      [attr.aria-label]="label() + ' keresése'">
+
+    @if (query().trim().length >= 2) {
+      <ul class="absolute left-0 top-[calc(100%+4px)] z-30 max-h-64 w-56 overflow-y-auto rounded-[9px] border border-ink/10 bg-surface py-1 shadow-lg" role="listbox">
+        @if (loading()) {
+          <li class="px-3 py-2 text-[13px] text-ink/50">keresés…</li>
+        } @else if (options().length === 0) {
+          <li class="px-3 py-2 text-[13px] text-ink/50">nincs találat</li>
+        } @else {
+          @for (opt of options(); track opt.key; let i = $index) {
+            <li role="option" [attr.aria-selected]="i === activeIndex()">
+              <button
+                type="button"
+                class="flex w-full items-center gap-1.5 px-3 py-1.75 text-left text-[13px] text-ink transition-colors"
+                [class.bg-accent-tint]="i === activeIndex()"
+                (mousedown)="select(opt)">
+                @if (opt.isCategory) {
+                  <span aria-hidden="true">🏷️</span>
+                }
+                {{ opt.label }}
+              </button>
+            </li>
+          }
+        }
+      </ul>
+    }
+  </div>
+}

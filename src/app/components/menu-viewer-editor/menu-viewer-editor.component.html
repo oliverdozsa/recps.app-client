@@ -1,0 +1,132 @@
+@if (saving()) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-canvas/70">
+    <span class="loading loading-spinner loading-lg text-accent"></span>
+  </div>
+}
+
+<div class="mx-auto max-w-[1060px] px-4 py-6 sm:px-7">
+
+  <div class="mb-4 flex flex-wrap items-center gap-3">
+    @if (isEditMode()) {
+      <input
+        type="text"
+        class="min-w-0 flex-1 rounded-[9px] border border-ink/14 bg-surface px-3 py-2 text-[16px] font-semibold text-ink"
+        [placeholder]="'menuEditor.menuNamePlaceholder' | translate"
+        [ngModel]="menuName()"
+        (ngModelChange)="menuName.set($event)">
+    } @else {
+      <h1 class="flex-1 text-[18px] font-semibold text-ink">{{ menuName() || ('menuEditor.defaultTitle' | translate) }}</h1>
+    }
+
+    @if (isEditMode()) {
+      <div class="flex items-center gap-1.5 rounded-[9px] border border-ink/14 px-1.5 py-1">
+        <button type="button" class="grid size-6 place-items-center rounded text-ink/60 hover:bg-ink/6" (click)="decreaseDays()" aria-label="nap eltávolítása">−</button>
+        <span class="min-w-14 text-center font-mono text-[12px] text-ink/70">{{ numDays() }} {{ "menuEditor.days" | translate }}</span>
+        <button type="button" class="grid size-6 place-items-center rounded text-ink/60 hover:bg-ink/6" (click)="increaseDays()" aria-label="nap hozzáadása">+</button>
+      </div>
+    }
+
+    <div class="flex items-center gap-2">
+      @if (isEditMode()) {
+        <button type="button" class="rounded-lg border border-ink/14 px-3 py-1.75 text-[13px] font-medium text-ink transition-colors hover:bg-ink/6" (click)="showGenerateModal.set(true)">
+          {{ "menuEditor.generateFromCollection" | translate }}
+        </button>
+      }
+      <button type="button" class="rounded-lg border border-ink/14 px-3 py-1.75 text-[13px] font-medium text-ink transition-colors hover:bg-ink/6" (click)="toggleIngredientsModal()">
+        {{ "menuEditor.showIngredients" | translate }}
+      </button>
+      @if (isEditMode()) {
+        <button type="button" class="rounded-lg bg-accent px-3 py-1.75 text-[13px] font-medium text-white disabled:opacity-40" [disabled]="!canSave()" (click)="save()">
+          {{ "menuEditor.save" | translate }}
+        </button>
+      } @else {
+        <button type="button" class="rounded-lg bg-ink px-3 py-1.75 text-[13px] font-medium text-canvas" (click)="toggleMode()">
+          {{ "menuEditor.edit" | translate }}
+        </button>
+      }
+    </div>
+  </div>
+
+  @if (isEditMode() && menuNameError() && menuName().length > 0) {
+    <p class="mb-3 text-[12px] text-danger">{{ menuNameError()! | translate }}</p>
+  }
+
+  @if (isEditMode() && (selectedRecipe() || selectedFromDay())) {
+    <div class="mb-4 rounded-[9px] bg-accent-tint px-3 py-2 text-[13px] text-accent-ink">
+      {{ (selectedFromDay() ? 'menuEditor.moveTip' : 'menuEditor.placeTip') | translate }}
+    </div>
+  }
+
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-start">
+    @if (isEditMode()) {
+      <app-marked-recipes (recipeSelected)="selectRecipe($event)" />
+    }
+
+    <div class="flex flex-1 gap-3 overflow-x-auto pb-2">
+      @for (day of menuDays(); track $index) {
+        <div
+          class="w-64 shrink-0 rounded-[14px] border bg-surface p-3"
+          [class]="selectedFromDay()?.dayIndex === $index ? 'border-accent ring-2 ring-accent/30' : (selectedRecipe() || selectedFromDay()) ? 'border-ink/20' : 'border-ink/10'"
+          (click)="onDayCardClick($index)">
+          <p class="mb-2 font-mono text-[11px] font-semibold uppercase tracking-[0.06em] text-ink/55">
+            {{ "menuEditor.day" | translate }} {{ $index + 1 }}
+          </p>
+
+          <div class="flex flex-col gap-1.5">
+            @for (recipe of day; track recipe.id; let ri = $index) {
+              <div (click)="isEditMode() && selectFromDay(recipe, $index, ri); $event.stopPropagation()">
+                <app-recipe-compact-card
+                  [recipe]="recipe"
+                  [selected]="selectedFromDay()?.dayIndex === $index && selectedFromDay()?.recipeIndex === ri"
+                  [editMode]="isEditMode()"
+                  (backClicked)="moveBackToPool(recipe, $index, ri)" />
+              </div>
+            }
+          </div>
+
+          @if (day.length === 0) {
+            <p class="py-4 text-center text-[12px] text-ink/50">
+              {{ isEditMode() ? ("menuEditor.tapToPlace" | translate) : ("menuEditor.noRecipes" | translate) }}
+            </p>
+          } @else if (day.length >= 10) {
+            <p class="mt-2 text-center text-[11px] text-ink/45">{{ "menuEditor.dayFull" | translate }}</p>
+          } @else if (isEditMode()) {
+            <p class="mt-2 text-center text-[11px] text-ink/45">{{ "menuEditor.tapToAddAnother" | translate }}</p>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div>
+
+@if (showGenerateModal()) {
+  <app-menu-generate-modal
+    [numDays]="numDays()"
+    (closed)="showGenerateModal.set(false)"
+    (generated)="onGenerated($event)" />
+}
+
+@if (showIngredientsModal()) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-ink/40 p-4" (click)="toggleIngredientsModal()">
+    <div class="w-full max-w-md rounded-[14px] bg-surface p-5 shadow-lg" (click)="$event.stopPropagation()">
+      <h2 class="mb-3 text-[16px] font-semibold text-ink">{{ "menuEditor.ingredientsModal.title" | translate }}</h2>
+      @if (allIngredients().length === 0) {
+        <p class="py-4 text-center text-[13px] text-ink/60">{{ "menuEditor.ingredientsModal.noIngredients" | translate }}</p>
+      } @else {
+        <ul class="mb-4 max-h-72 overflow-y-auto text-[13px] text-ink">
+          @for (name of allIngredients(); track name) {
+            <li class="border-b border-ink/6 py-1.5 last:border-0">{{ name }}</li>
+          }
+        </ul>
+      }
+      <div class="flex justify-end gap-2">
+        <button type="button" class="rounded-lg px-3 py-1.75 text-[13px] font-medium text-ink/65 hover:bg-ink/6" (click)="toggleIngredientsModal()">
+          {{ "menuEditor.ingredientsModal.close" | translate }}
+        </button>
+        <button type="button" class="rounded-lg bg-accent px-3 py-1.75 text-[13px] font-medium text-white" (click)="copyIngredients()">
+          {{ (copied() ? "menuEditor.ingredientsModal.copied" : "menuEditor.ingredientsModal.copy") | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

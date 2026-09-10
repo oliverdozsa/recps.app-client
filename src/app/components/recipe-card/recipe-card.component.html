@@ -1,0 +1,66 @@
+<article
+  class="card-shadow card-shadow-hover group flex flex-col overflow-hidden rounded-[14px] border border-transparent bg-surface transition-[box-shadow,border-color] duration-150 ease-out hover:border-ink/16">
+  <a
+    [href]="recipe().url"
+    target="_blank"
+    rel="noopener"
+    class="flex flex-1 flex-col p-3 focus-visible:outline-none"
+    [attr.aria-label]="recipe().name">
+
+    <div class="relative mb-3 aspect-[16/10] w-full overflow-hidden rounded-[9px]">
+      @if (recipe().imageUrl) {
+        <img
+          [src]="recipe().imageUrl"
+          [alt]="recipe().name ?? ''"
+          loading="lazy"
+          class="h-full w-full object-cover">
+      } @else {
+        <div class="striped-placeholder flex h-full w-full items-center justify-center">
+          <span class="font-mono text-[11px] uppercase tracking-[0.06em] text-ink/50">nincs kép</span>
+        </div>
+      }
+
+      @if (recipe().cookingTime) {
+        <span class="absolute bottom-2 right-2 rounded-md bg-canvas px-2 py-1 text-[11px] font-medium text-ink">
+          {{ recipe().cookingTime }} perc
+        </span>
+      }
+
+      <button
+        type="button"
+        class="absolute right-2 top-2 grid size-7 place-items-center rounded-full bg-canvas/90 text-ink/70 transition-colors hover:text-accent"
+        [attr.aria-pressed]="isMarked()"
+        [attr.aria-label]="isMarked() ? 'megjelölés eltávolítása' : 'recept megjelölése'"
+        (click)="toggleMarked($event)">
+        <span [class]="isMarked() ? 'icon-[tabler--bookmark-filled]' : 'icon-[tabler--bookmark]'" class="size-4"></span>
+      </button>
+    </div>
+
+    <h3 class="mb-2.5 text-[16px] font-semibold leading-[1.28] tracking-[-0.01em] text-ink [text-wrap:pretty]">
+      {{ recipe().name }}
+    </h3>
+
+    <div class="mb-2.5 flex flex-wrap items-center gap-1.5">
+      @for (tag of visibleTags(); track tag.id) {
+        <span
+          class="rounded-[7px] px-2.25 py-1 text-[12px] font-medium"
+          [class]="tag.matched ? 'bg-accent text-white' : 'bg-accent-tint text-accent-ink'">
+          {{ tag.label }}
+        </span>
+      }
+      @if (hiddenCount() > 0) {
+        <button
+          type="button"
+          class="rounded-[7px] border border-ink/14 px-2.25 py-1 text-[12px] font-medium text-ink/62 transition-colors hover:border-accent hover:text-accent"
+          [attr.aria-expanded]="expanded()"
+          (click)="toggleExpanded($event)">
+          {{ expanded() ? 'kevesebb' : '+' + hiddenCount() }}
+        </button>
+      }
+    </div>
+
+    <p class="mt-auto font-mono text-[12px] text-ink/62">
+      {{ recipe().ingredients.length }} hozzávaló @if (recipe().sourcePage) { · {{ recipe().sourcePage }} }
+    </p>
+  </a>
+</article>

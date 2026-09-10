@@ -1,0 +1,19 @@
+<app-ingredient-composer />
+<app-filter-bar />
+
+<div class="mx-auto max-w-[1060px] px-4 py-6 sm:px-7">
+  <app-recipe-grid
+    [recipes]="state.results() ?? []"
+    [loading]="state.loading()"
+    [matchedIngredientIds]="state.matchedIngredientIds()"
+    [excludeChips]="state.excludeChips()"
+    (removeExclude)="state.removeExcludeChip($event)"
+    (clearFilters)="state.resetFilters()" />
+
+  @if (!state.loading() && state.results() && state.results()!.length > 0) {
+    <app-pagination
+      [page]="state.page()"
+      [totalPages]="state.totalPages()"
+      (pageChange)="onPageChange($event)" />
+  }
+</div>

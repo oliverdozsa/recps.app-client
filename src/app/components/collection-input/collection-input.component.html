@@ -1,0 +1,6 @@
+<app-tags-input
+  [options]="filteredOptions()"
+  [displayFunction]="displayFn"
+  [initialTags]="initialCollections()"
+  (queryChange)="onQueryChange($event)"
+  (tagsChange)="selectedCollectionsChange.emit($event)" />

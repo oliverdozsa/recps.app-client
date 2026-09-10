@@ -1,0 +1,46 @@
+<header class="border-b border-ink/8 bg-canvas">
+  <div class="mx-auto flex max-w-[1060px] flex-wrap items-center gap-3 px-4 py-4 sm:flex-nowrap sm:px-7">
+
+    <div class="flex items-center gap-3">
+      <div class="relative inline-flex" appClickOutside (appClickOutside)="closeNav()">
+        <button type="button" class="grid size-8 place-items-center rounded-lg text-ink transition-colors hover:bg-ink/6"
+                aria-haspopup="menu" [attr.aria-expanded]="navOpen()" aria-label="Menü" (click)="toggleNav()">
+          <span class="icon-[tabler--menu-2] size-5"></span>
+        </button>
+        @if (navOpen()) {
+          <ul class="absolute left-0 top-[calc(100%+6px)] z-30 min-w-48 rounded-[11px] border border-ink/10 bg-surface p-1 shadow-lg" role="menu">
+            <li><a class="block rounded-lg px-3 py-2 text-[13px] font-medium text-ink hover:bg-ink/6" routerLink="/home" (click)="closeNav()">{{ "home.title" | translate }}</a></li>
+            <li><a class="block rounded-lg px-3 py-2 text-[13px] font-medium text-ink hover:bg-ink/6" routerLink="/menu" (click)="closeNav()">{{ "menu.title" | translate }}</a></li>
+            <li><a class="block rounded-lg px-3 py-2 text-[13px] font-medium text-ink hover:bg-ink/6" routerLink="/recipe-collections" (click)="closeNav()">{{ "recipeCollections.title" | translate }}</a></li>
+            <li><a class="block rounded-lg px-3 py-2 text-[13px] font-medium text-ink hover:bg-ink/6" routerLink="/about" (click)="closeNav()">{{ "about.title" | translate }}</a></li>
+          </ul>
+        }
+      </div>
+
+      <a routerLink="/home" class="flex items-center gap-2 focus-visible:outline-none">
+        <img src="logo.svg" alt="" width="24" height="24" class="size-6">
+        <span class="text-[17px] font-bold tracking-[-0.02em] text-ink">
+          recps<span class="text-accent">.app</span>
+        </span>
+      </a>
+    </div>
+
+    <div class="order-3 w-full sm:order-none sm:flex-1">
+      <label class="relative block">
+        <span class="icon-[tabler--search] pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-ink/50"></span>
+        <input
+          type="search"
+          class="w-full rounded-[11px] border border-ink/12 bg-surface py-2.5 pl-9.5 pr-3.5 text-[14.5px] text-ink placeholder:text-ink/60 focus-visible:outline-none"
+          placeholder="recept neve, pl. „vadas csirkéből”"
+          [ngModel]="state.nameQuery()"
+          (ngModelChange)="onNameQueryChange($event)"
+          aria-label="recept keresése név szerint">
+      </label>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <app-language-switcher />
+      <app-login />
+    </div>
+  </div>
+</header>

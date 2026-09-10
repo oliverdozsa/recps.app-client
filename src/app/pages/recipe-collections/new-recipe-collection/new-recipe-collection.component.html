@@ -1,0 +1,19 @@
+<div class="mx-auto max-w-[1060px] px-4 py-6 sm:px-7">
+  <div class="mb-5 flex flex-wrap items-center gap-3">
+    <input
+      type="text"
+      class="min-w-0 flex-1 rounded-[9px] border border-ink/14 bg-surface px-3 py-2 text-[16px] font-semibold text-ink"
+      [placeholder]="'recipeCollections.collectionNamePlaceholder' | translate"
+      [ngModel]="name()"
+      (ngModelChange)="name.set($event)">
+    <button type="button" class="rounded-lg bg-accent px-3 py-1.75 text-[13px] font-medium text-white disabled:opacity-40" [disabled]="!canSave() || saving()" (click)="save()">
+      {{ "recipeCollections.save" | translate }}
+    </button>
+  </div>
+
+  @if (markedRecipesService.markedRecipes().length === 0) {
+    <p class="mb-4 text-[13px] text-ink/60">{{ "recipeCollections.noMarkedRecipes" | translate }}</p>
+  }
+
+  <app-marked-recipes [displayFully]="true" [disableSelection]="true" />
+</div>

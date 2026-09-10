@@ -1,0 +1,42 @@
+<div
+  class="flex w-full items-center gap-2.5 rounded-[11px] border bg-surface p-2 transition-[box-shadow,border-color] duration-150 ease-out"
+  [class]="selected() ? 'border-accent ring-2 ring-accent/30' : 'border-ink/10'">
+
+  <a [href]="recipe().url" target="_blank" rel="noopener" class="relative size-12 shrink-0 overflow-hidden rounded-[7px]">
+    @if (recipe().imageUrl && !imageError()) {
+      <img [src]="recipe().imageUrl" [alt]="recipe().name ?? ''" loading="lazy" class="h-full w-full object-cover" (error)="onImageError()">
+    } @else {
+      <div class="striped-placeholder h-full w-full"></div>
+    }
+  </a>
+
+  <div class="min-w-0 flex-1">
+    <a [href]="recipe().url" target="_blank" rel="noopener" class="block truncate text-[13px] font-semibold text-ink hover:underline">
+      {{ recipe().name }}
+    </a>
+    <p class="truncate font-mono text-[11px] text-ink/60">
+      @if (recipe().cookingTime) {
+        {{ recipe().cookingTime }} {{ "recipeCard.mins" | translate }} ·
+      }
+      {{ recipe().sourcePage }}
+    </p>
+  </div>
+
+  <div class="flex shrink-0 items-center gap-1">
+    @if (editMode()) {
+      <button type="button" class="grid size-7 place-items-center rounded-lg text-ink/60 transition-colors hover:bg-ink/6" aria-label="vissza a készletbe" (click)="backClicked.emit(); $event.stopPropagation()">
+        <span class="icon-[tabler--arrow-back-up] size-4"></span>
+      </button>
+    }
+    @if (addMode()) {
+      <button type="button" class="grid size-7 place-items-center rounded-lg text-accent transition-colors hover:bg-accent-tint" aria-label="hozzáadás" (click)="addClicked.emit(); $event.stopPropagation()">
+        <span class="icon-[tabler--plus] size-4"></span>
+      </button>
+    }
+    @if (deleteMode()) {
+      <button type="button" class="grid size-7 place-items-center rounded-lg text-danger transition-colors hover:bg-danger-tint" aria-label="törlés" (click)="deleteClicked.emit(); $event.stopPropagation()">
+        <span class="icon-[tabler--trash] size-4"></span>
+      </button>
+    }
+  </div>
+</div>

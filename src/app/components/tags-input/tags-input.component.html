@@ -1,0 +1,36 @@
+<div class="relative">
+  <div class="flex flex-wrap items-center gap-1.5 rounded-[9px] border border-ink/14 bg-surface px-2.5 py-2" (click)="focusInput()">
+    @for (tag of tags(); track $index) {
+      <span class="inline-flex items-center gap-1 rounded-full bg-accent-tint px-2 py-1 text-[12px] font-medium text-accent-ink">
+        {{ displayFunction()(tag) }}
+        <button type="button" class="opacity-70 hover:opacity-100" (click)="removeTag(tag); $event.stopPropagation()" aria-label="eltávolítás">×</button>
+      </span>
+    }
+    <input
+      #tagInput
+      type="text"
+      class="min-w-24 flex-1 border-0 bg-transparent text-[13px] text-ink outline-none placeholder:text-ink/40"
+      [placeholder]="tags().length === 0 ? ('tagsInput.addTagsPlaceholder' | translate) : ''"
+      [ngModel]="inputValue()"
+      (ngModelChange)="onInput($event)"
+      (focus)="focused.set(true)"
+      (blur)="onBlur()"
+      (keydown)="onKeydown($event)">
+  </div>
+
+  @if (showDropdown()) {
+    <ul class="absolute left-0 top-[calc(100%+4px)] z-30 max-h-56 w-full overflow-y-auto rounded-[9px] border border-ink/10 bg-surface py-1 shadow-lg">
+      @for (opt of filteredOptions(); track $index; let i = $index) {
+        <li>
+          <button
+            type="button"
+            class="block w-full px-3 py-1.75 text-left text-[13px] text-ink"
+            [class.bg-accent-tint]="i === activeIndex()"
+            (mousedown)="addTag(opt)">
+            {{ displayFunction()(opt) }}
+          </button>
+        </li>
+      }
+    </ul>
+  }
+</div>

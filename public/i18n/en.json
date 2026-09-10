@@ -1,0 +1,120 @@
+{
+  "recipeMainSearchParams": {
+    "searchByName": "search by name",
+    "searchByNamePlaceholder": "recipe name...",
+    "byIngredients": "by ingredients",
+    "excluded": "exclude",
+    "addGroup": "add group",
+    "resetParams": "reset",
+    "laneRelation": {
+      "or": "OR",
+      "and": "AND"
+    }
+  },
+  "ingredientsInput": {
+    "searchInIngredients": "search ingredients",
+    "searchInCategories": "search categories"
+  },
+  "tagsInput": {
+    "addTagsPlaceholder": "start typing..."
+  },
+  "about": {
+    "title": "about",
+    "description": "recps.app is a recipe search app that helps you find meals based on what you have. Search by name, filter by ingredients you want to include, or exclude ones you'd rather avoid."
+  },
+  "login": {
+    "signOut": "sign out"
+  },
+  "home": {
+    "title": "recipes"
+  },
+  "searchResultDisplay": {
+    "noResultFound": "no such recipes found...",
+    "conflictingIngredients": "due to conflicting ingredients! <br /> an ingredient cannot be part of included and excluded at the same time!"
+  },
+  "recipeCard": {
+    "mins": "mins"
+  },
+  "recipeAdvancedSearchParams": {
+    "title": "filters",
+    "prepTime": "prep time",
+    "countIngredients": "ingredient count",
+    "orderBy": "order by",
+    "orderByNone": "none",
+    "orderByPrepTime": "prep time",
+    "orderByIngredientCount": "ingredient count",
+    "orderAsc": "ascending",
+    "orderDesc": "descending",
+    "sourcePages": "source pages",
+    "collections": "collections"
+  },
+  "markedRecipes": {
+    "title": "marked recipes",
+    "clearAll": "clear all",
+    "empty": "no marked recipes yet. open the recipe browser and mark some recipes to get started."
+  },
+  "menuEditor": {
+    "menuNamePlaceholder": "menu name…",
+    "defaultTitle": "menu planner",
+    "days": "days",
+    "save": "save",
+    "edit": "edit",
+    "moveTip": "tap a day column to move it there",
+    "placeTip": "tap a day column to place it",
+    "infoTip": "select a recipe from the pool, then tap a day column to place it",
+    "day": "day",
+    "tapToPlace": "tap to place here",
+    "recipeRequired": "at least 1 recipe required",
+    "noRecipes": "no recipes yet",
+    "dayFull": "day full (10/10)",
+    "tapToAddAnother": "tap to add another",
+    "nameTooShort": "name must be at least 2 characters.",
+    "nameTooLong": "name must be at most 250 characters.",
+    "generateFromCollection": "generate",
+    "showIngredients": "ingredients",
+    "generateModal": {
+      "title": "generate from collection",
+      "selectCollection": "select a collection",
+      "noCollections": "no collections available",
+      "selectDays": "select days to generate",
+      "allDays": "all",
+      "generate": "generate",
+      "cancel": "cancel"
+    },
+    "ingredientsModal": {
+      "title": "ingredients",
+      "noIngredients": "no ingredients yet",
+      "copy": "copy to clipboard",
+      "copied": "copied!",
+      "close": "close"
+    }
+  },
+  "recipeCollections": {
+    "title": "collections",
+    "loginNeeded": "you need to be logged in to view your recipe collections.",
+    "new": "new collection",
+    "empty": "no collections yet. create one to get started!",
+    "deleteModalTitle": "delete collection",
+    "deleteModalQuestion": "are you sure you want to delete ",
+    "deleteModalCancel": "cancel",
+    "deleteModalYes": "delete",
+    "collectionNamePlaceholder": "collection name…",
+    "save": "save",
+    "edit": "edit",
+    "cancel": "cancel",
+    "addMarkedRecipes": "add marked recipes",
+    "noMarkedRecipes": "no marked recipes. browse recipes and mark some first.",
+    "markedAlreadyAdded": "all marked recipes are already in this collection.",
+    "noRecipes": "no recipes in this collection."
+  },
+  "menu": {
+    "title": "menu planner",
+    "loginNeeded": "you need to be logged in to view your menus.",
+    "new": "new menu",
+    "empty": "No menus yet. Create one to get started!",
+    "deleteModalTitle": "delete menu",
+    "deleteModalQuestion": "Are you sure you want to delete ",
+    "deleteModalCancel": "cancel",
+    "deleteModalYes": "delete"
+  }
+}

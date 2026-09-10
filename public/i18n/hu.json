@@ -1,0 +1,120 @@
+{
+  "recipeMainSearchParams": {
+    "searchByName": "név alapján",
+    "searchByNamePlaceholder": "recept név...",
+    "byIngredients": "hozzávalók",
+    "excluded": "ne legyen benne",
+    "addGroup": "új csoport",
+    "resetParams": "alaphelyzet",
+    "laneRelation": {
+      "or": "VAGY",
+      "and": "ÉS"
+    }
+  },
+  "ingredientsInput": {
+    "searchInIngredients": "hozzávalókban",
+    "searchInCategories": "kategóriákban"
+  },
+  "tagsInput": {
+    "addTagsPlaceholder": "kezdj el írni..."
+  },
+  "about": {
+    "title": "rólunk",
+    "description": "A recps.app egy receptkereső ami segít ételeket keresni hozzávalók alapján. Kereshetsz név szerint, szűrhetsz hozzávalókra, vagy kizárhatod, amiket nem szeretnél."
+  },
+  "login": {
+    "signOut": "kilépés"
+  },
+  "home": {
+    "title": "receptek"
+  },
+  "searchResultDisplay": {
+    "noResultFound": "nincsenek ilyen receptek...",
+    "conflictingIngredients": "ütköző hozzávalók miatt!\negy hozzávaló nem szerepelhet egyszerre a keresett és a kizárt hozzávalók között!"
+  },
+  "recipeCard": {
+    "mins": "perc"
+  },
+  "recipeAdvancedSearchParams": {
+    "title": "szűrők",
+    "prepTime": "elkészítési idő",
+    "countIngredients": "hozzávalók száma",
+    "orderBy": "rendezés",
+    "orderByNone": "nincs",
+    "orderByPrepTime": "elkészítési idő",
+    "orderByIngredientCount": "hozzávalók száma",
+    "orderAsc": "növekvő",
+    "orderDesc": "csökkenő",
+    "sourcePages": "oldalak",
+    "collections": "gyűjtemények"
+  },
+  "markedRecipes": {
+    "title": "megjelölt receptek",
+    "clearAll": "összes törlése",
+    "empty": "még nincsenek megjelölt receptek. nyisd meg a receptböngészőt és jelölj meg néhány receptet a kezdéshez."
+  },
+  "menuEditor": {
+    "menuNamePlaceholder": "menü neve…",
+    "defaultTitle": "menü tervező",
+    "days": "nap",
+    "save": "mentés",
+    "edit": "szerkesztés",
+    "moveTip": "koppints egy nap oszlopra az áthelyezéshez",
+    "placeTip": "koppints egy nap oszlopra az elhelyezéshez",
+    "infoTip": "válassz egy receptet a gyűjteményből, majd koppints egy nap oszlopra az elhelyezéshez",
+    "day": "nap",
+    "tapToPlace": "koppints ide az elhelyezéshez",
+    "recipeRequired": "legalább 1 recept szükséges",
+    "noRecipes": "még nincsenek receptek",
+    "dayFull": "a nap tele van (10/10)",
+    "tapToAddAnother": "koppints egy másik hozzáadásához",
+    "nameTooShort": "a névnek legalább 2 karakternek kell lennie.",
+    "nameTooLong": "a név legfeljebb 250 karakter lehet.",
+    "generateFromCollection": "generálás",
+    "showIngredients": "hozzávalók",
+    "generateModal": {
+      "title": "generálás gyűjteményből",
+      "selectCollection": "válassz gyűjteményt",
+      "noCollections": "nincsenek elérhető gyűjtemények",
+      "selectDays": "napok kiválasztása",
+      "allDays": "összes",
+      "generate": "generálás",
+      "cancel": "mégse"
+    },
+    "ingredientsModal": {
+      "title": "hozzávalók",
+      "noIngredients": "még nincsenek hozzávalók",
+      "copy": "másolás vágólapra",
+      "copied": "másolva!",
+      "close": "bezárás"
+    }
+  },
+  "recipeCollections": {
+    "title": "gyűjtemények",
+    "loginNeeded": "a receptgyűjtemények megtekintéséhez be kell jelentkezned.",
+    "new": "új gyűjtemény",
+    "empty": "még nincsenek gyűjteményeid. hozz létre egyet a kezdéshez!",
+    "deleteModalTitle": "gyűjtemény törlése",
+    "deleteModalQuestion": "biztosan törlöd ezt: ",
+    "deleteModalCancel": "mégse",
+    "deleteModalYes": "törlés",
+    "collectionNamePlaceholder": "gyűjtemény neve…",
+    "save": "mentés",
+    "edit": "szerkesztés",
+    "cancel": "mégse",
+    "addMarkedRecipes": "megjelölt receptek hozzáadása",
+    "noMarkedRecipes": "nincsenek megjelölt receptek. böngéssz recepteket és jelölj meg néhányat.",
+    "markedAlreadyAdded": "az összes megjelölt recept már szerepel ebben a gyűjteményben.",
+    "noRecipes": "nincsenek receptek ebben a gyűjteményben."
+  },
+  "menu": {
+    "title": "menü tervező",
+    "loginNeeded": "a menü tervező használatához be kell jelentkezned",
+    "new": "új menü",
+    "empty": "Nincsenek még menüid. Hozz létre egyet a kezdéshez!",
+    "deleteModalTitle": "menü törlése",
+    "deleteModalQuestion": "Biztosan törlöd ezt: ",
+    "deleteModalCancel": "mégse",
+    "deleteModalYes": "törlés"
+  }
+}
