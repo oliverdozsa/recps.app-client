@@ -6,27 +6,108 @@
         legyen benne
       </span>
 
-      @for (chip of state.includeChips(); track chip.key) {
-        <span
-          class="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-accent px-2.75 py-1.5 text-[13px] font-medium text-white"
-          [class.ring-2]="isConflicting(chip)"
-          [class.ring-danger]="isConflicting(chip)">
-          {{ chip.label }}
+      @for (lane of includeLanes(); track $index; let laneIndex = $index; let isLastLane = $last) {
+        @if (isLastLane) {
+          @if (isGrouped()) {
+            <span class="inline-flex shrink-0 items-center gap-1 rounded-2xl border border-dashed border-accent/40 bg-accent/5 p-1">
+              @for (chip of lane.chips; track chip.key) {
+                <span
+                  class="inline-flex items-center gap-1.5 rounded-full bg-accent px-2.5 py-1 text-[13px] font-medium text-white"
+                  [class.ring-2]="isConflicting(chip)"
+                  [class.ring-danger]="isConflicting(chip)">
+                  {{ chip.label }}
+                  <button
+                    type="button"
+                    class="opacity-70 transition-opacity hover:opacity-100"
+                    [attr.aria-label]="'eltávolítás: ' + chip.label"
+                    (click)="removeInclude(chip)">
+                    ×
+                  </button>
+                </span>
+              }
+              <app-add-ingredient-control
+                label="hozzávaló"
+                [existingKeys]="includeKeys()"
+                (chipSelected)="addInclude($event)"
+                (backspaceOnEmpty)="removeLastInclude()" />
+            </span>
+          } @else {
+            @for (chip of lane.chips; track chip.key) {
+              <span
+                class="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-accent px-2.75 py-1.5 text-[13px] font-medium text-white"
+                [class.ring-2]="isConflicting(chip)"
+                [class.ring-danger]="isConflicting(chip)">
+                {{ chip.label }}
+                <button
+                  type="button"
+                  class="opacity-70 transition-opacity hover:opacity-100"
+                  [attr.aria-label]="'eltávolítás: ' + chip.label"
+                  (click)="removeInclude(chip)">
+                  ×
+                </button>
+              </span>
+            }
+
+            <app-add-ingredient-control
+              label="hozzávaló"
+              [existingKeys]="includeKeys()"
+              (chipSelected)="addInclude($event)"
+              (backspaceOnEmpty)="removeLastInclude()" />
+          }
+        } @else {
+          @if (lane.chips.length > 1) {
+            <span class="inline-flex shrink-0 items-center gap-1 rounded-2xl border border-dashed border-accent/40 bg-accent/5 p-1">
+              @for (chip of lane.chips; track chip.key) {
+                <span
+                  class="inline-flex items-center gap-1.5 rounded-full bg-accent px-2.5 py-1 text-[13px] font-medium text-white"
+                  [class.ring-2]="isConflicting(chip)"
+                  [class.ring-danger]="isConflicting(chip)">
+                  {{ chip.label }}
+                  <button
+                    type="button"
+                    class="opacity-70 transition-opacity hover:opacity-100"
+                    [attr.aria-label]="'eltávolítás: ' + chip.label"
+                    (click)="removeInclude(chip)">
+                    ×
+                  </button>
+                </span>
+              }
+            </span>
+          } @else {
+            <span
+              class="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-accent px-2.75 py-1.5 text-[13px] font-medium text-white"
+              [class.ring-2]="isConflicting(lane.chips[0])"
+              [class.ring-danger]="isConflicting(lane.chips[0])">
+              {{ lane.chips[0].label }}
+              <button
+                type="button"
+                class="opacity-70 transition-opacity hover:opacity-100"
+                [attr.aria-label]="'eltávolítás: ' + lane.chips[0].label"
+                (click)="removeInclude(lane.chips[0])">
+                ×
+              </button>
+            </span>
+          }
+
           <button
             type="button"
-            class="opacity-70 transition-opacity hover:opacity-100"
-            [attr.aria-label]="'eltávolítás: ' + chip.label"
-            (click)="removeInclude(chip)">
-            ×
+            class="shrink-0 rounded-full px-2 py-1 font-mono text-[11px] font-semibold uppercase tracking-[0.04em] transition-colors"
+            [class]="state.includeRelations()[laneIndex] === 'OR' ? 'bg-accent-tint text-accent-ink hover:bg-accent-tint/70' : 'bg-ink/6 text-ink/55 hover:bg-ink/10'"
+            [attr.aria-label]="'kapcsolat váltása: ' + (state.includeRelations()[laneIndex] === 'OR' ? ('recipeMainSearchParams.laneRelation.or' | translate) : ('recipeMainSearchParams.laneRelation.and' | translate))"
+            (click)="toggleRelation(laneIndex)">
+            {{ (state.includeRelations()[laneIndex] === 'OR' ? 'recipeMainSearchParams.laneRelation.or' : 'recipeMainSearchParams.laneRelation.and') | translate }}
           </button>
-        </span>
+        }
       }
 
-      <app-add-ingredient-control
-        label="hozzávaló"
-        [existingKeys]="includeKeys()"
-        (chipSelected)="addInclude($event)"
-        (backspaceOnEmpty)="removeLastInclude()" />
+      @if (canAddGroup()) {
+        <button
+          type="button"
+          class="shrink-0 rounded-full border border-dashed border-accent/35 px-2.75 py-1.5 text-[13px] text-accent-ink/80 transition-colors hover:border-accent/60 hover:text-accent-ink"
+          (click)="addGroup()">
+          + csoport
+        </button>
+      }
     </div>
 
     <div class="hidden h-7 w-px shrink-0 bg-ink/10 sm:block"></div>
