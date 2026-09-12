@@ -6,7 +6,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "recps.app-client-new": {
+    "recps.app-client": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -16,7 +16,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/recps.app-client-new",
+            "outputPath": "dist/recps.app-client",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -71,10 +71,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "recps.app-client-new:build:production"
+              "buildTarget": "recps.app-client:build:production"
             },
             "development": {
-              "buildTarget": "recps.app-client-new:build:development"
+              "buildTarget": "recps.app-client:build:development"
             }
           },
           "defaultConfiguration": "development"

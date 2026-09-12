@@ -1,5 +1,5 @@
 {
-  "name": "recps.app-client-new",
+  "name": "recps.app-client",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
