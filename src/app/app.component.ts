@@ -15,6 +15,7 @@ export class AppComponent implements OnInit {
   private languageService = inject(LanguageService);
   private searchState = inject(SearchStateService);
   private authService = inject(AuthService);
+  readonly year = new Date().getFullYear();
 
   ngOnInit(): void {
     this.languageService.getAllIfNeeded();
