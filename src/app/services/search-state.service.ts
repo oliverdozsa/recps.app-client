@@ -1,8 +1,9 @@
-import {computed, inject, Injectable, signal} from '@angular/core';
+import {computed, effect, inject, Injectable, signal, untracked} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Params} from '@angular/router';
 import {switchMap} from 'rxjs';
 import {LanguageService} from './language.service';
+import {IngredientsService} from './ingredients.service';
 import {RecipeOrderBy, RecipeOrderDirection, RecipeSearchRequest} from './requests';
 import {PageResponseRecipeSearchResponse, SourcePageResponse} from './responses';
 import {IngredientGroupRelation, IngredientGroupWithRelation} from './common.data';
@@ -22,6 +23,7 @@ const PAGE_SIZE = 15;
 export class SearchStateService {
   private http = inject(HttpClient);
   private languageService = inject(LanguageService);
+  private ingredientsService = inject(IngredientsService);
   private baseUrl = environment.apiUrl;
 
   nameQuery = signal<string>('');
@@ -84,6 +86,33 @@ export class SearchStateService {
       || this.maxIngredients() !== undefined
       || this.sitesTouched();
   });
+
+  constructor() {
+    // Re-labels already-added chips in the newly selected language, so switching languages
+    // doesn't leave previously picked ingredients/categories displayed in the old one.
+    effect(() => {
+      const languageId = this.languageService.selectedLanguage()?.id;
+      if (languageId !== undefined) {
+        untracked(() => this.retranslateChips(languageId));
+      }
+    });
+  }
+
+  private retranslateChips(languageId: number) {
+    const allChips = [...this.includeLanes().flatMap(lane => lane.chips), ...this.excludeChips()];
+    const allIds = Array.from(new Set(allChips.flatMap(c => c.ids)));
+    if (allIds.length === 0) return;
+
+    this.ingredientsService.findByIds(languageId, allIds).subscribe(results => {
+      const nameById = new Map(results.map(r => [r.ingredientId, r.name]));
+      const relabel = (chip: Chip): Chip => {
+        const names = chip.ids.map(id => nameById.get(id)).filter((n): n is string => !!n);
+        return names.length > 0 ? {...chip, label: names.join(' / ')} : chip;
+      };
+      this.includeLanes.update(lanes => lanes.map(lane => ({chips: lane.chips.map(relabel)})));
+      this.excludeChips.update(chips => chips.map(relabel));
+    });
+  }
 
   getSourcePages() {
     return this.http.get<SourcePageResponse[]>(`${this.baseUrl}/recipes/sourcePages`);
