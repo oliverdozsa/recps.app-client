@@ -1,6 +1,7 @@
 import {inject, Injectable, signal} from '@angular/core';
 import {OAuthService} from 'angular-oauth2-oidc';
 import {Router} from '@angular/router';
+import {TranslateService} from '@ngx-translate/core';
 import {NotificationsService} from './notifications.service';
 import {SearchStateService} from './search-state.service';
 
@@ -12,6 +13,7 @@ export class AuthService {
   private router = inject(Router);
   private notifications = inject(NotificationsService);
   private searchState = inject(SearchStateService);
+  private translate = inject(TranslateService);
 
   private isLoggedInSignal = signal(false);
   isLoggedIn = this.isLoggedInSignal.asReadonly();
@@ -70,7 +72,7 @@ export class AuthService {
     }
 
     if (this.isLoggedIn()) {
-      setTimeout(() => this.notifications.success("Hello!"));
+      setTimeout(() => this.notifications.success(this.translate.instant("login.welcomeMessage")));
     }
   }
 }

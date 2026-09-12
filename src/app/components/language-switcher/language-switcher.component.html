@@ -2,7 +2,7 @@
   <button
     type="button"
     class="rounded-lg border border-ink/14 px-2.5 py-1.5 text-[13px] font-medium uppercase text-ink transition-colors"
-    aria-haspopup="menu" [attr.aria-expanded]="open()" aria-label="Nyelv váltása"
+    aria-haspopup="menu" [attr.aria-expanded]="open()" [attr.aria-label]="'languageSwitcher.ariaLabel' | translate"
     (click)="toggle()">
     {{ languageService.selectedLanguage()?.isoName ?? '—' }}
   </button>

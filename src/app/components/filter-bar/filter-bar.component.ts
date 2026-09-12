@@ -1,4 +1,6 @@
 import {ChangeDetectionStrategy, Component, computed, inject, signal} from '@angular/core';
+import {toSignal} from '@angular/core/rxjs-interop';
+import {TranslatePipe, TranslateService} from '@ngx-translate/core';
 import {DualRangeComponent} from '../dual-range/dual-range.component';
 import {CollectionInputComponent} from '../collection-input/collection-input.component';
 import {ClickOutsideDirective} from '../../directives/click-outside.directive';
@@ -13,7 +15,7 @@ type PanelKey = 'time' | 'ingredients' | 'sites' | 'sort' | 'collections';
 @Component({
   selector: 'app-filter-bar',
   standalone: true,
-  imports: [DualRangeComponent, CollectionInputComponent, ClickOutsideDirective],
+  imports: [DualRangeComponent, CollectionInputComponent, ClickOutsideDirective, TranslatePipe],
   templateUrl: './filter-bar.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -21,6 +23,11 @@ export class FilterBarComponent {
   state = inject(SearchStateService);
   languageService = inject(LanguageService);
   authService = inject(AuthService);
+  private translate = inject(TranslateService);
+
+  // Re-evaluates the computed labels below whenever the active language actually finishes
+  // loading (translate.instant is not itself reactive to language switches).
+  private langChange = toSignal(this.translate.onLangChange, {initialValue: null});
 
   openPanel = signal<PanelKey | null>(null);
 
@@ -47,36 +54,44 @@ export class FilterBarComponent {
   });
 
   timeLabel = computed(() => {
+    this.langChange();
     const min = this.state.minTime();
     const max = this.state.maxTime();
-    if (min === undefined && max === undefined) return 'elkészítési idő';
-    if (max !== undefined && min === undefined) return `max. ${max} perc`;
-    if (min !== undefined && max === undefined) return `min. ${min} perc`;
-    return `${min}–${max} perc`;
+    if (min === undefined && max === undefined) return this.translate.instant('recipeAdvancedSearchParams.prepTime');
+    if (max !== undefined && min === undefined) return this.translate.instant('recipeAdvancedSearchParams.maxMinutes', {max});
+    if (min !== undefined && max === undefined) return this.translate.instant('recipeAdvancedSearchParams.minMinutes', {min});
+    return this.translate.instant('recipeAdvancedSearchParams.rangeMinutes', {min, max});
   });
 
   ingredientsLabel = computed(() => {
+    this.langChange();
     const min = this.state.minIngredients();
     const max = this.state.maxIngredients();
-    if (min === undefined && max === undefined) return 'hozzávalók száma';
-    if (max !== undefined && min === undefined) return `max. ${max} db`;
-    if (min !== undefined && max === undefined) return `min. ${min} db`;
-    return `${min}–${max} db`;
+    if (min === undefined && max === undefined) return this.translate.instant('recipeAdvancedSearchParams.countIngredients');
+    if (max !== undefined && min === undefined) return this.translate.instant('recipeAdvancedSearchParams.maxCount', {max});
+    if (min !== undefined && max === undefined) return this.translate.instant('recipeAdvancedSearchParams.minCount', {min});
+    return this.translate.instant('recipeAdvancedSearchParams.rangeCount', {min, max});
   });
 
   sitesLabel = computed(() => {
+    this.langChange();
     const n = this.state.sites().size;
-    return n > 0 ? `${n} oldal` : 'oldalak';
+    return n > 0 ? this.translate.instant('recipeAdvancedSearchParams.sourcePagesCount', {n}) : this.translate.instant('recipeAdvancedSearchParams.sourcePages');
   });
 
-  resultCountLabel = computed(() => this.state.totalCount().toLocaleString('hu-HU'));
+  resultCountLabel = computed(() => {
+    this.langChange();
+    const locale = this.translate.currentLang === 'en' ? 'en-US' : 'hu-HU';
+    return this.state.totalCount().toLocaleString(locale);
+  });
 
   sortLabel = computed(() => {
+    this.langChange();
     const sort = this.state.sort();
-    if (!sort.orderBy) return 'rendezés: relevancia';
-    const field = sort.orderBy === 'prepTime' ? 'idő' : 'hozzávalók';
-    const dir = sort.orderDirection === 'desc' ? 'csökkenő' : 'növekvő';
-    return `${field}, ${dir}`;
+    if (!sort.orderBy) return this.translate.instant('recipeAdvancedSearchParams.sortByRelevance');
+    const fieldKey = sort.orderBy === 'prepTime' ? 'recipeAdvancedSearchParams.orderByPrepTime' : 'recipeAdvancedSearchParams.orderByIngredientCount';
+    const dirKey = sort.orderDirection === 'desc' ? 'recipeAdvancedSearchParams.orderDesc' : 'recipeAdvancedSearchParams.orderAsc';
+    return `${this.translate.instant(fieldKey)}, ${this.translate.instant(dirKey)}`;
   });
 
   onMinTime(v: number | null) {

@@ -1,4 +1,5 @@
 import {Component, inject, signal} from '@angular/core';
+import {TranslatePipe} from '@ngx-translate/core';
 import {LanguageService} from '../../services/language.service';
 import {LanguageResponse} from '../../services/responses';
 import {ClickOutsideDirective} from '../../directives/click-outside.directive';
@@ -6,7 +7,7 @@ import {ClickOutsideDirective} from '../../directives/click-outside.directive';
 @Component({
   selector: 'app-language-switcher',
   standalone: true,
-  imports: [ClickOutsideDirective],
+  imports: [ClickOutsideDirective, TranslatePipe],
   templateUrl: './language-switcher.component.html'
 })
 export class LanguageSwitcherComponent {

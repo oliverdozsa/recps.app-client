@@ -3,6 +3,7 @@ import {FormsModule} from '@angular/forms';
 import {forkJoin, of, Subject} from 'rxjs';
 import {debounceTime, switchMap} from 'rxjs/operators';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {TranslatePipe} from '@ngx-translate/core';
 import {IngredientsService, SearchSource} from '../../services/ingredients.service';
 import {LanguageService} from '../../services/language.service';
 import {Chip, chipFromUnion} from '../../models/chip.model';
@@ -10,7 +11,7 @@ import {Chip, chipFromUnion} from '../../models/chip.model';
 @Component({
   selector: 'app-add-ingredient-control',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, TranslatePipe],
   templateUrl: './add-ingredient-control.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -18,7 +19,7 @@ export class AddIngredientControlComponent {
   private ingredientsService = inject(IngredientsService);
   private languageService = inject(LanguageService);
 
-  label = input<string>('hozzávaló');
+  label = input<string>('');
   existingKeys = input<Set<string>>(new Set());
   chipSelected = output<Chip>();
   backspaceOnEmpty = output<void>();

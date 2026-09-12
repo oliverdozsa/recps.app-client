@@ -16,13 +16,13 @@
           class="h-full w-full object-cover">
       } @else {
         <div class="striped-placeholder flex h-full w-full items-center justify-center">
-          <span class="font-mono text-[11px] uppercase tracking-[0.06em] text-ink/50">nincs kép</span>
+          <span class="font-mono text-[11px] uppercase tracking-[0.06em] text-ink/50">{{ "recipeCard.noImage" | translate }}</span>
         </div>
       }
 
       @if (recipe().cookingTime) {
         <span class="absolute bottom-2 right-2 rounded-md bg-canvas px-2 py-1 text-[11px] font-medium text-ink">
-          {{ recipe().cookingTime }} perc
+          {{ recipe().cookingTime }} {{ "recipeCard.mins" | translate }}
         </span>
       }
 
@@ -30,7 +30,7 @@
         type="button"
         class="absolute right-2 top-2 grid size-7 place-items-center rounded-full bg-canvas/90 text-ink/70 transition-colors hover:text-accent"
         [attr.aria-pressed]="isMarked()"
-        [attr.aria-label]="isMarked() ? 'megjelölés eltávolítása' : 'recept megjelölése'"
+        [attr.aria-label]="(isMarked() ? 'recipeCard.unmark' : 'recipeCard.mark') | translate"
         (click)="toggleMarked($event)">
         <span [class]="isMarked() ? 'icon-[tabler--bookmark-filled]' : 'icon-[tabler--bookmark]'" class="size-4"></span>
       </button>
@@ -54,13 +54,13 @@
           class="rounded-[7px] border border-ink/14 px-2.25 py-1 text-[12px] font-medium text-ink/62 transition-colors hover:border-accent hover:text-accent"
           [attr.aria-expanded]="expanded()"
           (click)="toggleExpanded($event)">
-          {{ expanded() ? 'kevesebb' : '+' + hiddenCount() }}
+          {{ expanded() ? ('recipeCard.showLess' | translate) : '+' + hiddenCount() }}
         </button>
       }
     </div>
 
     <p class="mt-auto font-mono text-[12px] text-ink/62">
-      {{ recipe().ingredients.length }} hozzávaló @if (recipe().sourcePage) { · {{ recipe().sourcePage }} }
+      {{ recipe().ingredients.length }} {{ "recipeCard.ingredientsCount" | translate }} @if (recipe().sourcePage) { · {{ recipe().sourcePage }} }
     </p>
   </a>
 </article>

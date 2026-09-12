@@ -1,10 +1,12 @@
 import {ChangeDetectionStrategy, Component, computed, ElementRef, OnInit, input, output, signal, viewChild} from '@angular/core';
 import {debounceTime, Subject} from 'rxjs';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {TranslatePipe} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-dual-range',
   standalone: true,
+  imports: [TranslatePipe],
   templateUrl: './dual-range.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })

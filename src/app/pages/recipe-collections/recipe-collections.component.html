@@ -20,7 +20,7 @@
         @for (c of collections(); track c.id) {
           <li class="flex items-center justify-between gap-3 rounded-[11px] border border-ink/10 bg-surface px-4 py-3">
             <a [routerLink]="['/recipe-collections', c.id]" class="flex-1 truncate text-[14px] font-medium text-ink hover:underline">{{ c.name }}</a>
-            <button type="button" class="grid size-8 place-items-center rounded-lg text-ink/50 transition-colors hover:bg-danger-tint hover:text-danger" aria-label="törlés" (click)="confirmDelete(c)">
+            <button type="button" class="grid size-8 place-items-center rounded-lg text-ink/50 transition-colors hover:bg-danger-tint hover:text-danger" [attr.aria-label]="'common.delete' | translate" (click)="confirmDelete(c)">
               <span class="icon-[tabler--trash] size-4"></span>
             </button>
           </li>

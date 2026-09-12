@@ -1,5 +1,5 @@
 <div class="flex flex-col items-center gap-4 py-20 text-center">
-  <p class="text-[17px] font-semibold text-ink">Nincs találat</p>
+  <p class="text-[17px] font-semibold text-ink">{{ "emptyState.title" | translate }}</p>
 
   @if (excludeChips().length > 0) {
     <div class="flex flex-wrap justify-center gap-2">
@@ -9,7 +9,7 @@
           <button
             type="button"
             class="opacity-70 transition-opacity hover:opacity-100"
-            [attr.aria-label]="'kizárás eltávolítása: ' + chip.label"
+            [attr.aria-label]="('emptyState.removeExclusion' | translate) + ': ' + chip.label"
             (click)="removeExclude.emit(chip)">
             ×
           </button>
@@ -22,6 +22,6 @@
     type="button"
     class="rounded-lg bg-ink px-4 py-2 text-[13px] font-medium text-canvas transition-colors hover:bg-ink/85"
     (click)="clearFilters.emit()">
-    szűrők törlése
+    {{ "emptyState.clearFilters" | translate }}
   </button>
 </div>

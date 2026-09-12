@@ -5,6 +5,8 @@
     "byIngredients": "hozzávalók",
     "excluded": "ne legyen benne",
     "addGroup": "új csoport",
+    "group": "csoport",
+    "toggleRelationAriaLabel": "kapcsolat váltása",
     "resetParams": "alaphelyzet",
     "laneRelation": {
       "or": "VAGY",
@@ -13,7 +15,45 @@
   },
   "ingredientsInput": {
     "searchInIngredients": "hozzávalókban",
-    "searchInCategories": "kategóriákban"
+    "searchInCategories": "kategóriákban",
+    "searchPlaceholder": "keresés…",
+    "searching": "keresés…",
+    "noResults": "nincs találat",
+    "ingredient": "hozzávaló",
+    "searchSuffix": "keresése"
+  },
+  "common": {
+    "delete": "törlés",
+    "remove": "eltávolítás",
+    "add": "hozzáadás"
+  },
+  "languageSwitcher": {
+    "ariaLabel": "nyelv váltása"
+  },
+  "pagination": {
+    "navAriaLabel": "lapozás",
+    "prevPage": "előző oldal",
+    "nextPage": "következő oldal",
+    "pageNumber": "oldal"
+  },
+  "pageNotFound": {
+    "title": "Nincs ilyen oldal",
+    "description": "A keresett hozzávaló nem található ezen a polcon.",
+    "backToSearch": "vissza a kereséshez"
+  },
+  "appHeader": {
+    "menuAriaLabel": "Menü",
+    "searchPlaceholder": "recept neve, pl. „vadas csirkéből”",
+    "searchAriaLabel": "recept keresése név szerint"
+  },
+  "dualRange": {
+    "minValue": "minimum érték",
+    "maxValue": "maximum érték"
+  },
+  "emptyState": {
+    "title": "Nincs találat",
+    "removeExclusion": "kizárás eltávolítása",
+    "clearFilters": "szűrők törlése"
   },
   "tagsInput": {
     "addTagsPlaceholder": "kezdj el írni..."
@@ -23,7 +63,10 @@
     "description": "A recps.app egy receptkereső ami segít ételeket keresni hozzávalók alapján. Kereshetsz név szerint, szűrhetsz hozzávalókra, vagy kizárhatod, amiket nem szeretnél."
   },
   "login": {
-    "signOut": "kilépés"
+    "signOut": "kilépés",
+    "userMenuAriaLabel": "Felhasználói menü",
+    "signIn": "belépés",
+    "welcomeMessage": "Szia!"
   },
   "home": {
     "title": "receptek"
@@ -33,7 +76,12 @@
     "conflictingIngredients": "ütköző hozzávalók miatt!\negy hozzávaló nem szerepelhet egyszerre a keresett és a kizárt hozzávalók között!"
   },
   "recipeCard": {
-    "mins": "perc"
+    "mins": "perc",
+    "noImage": "nincs kép",
+    "unmark": "megjelölés eltávolítása",
+    "mark": "recept megjelölése",
+    "showLess": "kevesebb",
+    "ingredientsCount": "hozzávaló"
   },
   "recipeAdvancedSearchParams": {
     "title": "szűrők",
@@ -43,10 +91,20 @@
     "orderByNone": "nincs",
     "orderByPrepTime": "elkészítési idő",
     "orderByIngredientCount": "hozzávalók száma",
+    "orderByRelevance": "relevancia",
+    "sortByRelevance": "rendezés: relevancia",
     "orderAsc": "növekvő",
     "orderDesc": "csökkenő",
     "sourcePages": "oldalak",
-    "collections": "gyűjtemények"
+    "sourcePagesCount": "{{n}} oldal",
+    "collections": "gyűjtemények",
+    "maxMinutes": "max. {{max}} perc",
+    "minMinutes": "min. {{min}} perc",
+    "rangeMinutes": "{{min}}–{{max}} perc",
+    "maxCount": "max. {{max}} db",
+    "minCount": "min. {{min}} db",
+    "rangeCount": "{{min}}–{{max}} db",
+    "recipesCountSuffix": "recept"
   },
   "markedRecipes": {
     "title": "megjelölt receptek",
@@ -72,6 +130,9 @@
     "nameTooLong": "a név legfeljebb 250 karakter lehet.",
     "generateFromCollection": "generálás",
     "showIngredients": "hozzávalók",
+    "removeDayAriaLabel": "nap eltávolítása",
+    "addDayAriaLabel": "nap hozzáadása",
+    "backToPoolAriaLabel": "vissza a készletbe",
     "generateModal": {
       "title": "generálás gyűjteményből",
       "selectCollection": "válassz gyűjteményt",

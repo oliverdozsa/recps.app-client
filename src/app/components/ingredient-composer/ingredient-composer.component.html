@@ -3,7 +3,7 @@
 
     <div class="flex min-w-0 items-center gap-2 overflow-x-auto no-scrollbar sm:flex-wrap sm:overflow-visible">
       <span class="shrink-0 font-mono text-[11.5px] font-semibold uppercase tracking-[0.06em] text-ink/65">
-        legyen benne
+        {{ "recipeMainSearchParams.byIngredients" | translate }}
       </span>
 
       @for (lane of includeLanes(); track $index; let laneIndex = $index; let isLastLane = $last) {
@@ -17,14 +17,14 @@
               <button
                 type="button"
                 class="opacity-70 transition-opacity hover:opacity-100"
-                [attr.aria-label]="'eltávolítás: ' + chip.label"
+                [attr.aria-label]="('common.remove' | translate) + ': ' + chip.label"
                 (click)="removeInclude(chip)">
                 ×
               </button>
             </span>
           }
           <app-add-ingredient-control
-            label="hozzávaló"
+            [label]="'ingredientsInput.ingredient' | translate"
             [existingKeys]="includeKeys()"
             (chipSelected)="addInclude($event, laneIndex)"
             (backspaceOnEmpty)="removeLastInclude(laneIndex)" />
@@ -35,7 +35,7 @@
             type="button"
             class="shrink-0 rounded-full px-2 py-1 font-mono text-[11px] font-semibold uppercase tracking-[0.04em] transition-colors"
             [class]="state.includeRelations()[laneIndex] === 'OR' ? 'bg-accent-tint text-accent-ink hover:bg-accent-tint/70' : 'bg-ink/6 text-ink/55 hover:bg-ink/10'"
-            [attr.aria-label]="'kapcsolat váltása: ' + (state.includeRelations()[laneIndex] === 'OR' ? ('recipeMainSearchParams.laneRelation.or' | translate) : ('recipeMainSearchParams.laneRelation.and' | translate))"
+            [attr.aria-label]="('recipeMainSearchParams.toggleRelationAriaLabel' | translate) + ': ' + (state.includeRelations()[laneIndex] === 'OR' ? ('recipeMainSearchParams.laneRelation.or' | translate) : ('recipeMainSearchParams.laneRelation.and' | translate))"
             (click)="toggleRelation(laneIndex)">
             {{ (state.includeRelations()[laneIndex] === 'OR' ? 'recipeMainSearchParams.laneRelation.or' : 'recipeMainSearchParams.laneRelation.and') | translate }}
           </button>
@@ -47,7 +47,7 @@
           type="button"
           class="shrink-0 rounded-full border border-dashed border-accent/35 px-2.75 py-1.5 text-[13px] text-accent-ink/80 transition-colors hover:border-accent/60 hover:text-accent-ink"
           (click)="addGroup()">
-          + csoport
+          + {{ "recipeMainSearchParams.group" | translate }}
         </button>
       }
     </div>
@@ -56,7 +56,7 @@
 
     <div class="flex min-w-0 items-center gap-2 overflow-x-auto no-scrollbar sm:flex-wrap sm:overflow-visible">
       <span class="shrink-0 font-mono text-[11.5px] font-semibold uppercase tracking-[0.06em] text-ink/65">
-        ne legyen
+        {{ "recipeMainSearchParams.excluded" | translate }}
       </span>
 
       @for (chip of state.excludeChips(); track chip.key) {
@@ -65,7 +65,7 @@
           <button
             type="button"
             class="opacity-70 transition-opacity hover:opacity-100"
-            [attr.aria-label]="'eltávolítás: ' + chip.label"
+            [attr.aria-label]="('common.remove' | translate) + ': ' + chip.label"
             (click)="removeExclude(chip)">
             ×
           </button>
@@ -73,7 +73,7 @@
       }
 
       <app-add-ingredient-control
-        label="hozzávaló"
+        [label]="'ingredientsInput.ingredient' | translate"
         [existingKeys]="excludeKeys()"
         (chipSelected)="addExclude($event)"
         (backspaceOnEmpty)="removeLastExclude()" />

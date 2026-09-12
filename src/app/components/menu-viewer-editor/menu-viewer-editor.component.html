@@ -20,9 +20,9 @@
 
     @if (isEditMode()) {
       <div class="flex items-center gap-1.5 rounded-[9px] border border-ink/14 px-1.5 py-1">
-        <button type="button" class="grid size-6 place-items-center rounded text-ink/60 hover:bg-ink/6" (click)="decreaseDays()" aria-label="nap eltávolítása">−</button>
+        <button type="button" class="grid size-6 place-items-center rounded text-ink/60 hover:bg-ink/6" (click)="decreaseDays()" [attr.aria-label]="'menuEditor.removeDayAriaLabel' | translate">−</button>
         <span class="min-w-14 text-center font-mono text-[12px] text-ink/70">{{ numDays() }} {{ "menuEditor.days" | translate }}</span>
-        <button type="button" class="grid size-6 place-items-center rounded text-ink/60 hover:bg-ink/6" (click)="increaseDays()" aria-label="nap hozzáadása">+</button>
+        <button type="button" class="grid size-6 place-items-center rounded text-ink/60 hover:bg-ink/6" (click)="increaseDays()" [attr.aria-label]="'menuEditor.addDayAriaLabel' | translate">+</button>
       </div>
     }
 

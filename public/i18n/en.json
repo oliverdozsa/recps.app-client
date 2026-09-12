@@ -5,6 +5,8 @@
     "byIngredients": "by ingredients",
     "excluded": "exclude",
     "addGroup": "add group",
+    "group": "group",
+    "toggleRelationAriaLabel": "toggle relation",
     "resetParams": "reset",
     "laneRelation": {
       "or": "OR",
@@ -13,7 +15,45 @@
   },
   "ingredientsInput": {
     "searchInIngredients": "search ingredients",
-    "searchInCategories": "search categories"
+    "searchInCategories": "search categories",
+    "searchPlaceholder": "search…",
+    "searching": "searching…",
+    "noResults": "no results",
+    "ingredient": "ingredient",
+    "searchSuffix": "search"
+  },
+  "common": {
+    "delete": "delete",
+    "remove": "remove",
+    "add": "add"
+  },
+  "languageSwitcher": {
+    "ariaLabel": "switch language"
+  },
+  "pagination": {
+    "navAriaLabel": "pagination",
+    "prevPage": "previous page",
+    "nextPage": "next page",
+    "pageNumber": "page"
+  },
+  "pageNotFound": {
+    "title": "Page not found",
+    "description": "The ingredient you're looking for isn't on this shelf.",
+    "backToSearch": "back to search"
+  },
+  "appHeader": {
+    "menuAriaLabel": "Menu",
+    "searchPlaceholder": "recipe name, e.g. \"hunter's chicken\"",
+    "searchAriaLabel": "search recipes by name"
+  },
+  "dualRange": {
+    "minValue": "minimum value",
+    "maxValue": "maximum value"
+  },
+  "emptyState": {
+    "title": "No results",
+    "removeExclusion": "remove exclusion",
+    "clearFilters": "clear filters"
   },
   "tagsInput": {
     "addTagsPlaceholder": "start typing..."
@@ -23,7 +63,10 @@
     "description": "recps.app is a recipe search app that helps you find meals based on what you have. Search by name, filter by ingredients you want to include, or exclude ones you'd rather avoid."
   },
   "login": {
-    "signOut": "sign out"
+    "signOut": "sign out",
+    "userMenuAriaLabel": "user menu",
+    "signIn": "sign in",
+    "welcomeMessage": "Hello!"
   },
   "home": {
     "title": "recipes"
@@ -33,7 +76,12 @@
     "conflictingIngredients": "due to conflicting ingredients! <br /> an ingredient cannot be part of included and excluded at the same time!"
   },
   "recipeCard": {
-    "mins": "mins"
+    "mins": "mins",
+    "noImage": "no image",
+    "unmark": "unmark recipe",
+    "mark": "mark recipe",
+    "showLess": "less",
+    "ingredientsCount": "ingredients"
   },
   "recipeAdvancedSearchParams": {
     "title": "filters",
@@ -43,10 +91,20 @@
     "orderByNone": "none",
     "orderByPrepTime": "prep time",
     "orderByIngredientCount": "ingredient count",
+    "orderByRelevance": "relevance",
+    "sortByRelevance": "sort: relevance",
     "orderAsc": "ascending",
     "orderDesc": "descending",
     "sourcePages": "source pages",
-    "collections": "collections"
+    "sourcePagesCount": "{{n}} sites",
+    "collections": "collections",
+    "maxMinutes": "max. {{max}} min",
+    "minMinutes": "min. {{min}} min",
+    "rangeMinutes": "{{min}}–{{max}} min",
+    "maxCount": "max. {{max}}",
+    "minCount": "min. {{min}}",
+    "rangeCount": "{{min}}–{{max}}",
+    "recipesCountSuffix": "recipes"
   },
   "markedRecipes": {
     "title": "marked recipes",
@@ -72,6 +130,9 @@
     "nameTooLong": "name must be at most 250 characters.",
     "generateFromCollection": "generate",
     "showIngredients": "ingredients",
+    "removeDayAriaLabel": "remove day",
+    "addDayAriaLabel": "add day",
+    "backToPoolAriaLabel": "back to pool",
     "generateModal": {
       "title": "generate from collection",
       "selectCollection": "select a collection",

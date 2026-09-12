@@ -1,10 +1,10 @@
-<nav class="flex items-center justify-center gap-1.5 py-6 font-mono text-[13px]" aria-label="lapozás">
+<nav class="flex items-center justify-center gap-1.5 py-6 font-mono text-[13px]" [attr.aria-label]="'pagination.navAriaLabel' | translate">
   <button
     type="button"
     class="grid h-8 w-8 place-items-center rounded-lg text-ink/62 transition-colors hover:bg-ink/6 disabled:opacity-30"
     [disabled]="page() === 0"
     (click)="prev()"
-    aria-label="előző oldal">
+    [attr.aria-label]="'pagination.prevPage' | translate">
     «
   </button>
 
@@ -15,7 +15,7 @@
         class="grid h-8 w-8 place-items-center rounded-lg transition-colors"
         [class]="p === page() ? 'bg-accent text-white' : 'text-ink/62 hover:bg-ink/6'"
         [attr.aria-current]="p === page() ? 'page' : null"
-        [attr.aria-label]="'oldal ' + (p + 1)"
+        [attr.aria-label]="('pagination.pageNumber' | translate) + ' ' + (p + 1)"
         (click)="goTo(p)">
         {{ p + 1 }}
       </button>
@@ -29,7 +29,7 @@
     class="grid h-8 w-8 place-items-center rounded-lg text-ink/62 transition-colors hover:bg-ink/6 disabled:opacity-30"
     [disabled]="page() >= totalPages() - 1"
     (click)="next()"
-    aria-label="következő oldal">
+    [attr.aria-label]="'pagination.nextPage' | translate">
     »
   </button>
 </nav>

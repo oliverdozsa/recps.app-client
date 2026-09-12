@@ -1,4 +1,5 @@
 import {ChangeDetectionStrategy, Component, computed, inject, input, signal} from '@angular/core';
+import {TranslatePipe} from '@ngx-translate/core';
 import {MarkedRecipesService} from '../../services/marked-recipes.service';
 import {Recipe} from '../../models/recipe.model';
 
@@ -11,6 +12,7 @@ interface DisplayTag {
 @Component({
   selector: 'app-recipe-card',
   standalone: true,
+  imports: [TranslatePipe],
   templateUrl: './recipe-card.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })

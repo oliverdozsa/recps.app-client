@@ -24,17 +24,17 @@
 
   <div class="flex shrink-0 items-center gap-1">
     @if (editMode()) {
-      <button type="button" class="grid size-7 place-items-center rounded-lg text-ink/60 transition-colors hover:bg-ink/6" aria-label="vissza a készletbe" (click)="backClicked.emit(); $event.stopPropagation()">
+      <button type="button" class="grid size-7 place-items-center rounded-lg text-ink/60 transition-colors hover:bg-ink/6" [attr.aria-label]="'menuEditor.backToPoolAriaLabel' | translate" (click)="backClicked.emit(); $event.stopPropagation()">
         <span class="icon-[tabler--arrow-back-up] size-4"></span>
       </button>
     }
     @if (addMode()) {
-      <button type="button" class="grid size-7 place-items-center rounded-lg text-accent transition-colors hover:bg-accent-tint" aria-label="hozzáadás" (click)="addClicked.emit(); $event.stopPropagation()">
+      <button type="button" class="grid size-7 place-items-center rounded-lg text-accent transition-colors hover:bg-accent-tint" [attr.aria-label]="'common.add' | translate" (click)="addClicked.emit(); $event.stopPropagation()">
         <span class="icon-[tabler--plus] size-4"></span>
       </button>
     }
     @if (deleteMode()) {
-      <button type="button" class="grid size-7 place-items-center rounded-lg text-danger transition-colors hover:bg-danger-tint" aria-label="törlés" (click)="deleteClicked.emit(); $event.stopPropagation()">
+      <button type="button" class="grid size-7 place-items-center rounded-lg text-danger transition-colors hover:bg-danger-tint" [attr.aria-label]="'common.delete' | translate" (click)="deleteClicked.emit(); $event.stopPropagation()">
         <span class="icon-[tabler--trash] size-4"></span>
       </button>
     }

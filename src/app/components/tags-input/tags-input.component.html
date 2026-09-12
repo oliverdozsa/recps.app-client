@@ -3,7 +3,7 @@
     @for (tag of tags(); track $index) {
       <span class="inline-flex items-center gap-1 rounded-full bg-accent-tint px-2 py-1 text-[12px] font-medium text-accent-ink">
         {{ displayFunction()(tag) }}
-        <button type="button" class="opacity-70 hover:opacity-100" (click)="removeTag(tag); $event.stopPropagation()" aria-label="eltávolítás">×</button>
+        <button type="button" class="opacity-70 hover:opacity-100" (click)="removeTag(tag); $event.stopPropagation()" [attr.aria-label]="'common.remove' | translate">×</button>
       </span>
     }
     <input

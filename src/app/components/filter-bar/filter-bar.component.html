@@ -60,11 +60,11 @@
       </button>
       @if (openPanel() === 'sort') {
         <ul class="absolute left-0 top-[calc(100%+6px)] z-30 min-w-52 rounded-[11px] border border-ink/10 bg-surface p-1 shadow-lg" role="menu">
-          <li><button type="button" class="w-full rounded-lg px-2.5 py-1.75 text-left text-[13px] text-ink hover:bg-ink/6" (click)="setSort(undefined, 'asc'); closePanel()">relevancia</button></li>
-          <li><button type="button" class="w-full rounded-lg px-2.5 py-1.75 text-left text-[13px] text-ink hover:bg-ink/6" (click)="setSort('prepTime', 'asc'); closePanel()">idő, növekvő</button></li>
-          <li><button type="button" class="w-full rounded-lg px-2.5 py-1.75 text-left text-[13px] text-ink hover:bg-ink/6" (click)="setSort('prepTime', 'desc'); closePanel()">idő, csökkenő</button></li>
-          <li><button type="button" class="w-full rounded-lg px-2.5 py-1.75 text-left text-[13px] text-ink hover:bg-ink/6" (click)="setSort('ingredientCount', 'asc'); closePanel()">hozzávalók, növekvő</button></li>
-          <li><button type="button" class="w-full rounded-lg px-2.5 py-1.75 text-left text-[13px] text-ink hover:bg-ink/6" (click)="setSort('ingredientCount', 'desc'); closePanel()">hozzávalók, csökkenő</button></li>
+          <li><button type="button" class="w-full rounded-lg px-2.5 py-1.75 text-left text-[13px] text-ink hover:bg-ink/6" (click)="setSort(undefined, 'asc'); closePanel()">{{ "recipeAdvancedSearchParams.orderByRelevance" | translate }}</button></li>
+          <li><button type="button" class="w-full rounded-lg px-2.5 py-1.75 text-left text-[13px] text-ink hover:bg-ink/6" (click)="setSort('prepTime', 'asc'); closePanel()">{{ "recipeAdvancedSearchParams.orderByPrepTime" | translate }}, {{ "recipeAdvancedSearchParams.orderAsc" | translate }}</button></li>
+          <li><button type="button" class="w-full rounded-lg px-2.5 py-1.75 text-left text-[13px] text-ink hover:bg-ink/6" (click)="setSort('prepTime', 'desc'); closePanel()">{{ "recipeAdvancedSearchParams.orderByPrepTime" | translate }}, {{ "recipeAdvancedSearchParams.orderDesc" | translate }}</button></li>
+          <li><button type="button" class="w-full rounded-lg px-2.5 py-1.75 text-left text-[13px] text-ink hover:bg-ink/6" (click)="setSort('ingredientCount', 'asc'); closePanel()">{{ "recipeAdvancedSearchParams.orderByIngredientCount" | translate }}, {{ "recipeAdvancedSearchParams.orderAsc" | translate }}</button></li>
+          <li><button type="button" class="w-full rounded-lg px-2.5 py-1.75 text-left text-[13px] text-ink hover:bg-ink/6" (click)="setSort('ingredientCount', 'desc'); closePanel()">{{ "recipeAdvancedSearchParams.orderByIngredientCount" | translate }}, {{ "recipeAdvancedSearchParams.orderDesc" | translate }}</button></li>
         </ul>
       }
     </div>
@@ -74,7 +74,7 @@
         <button type="button" class="flex items-center gap-1 rounded-[9px] border border-ink/14 bg-surface px-3 py-1.75 text-[13px] transition-colors"
                 [class]="state.selectedCollectionIds().length > 0 ? 'font-medium text-ink' : 'text-ink/60'"
                 [attr.aria-expanded]="openPanel() === 'collections'" (click)="togglePanel('collections')">
-        gyűjtemények <span class="text-ink/35">⌄</span>
+        {{ "recipeAdvancedSearchParams.collections" | translate }} <span class="text-ink/35">⌄</span>
         </button>
         @if (openPanel() === 'collections') {
           <div class="absolute left-0 top-[calc(100%+6px)] z-30 w-72 rounded-[11px] border border-ink/10 bg-surface p-3 shadow-lg">
@@ -86,12 +86,12 @@
 
     @if (state.isFilterDirty()) {
       <button type="button" class="text-[13px] font-medium text-ink/60 transition-colors hover:text-ink" (click)="reset()">
-        alaphelyzet ↺
+        {{ "recipeMainSearchParams.resetParams" | translate }} ↺
       </button>
     }
 
     <span class="ml-auto font-mono text-[13px] text-ink/66" aria-live="polite">
-      {{ resultCountLabel() }} recept
+      {{ resultCountLabel() }} {{ "recipeAdvancedSearchParams.recipesCountSuffix" | translate }}
     </span>
   </div>
 </div>
