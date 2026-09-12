@@ -1,4 +1,4 @@
-@if (!authService.isLoggedIn) {
+@if (!authService.isLoggedIn()) {
   <p class="py-16 text-center text-[14px] text-ink/65">{{ "menu.loginNeeded" | translate }}</p>
 } @else if (loading()) {
   <div class="flex justify-center py-16">

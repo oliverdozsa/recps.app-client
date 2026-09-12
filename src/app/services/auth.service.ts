@@ -1,4 +1,4 @@
-import {inject, Injectable} from '@angular/core';
+import {inject, Injectable, signal} from '@angular/core';
 import {OAuthService} from 'angular-oauth2-oidc';
 import {Router} from '@angular/router';
 import {NotificationsService} from './notifications.service';
@@ -13,9 +13,8 @@ export class AuthService {
   private notifications = inject(NotificationsService);
   private searchState = inject(SearchStateService);
 
-  get isLoggedIn() {
-    return this.oauthService.hasValidIdToken();
-  }
+  private isLoggedInSignal = signal(false);
+  isLoggedIn = this.isLoggedInSignal.asReadonly();
 
   constructor() {
     this.oauthService.setStorage(localStorage);
@@ -28,9 +27,18 @@ export class AuthService {
       scope: "openid profile email"
     });
 
+    // The oauth library fires these outside places Angular is already re-rendering
+    // (e.g. right after the redirect back from the login flow), so this is the only
+    // reliable way to keep isLoggedIn in sync with the actual token state.
+    this.oauthService.events.subscribe(() => this.syncIsLoggedIn());
+
     this.oauthService.setupAutomaticSilentRefresh();
     this.oauthService.loadDiscoveryDocumentAndTryLogin()
       .then(() => this.onTryLoginComplete());
+  }
+
+  private syncIsLoggedIn() {
+    this.isLoggedInSignal.set(this.oauthService.hasValidIdToken());
   }
 
   login() {
@@ -41,6 +49,7 @@ export class AuthService {
     this.searchState.clearCollections();
     this.oauthService.revokeTokenAndLogout();
     this.oauthService.logOut();
+    this.syncIsLoggedIn();
   }
 
   getProfile() {
@@ -48,6 +57,8 @@ export class AuthService {
   }
 
   private onTryLoginComplete() {
+    this.syncIsLoggedIn();
+
     let stateUrl = this.oauthService.state!;
 
     if (stateUrl) {
@@ -58,7 +69,7 @@ export class AuthService {
       setTimeout(() => this.router.navigateByUrl(stateUrl));
     }
 
-    if (this.isLoggedIn) {
+    if (this.isLoggedIn()) {
       setTimeout(() => this.notifications.success("Hello!"));
     }
   }

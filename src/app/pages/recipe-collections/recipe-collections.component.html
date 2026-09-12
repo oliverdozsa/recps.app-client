@@ -1,5 +1,5 @@
 <div class="mx-auto max-w-[1060px] px-4 py-6 sm:px-7">
-  @if (!authService.isLoggedIn) {
+  @if (!authService.isLoggedIn()) {
     <p class="py-16 text-center text-[14px] text-ink/65">{{ "recipeCollections.loginNeeded" | translate }}</p>
   } @else if (loading()) {
     <div class="flex justify-center py-16">

@@ -1,4 +1,4 @@
-@if (authService.isLoggedIn) {
+@if (authService.isLoggedIn()) {
   <div class="relative inline-flex" appClickOutside (appClickOutside)="close()">
     <button type="button" class="flex items-center rounded-full" aria-haspopup="menu" [attr.aria-expanded]="open()" aria-label="Felhasználói menü" (click)="toggle()">
       <img [src]="picture" alt="" class="size-8 rounded-full border border-ink/12">

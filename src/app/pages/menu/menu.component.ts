@@ -22,7 +22,7 @@ export class MenuComponent implements OnInit {
   menuToDelete = signal<MenuPlanSimplifiedResponse | null>(null);
 
   ngOnInit(): void {
-    if (!this.authService.isLoggedIn) {
+    if (!this.authService.isLoggedIn()) {
       this.loading.set(false);
       return;
     }

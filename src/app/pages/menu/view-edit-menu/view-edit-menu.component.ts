@@ -24,7 +24,7 @@ export class ViewEditMenuComponent implements OnInit {
   loading = signal(true);
 
   ngOnInit(): void {
-    if (!this.authService.isLoggedIn) {
+    if (!this.authService.isLoggedIn()) {
       this.loading.set(false);
       return;
     }
