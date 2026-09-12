@@ -16,9 +16,9 @@
   @if (markedRecipesService.markedRecipes().length === 0) {
     <p class="py-4 text-center text-[13px] text-ink/60">{{ "markedRecipes.empty" | translate }}</p>
   } @else {
-    <div class="flex gap-2 overflow-x-auto no-scrollbar" [class.flex-col]="displayFully()" [class.flex-wrap]="displayFully()">
+    <div class="flex gap-2 overflow-x-auto no-scrollbar sm:flex-col sm:overflow-visible" [class.flex-col]="displayFully()" [class.flex-wrap]="displayFully()">
       @for (recipe of markedRecipesService.markedRecipes(); track recipe.id) {
-        <div class="w-64 shrink-0" [class.w-full]="displayFully()" (click)="onRecipeClicked(recipe)">
+        <div class="w-64 shrink-0 sm:w-full" [class.w-full]="displayFully()" (click)="onRecipeClicked(recipe)">
           <app-recipe-compact-card
             [recipe]="recipe"
             [selected]="selected()?.id === recipe.id"
