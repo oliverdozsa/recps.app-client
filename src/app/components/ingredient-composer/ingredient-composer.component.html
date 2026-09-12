@@ -7,88 +7,30 @@
       </span>
 
       @for (lane of includeLanes(); track $index; let laneIndex = $index; let isLastLane = $last) {
-        @if (isLastLane) {
-          @if (isGrouped()) {
-            <span class="inline-flex shrink-0 items-center gap-1 rounded-2xl border border-dashed border-accent/40 bg-accent/5 p-1">
-              @for (chip of lane.chips; track chip.key) {
-                <span
-                  class="inline-flex items-center gap-1.5 rounded-full bg-accent px-2.5 py-1 text-[13px] font-medium text-white"
-                  [class.ring-2]="isConflicting(chip)"
-                  [class.ring-danger]="isConflicting(chip)">
-                  {{ chip.label }}
-                  <button
-                    type="button"
-                    class="opacity-70 transition-opacity hover:opacity-100"
-                    [attr.aria-label]="'eltávolítás: ' + chip.label"
-                    (click)="removeInclude(chip)">
-                    ×
-                  </button>
-                </span>
-              }
-              <app-add-ingredient-control
-                label="hozzávaló"
-                [existingKeys]="includeKeys()"
-                (chipSelected)="addInclude($event)"
-                (backspaceOnEmpty)="removeLastInclude()" />
-            </span>
-          } @else {
-            @for (chip of lane.chips; track chip.key) {
-              <span
-                class="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-accent px-2.75 py-1.5 text-[13px] font-medium text-white"
-                [class.ring-2]="isConflicting(chip)"
-                [class.ring-danger]="isConflicting(chip)">
-                {{ chip.label }}
-                <button
-                  type="button"
-                  class="opacity-70 transition-opacity hover:opacity-100"
-                  [attr.aria-label]="'eltávolítás: ' + chip.label"
-                  (click)="removeInclude(chip)">
-                  ×
-                </button>
-              </span>
-            }
-
-            <app-add-ingredient-control
-              label="hozzávaló"
-              [existingKeys]="includeKeys()"
-              (chipSelected)="addInclude($event)"
-              (backspaceOnEmpty)="removeLastInclude()" />
-          }
-        } @else {
-          @if (lane.chips.length > 1) {
-            <span class="inline-flex shrink-0 items-center gap-1 rounded-2xl border border-dashed border-accent/40 bg-accent/5 p-1">
-              @for (chip of lane.chips; track chip.key) {
-                <span
-                  class="inline-flex items-center gap-1.5 rounded-full bg-accent px-2.5 py-1 text-[13px] font-medium text-white"
-                  [class.ring-2]="isConflicting(chip)"
-                  [class.ring-danger]="isConflicting(chip)">
-                  {{ chip.label }}
-                  <button
-                    type="button"
-                    class="opacity-70 transition-opacity hover:opacity-100"
-                    [attr.aria-label]="'eltávolítás: ' + chip.label"
-                    (click)="removeInclude(chip)">
-                    ×
-                  </button>
-                </span>
-              }
-            </span>
-          } @else {
+        <span class="inline-flex shrink-0 items-center gap-1 rounded-2xl border border-dashed border-accent/40 bg-accent/5 p-1">
+          @for (chip of lane.chips; track chip.key) {
             <span
-              class="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-accent px-2.75 py-1.5 text-[13px] font-medium text-white"
-              [class.ring-2]="isConflicting(lane.chips[0])"
-              [class.ring-danger]="isConflicting(lane.chips[0])">
-              {{ lane.chips[0].label }}
+              class="inline-flex items-center gap-1.5 rounded-full bg-accent px-2.5 py-1 text-[13px] font-medium text-white"
+              [class.ring-2]="isConflicting(chip)"
+              [class.ring-danger]="isConflicting(chip)">
+              {{ chip.label }}
               <button
                 type="button"
                 class="opacity-70 transition-opacity hover:opacity-100"
-                [attr.aria-label]="'eltávolítás: ' + lane.chips[0].label"
-                (click)="removeInclude(lane.chips[0])">
+                [attr.aria-label]="'eltávolítás: ' + chip.label"
+                (click)="removeInclude(chip)">
                 ×
               </button>
             </span>
           }
+          <app-add-ingredient-control
+            label="hozzávaló"
+            [existingKeys]="includeKeys()"
+            (chipSelected)="addInclude($event, laneIndex)"
+            (backspaceOnEmpty)="removeLastInclude(laneIndex)" />
+        </span>
 
+        @if (!isLastLane) {
           <button
             type="button"
             class="shrink-0 rounded-full px-2 py-1 font-mono text-[11px] font-semibold uppercase tracking-[0.04em] transition-colors"

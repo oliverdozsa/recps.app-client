@@ -7,7 +7,7 @@ import {SearchStateService} from '../../services/search-state.service';
 import {LanguageService} from '../../services/language.service';
 import {IngredientsService} from '../../services/ingredients.service';
 import {RecipeOrderBy, RecipeOrderDirection} from '../../services/requests';
-import {Chip} from '../../models/chip.model';
+import {Chip, IncludeLane} from '../../models/chip.model';
 import {IngredientComposerComponent} from '../../components/ingredient-composer/ingredient-composer.component';
 import {FilterBarComponent} from '../../components/filter-bar/filter-bar.component';
 import {RecipeGridComponent} from '../../components/recipe-grid/recipe-grid.component';
@@ -31,7 +31,8 @@ export class HomeComponent implements OnInit {
 
   private requestTrigger = computed(() => ({
     q: this.state.nameQuery(),
-    inc: this.state.includeChips(),
+    inc: this.state.includeLanes(),
+    incRel: this.state.includeRelations(),
     exc: this.state.excludeChips(),
     minTime: this.state.minTime(),
     maxTime: this.state.maxTime(),
@@ -135,8 +136,24 @@ export class HomeComponent implements OnInit {
       this.resolveChips(languageId, incKeys),
       this.resolveChips(languageId, excKeys)
     ]);
-    this.state.includeChips.set(includeChips);
     this.state.excludeChips.set(excludeChips);
+
+    const laneSizes = params.get('incGrp')?.split(',').map(Number).filter(n => n > 0)
+      ?? (includeChips.length > 0 ? [includeChips.length] : []);
+    const lanes: IncludeLane[] = [];
+    let offset = 0;
+    for (const size of laneSizes) {
+      lanes.push({chips: includeChips.slice(offset, offset + size)});
+      offset += size;
+    }
+    lanes.push({chips: []});
+    this.state.includeLanes.set(lanes);
+
+    const relCount = Math.max(0, lanes.length - 1);
+    const relParam = params.get('incRel')?.split(',') ?? [];
+    this.state.includeRelations.set(
+      Array.from({length: relCount}, (_, i) => relParam[i] === 'O' ? 'OR' : 'AND')
+    );
   }
 
   private async resolveChips(languageId: number, keys: string[]): Promise<Chip[]> {

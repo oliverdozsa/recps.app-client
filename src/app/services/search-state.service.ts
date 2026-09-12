@@ -5,7 +5,8 @@ import {switchMap} from 'rxjs';
 import {LanguageService} from './language.service';
 import {RecipeOrderBy, RecipeOrderDirection, RecipeSearchRequest} from './requests';
 import {PageResponseRecipeSearchResponse, SourcePageResponse} from './responses';
-import {Chip} from '../models/chip.model';
+import {IngredientGroupRelation, IngredientGroupWithRelation} from './common.data';
+import {Chip, IncludeLane} from '../models/chip.model';
 import {environment} from '../../environments/environment';
 
 export interface SortOption {
@@ -24,7 +25,17 @@ export class SearchStateService {
   private baseUrl = environment.apiUrl;
 
   nameQuery = signal<string>('');
-  includeChips = signal<Chip[]>([]);
+
+  /**
+   * Include ingredients/categories, grouped into lanes. All chips within one lane are AND'd
+   * together; each lane has its own add control, so a chip can be added to any lane directly.
+   * Consecutive lanes are combined via includeRelations[i], which joins lane i with lane i+1
+   * (so its length is always includeLanes.length - 1). There is always at least one (possibly
+   * empty) trailing lane, which is what "+ csoport" appends to.
+   */
+  includeLanes = signal<IncludeLane[]>([{chips: []}]);
+  includeRelations = signal<IngredientGroupRelation[]>([]);
+
   excludeChips = signal<Chip[]>([]);
   minTime = signal<number | undefined>(undefined);
   maxTime = signal<number | undefined>(undefined);
@@ -41,6 +52,8 @@ export class SearchStateService {
   results = signal<PageResponseRecipeSearchResponse['items']>([]);
   totalCount = signal<number>(0);
   loading = signal<boolean>(false);
+
+  includeChips = computed<Chip[]>(() => this.includeLanes().flatMap(lane => lane.chips));
 
   matchedIngredientIds = computed<Set<number>>(() => {
     const ids = new Set<number>();
@@ -76,14 +89,47 @@ export class SearchStateService {
     return this.http.get<SourcePageResponse[]>(`${this.baseUrl}/recipes/sourcePages`);
   }
 
-  addIncludeChip(chip: Chip) {
+  addIncludeChip(chip: Chip, laneIndex: number) {
     if (this.includeChips().some(c => c.key === chip.key)) return;
-    this.includeChips.update(chips => [...chips, chip]);
+    this.includeLanes.update(lanes => {
+      const next = lanes.map(lane => ({chips: lane.chips}));
+      next[laneIndex] = {chips: [...next[laneIndex].chips, chip]};
+      return next;
+    });
     this.page.set(0);
   }
 
   removeIncludeChip(chip: Chip) {
-    this.includeChips.update(chips => chips.filter(c => c.key !== chip.key));
+    const laneIndex = this.includeLanes().findIndex(lane => lane.chips.some(c => c.key === chip.key));
+    if (laneIndex === -1) return;
+
+    let lanes = this.includeLanes().map(lane => ({
+      chips: lane.chips.filter(c => c.key !== chip.key)
+    }));
+    let relations = [...this.includeRelations()];
+
+    // Prune a lane that became empty, unless it's the sole (trailing, in-progress) lane.
+    if (lanes[laneIndex].chips.length === 0 && lanes.length > 1) {
+      lanes = lanes.filter((_, i) => i !== laneIndex);
+      const relationIndex = Math.min(laneIndex, relations.length - 1);
+      relations = relations.filter((_, i) => i !== relationIndex);
+    }
+
+    this.includeLanes.set(lanes);
+    this.includeRelations.set(relations);
+    this.page.set(0);
+  }
+
+  /** Starts a new, currently-empty lane that subsequent chips will be added to. */
+  addIncludeLane() {
+    const lanes = this.includeLanes();
+    if (lanes.length > 0 && lanes[lanes.length - 1].chips.length === 0) return;
+    this.includeLanes.update(current => [...current, {chips: []}]);
+    this.includeRelations.update(relations => [...relations, 'AND']);
+  }
+
+  toggleIncludeRelation(index: number) {
+    this.includeRelations.update(relations => relations.map((r, i) => i === index ? (r === 'AND' ? 'OR' : 'AND') : r));
     this.page.set(0);
   }
 
@@ -144,7 +190,8 @@ export class SearchStateService {
 
   resetFilters() {
     this.nameQuery.set('');
-    this.includeChips.set([]);
+    this.includeLanes.set([{chips: []}]);
+    this.includeRelations.set([]);
     this.excludeChips.set([]);
     this.minTime.set(undefined);
     this.maxTime.set(undefined);
@@ -160,6 +207,44 @@ export class SearchStateService {
     this.selectedCollectionIds.set([]);
   }
 
+  /** Non-empty lanes, i.e. excluding the trailing in-progress lane when it has no chips yet. */
+  private populatedLanes(): IncludeLane[] {
+    return this.includeLanes().filter(lane => lane.chips.length > 0);
+  }
+
+  private buildIncludedIngredientGroups(): IngredientGroupWithRelation[] | undefined {
+    const lanes = this.populatedLanes();
+    if (lanes.length === 0) return undefined;
+
+    const relations = this.includeRelations();
+    const result: IngredientGroupWithRelation[] = [];
+
+    lanes.forEach((lane, laneIndex) => {
+      const laneRelation = lanes.length > 1 && laneIndex < lanes.length - 1
+        ? (relations[laneIndex] ?? 'AND')
+        : undefined;
+
+      const categories = lane.chips.filter(c => c.isCategory);
+      const ingredients = lane.chips.filter(c => !c.isCategory);
+      const laneGroups: IngredientGroupWithRelation[] = categories.map(c => ({
+        group: {ids: c.ids, minMatch: c.minMatch ?? 1, asPercent: c.asPercent ?? false}
+      }));
+
+      if (ingredients.length > 0) {
+        const ids = ingredients.flatMap(i => i.ids);
+        laneGroups.push({group: {ids, minMatch: ids.length}});
+      }
+
+      if (laneGroups.length > 0 && laneRelation) {
+        laneGroups[laneGroups.length - 1] = {...laneGroups[laneGroups.length - 1], relation: laneRelation};
+      }
+
+      result.push(...laneGroups);
+    });
+
+    return result.length > 0 ? result : undefined;
+  }
+
   buildRequest(): RecipeSearchRequest {
     const languageId = this.languageService.selectedLanguage()?.id ?? 0;
     const activeSites = this.sitesTouched()
@@ -171,15 +256,7 @@ export class SearchStateService {
       limit: PAGE_SIZE,
       page: this.page(),
       filterByName: this.nameQuery() || undefined,
-      includedIngredientGroups: this.includeChips().length > 0
-        ? this.includeChips().map(chip => ({
-          group: {
-            ids: chip.ids,
-            minMatch: chip.isCategory ? (chip.minMatch ?? 1) : chip.ids.length,
-            asPercent: chip.isCategory ? (chip.asPercent ?? false) : false
-          }
-        }))
-        : undefined,
+      includedIngredientGroups: this.buildIncludedIngredientGroups(),
       excludedIngredients: this.excludeChips().length > 0
         ? this.excludeChips().flatMap(c => c.ids)
         : undefined,
@@ -215,8 +292,19 @@ export class SearchStateService {
 
   toQueryParams(): Params {
     const params: Params = {};
+    const lanes = this.populatedLanes();
+
     if (this.nameQuery()) params['q'] = this.nameQuery();
-    if (this.includeChips().length > 0) params['inc'] = this.includeChips().map(c => c.key).join(',');
+    if (lanes.length > 0) {
+      params['inc'] = lanes.flatMap(lane => lane.chips.map(c => c.key)).join(',');
+      if (lanes.length > 1) {
+        params['incGrp'] = lanes.map(lane => lane.chips.length).join(',');
+      }
+      const realRelations = this.includeRelations().slice(0, lanes.length - 1);
+      if (lanes.length > 1 && realRelations.some(r => r === 'OR')) {
+        params['incRel'] = realRelations.map(r => r === 'OR' ? 'O' : 'A').join(',');
+      }
+    }
     if (this.excludeChips().length > 0) params['exc'] = this.excludeChips().map(c => c.key).join(',');
     if (this.minTime() !== undefined) params['minTime'] = this.minTime();
     if (this.maxTime() !== undefined) params['time'] = this.maxTime();

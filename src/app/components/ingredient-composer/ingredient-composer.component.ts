@@ -18,8 +18,6 @@ export class IngredientComposerComponent {
   excludeKeys = computed(() => new Set(this.state.excludeChips().map(c => c.key)));
   conflicting = computed(() => this.state.conflictingIngredientIds());
   includeLanes = computed(() => this.state.includeLanes());
-  /** Whether a group has actually been started (i.e. addGroup() was used), independent of whether the new lane has chips yet. */
-  isGrouped = computed(() => this.includeLanes().length > 1);
   canAddGroup = computed(() => {
     const lanes = this.includeLanes();
     return lanes[lanes.length - 1].chips.length > 0;
@@ -29,8 +27,8 @@ export class IngredientComposerComponent {
     this.state.addIncludeLane();
   }
 
-  addInclude(chip: Chip) {
-    this.state.addIncludeChip(chip);
+  addInclude(chip: Chip, laneIndex: number) {
+    this.state.addIncludeChip(chip, laneIndex);
   }
 
   removeInclude(chip: Chip) {
@@ -49,9 +47,9 @@ export class IngredientComposerComponent {
     this.state.toggleIncludeRelation(index);
   }
 
-  removeLastInclude() {
-    const chips = this.state.includeChips();
-    if (chips.length > 0) this.state.removeIncludeChip(chips[chips.length - 1]);
+  removeLastInclude(laneIndex: number) {
+    const lane = this.state.includeLanes()[laneIndex];
+    if (lane && lane.chips.length > 0) this.state.removeIncludeChip(lane.chips[lane.chips.length - 1]);
   }
 
   removeLastExclude() {
