@@ -2,7 +2,6 @@ import {inject, Injectable, signal} from '@angular/core';
 import {OAuthService} from 'angular-oauth2-oidc';
 import {Router} from '@angular/router';
 import {TranslateService} from '@ngx-translate/core';
-import {NotificationsService} from './notifications.service';
 import {SearchStateService} from './search-state.service';
 
 @Injectable({
@@ -11,7 +10,6 @@ import {SearchStateService} from './search-state.service';
 export class AuthService {
   private oauthService = inject(OAuthService);
   private router = inject(Router);
-  private notifications = inject(NotificationsService);
   private searchState = inject(SearchStateService);
   private translate = inject(TranslateService);
 
@@ -69,10 +67,6 @@ export class AuthService {
       }
 
       setTimeout(() => this.router.navigateByUrl(stateUrl));
-    }
-
-    if (this.isLoggedIn()) {
-      setTimeout(() => this.notifications.success(this.translate.instant("login.welcomeMessage")));
     }
   }
 }
