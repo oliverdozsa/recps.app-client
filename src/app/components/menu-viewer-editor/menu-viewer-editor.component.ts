@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, computed, effect, inject, input, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, effect, inject, input, OnInit, signal} from '@angular/core';
 import {Router} from '@angular/router';
 import {FormsModule} from '@angular/forms';
 import {TranslatePipe} from '@ngx-translate/core';
@@ -23,7 +23,7 @@ interface FromDaySelection {
   templateUrl: './menu-viewer-editor.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MenuViewerEditorComponent {
+export class MenuViewerEditorComponent implements OnInit {
   private menuService = inject(MenuService);
   private markedRecipesService = inject(MarkedRecipesService);
   private router = inject(Router);
@@ -68,20 +68,6 @@ export class MenuViewerEditorComponent {
   });
 
   constructor() {
-    this.isEditMode.set(!this.startInViewMode());
-    const initialDays = this.initialMenuDays();
-    this.menuName.set(this.initialMenuName());
-
-    if (initialDays !== null) {
-      this.menuDays.set(initialDays);
-    } else {
-      const draft = loadFromStorage();
-      if (draft) {
-        this.menuName.set(draft.menuName);
-        this.menuDays.set(draft.menuDays);
-      }
-    }
-
     effect(() => {
       const name = this.menuName();
       const days = this.menuDays();
@@ -95,6 +81,22 @@ export class MenuViewerEditorComponent {
         this.markedRecipesService.selectedRecipeCleared$.next();
       }
     });
+  }
+
+  ngOnInit(): void {
+    this.isEditMode.set(!this.startInViewMode());
+    const initialDays = this.initialMenuDays();
+    this.menuName.set(this.initialMenuName());
+
+    if (initialDays !== null) {
+      this.menuDays.set(initialDays);
+    } else {
+      const draft = loadFromStorage();
+      if (draft) {
+        this.menuName.set(draft.menuName);
+        this.menuDays.set(draft.menuDays);
+      }
+    }
   }
 
   selectRecipe(recipe: Recipe | null) {
