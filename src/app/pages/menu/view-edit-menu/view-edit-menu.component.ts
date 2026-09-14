@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, inject, OnInit, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, effect, inject, signal, untracked} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {TranslatePipe} from '@ngx-translate/core';
 import {AuthService} from '../../../services/auth.service';
@@ -14,7 +14,7 @@ import {MenuViewerEditorComponent} from '../../../components/menu-viewer-editor/
   templateUrl: './view-edit-menu.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ViewEditMenuComponent implements OnInit {
+export class ViewEditMenuComponent {
   authService = inject(AuthService);
   private menuService = inject(MenuService);
   private languageService = inject(LanguageService);
@@ -23,18 +23,24 @@ export class ViewEditMenuComponent implements OnInit {
   menu = signal<MenuPlanDetailedResponse | null>(null);
   loading = signal(true);
 
-  ngOnInit(): void {
-    if (!this.authService.isLoggedIn()) {
-      this.loading.set(false);
-      return;
-    }
-    const id = Number(this.route.snapshot.paramMap.get('id'));
-    this.menuService.getById(id, this.languageService.selectedLanguage()?.id).subscribe({
-      next: menu => {
-        this.menu.set(menu);
-        this.loading.set(false);
-      },
-      error: () => this.loading.set(false)
+  private loaded = false;
+
+  constructor() {
+    effect(() => {
+      if (!this.authService.isLoggedIn() || this.loaded) {
+        return;
+      }
+      this.loaded = true;
+
+      const id = Number(this.route.snapshot.paramMap.get('id'));
+      const languageId = untracked(() => this.languageService.selectedLanguage()?.id);
+      this.menuService.getById(id, languageId).subscribe({
+        next: menu => {
+          this.menu.set(menu);
+          this.loading.set(false);
+        },
+        error: () => this.loading.set(false)
+      });
     });
   }
 }
