@@ -1,7 +1,7 @@
 @if (authService.isLoggedIn()) {
   <div class="relative inline-flex" appClickOutside (appClickOutside)="close()">
-    <button type="button" class="flex items-center rounded-full" aria-haspopup="menu" [attr.aria-expanded]="open()" [attr.aria-label]="'login.userMenuAriaLabel' | translate" (click)="toggle()">
-      <img [src]="picture" alt="" class="size-8 rounded-full border border-ink/12">
+    <button type="button" class="flex h-11 items-center rounded-full" aria-haspopup="menu" [attr.aria-expanded]="open()" [attr.aria-label]="'login.userMenuAriaLabel' | translate" (click)="toggle()">
+      <img [src]="picture" alt="" class="size-9 rounded-full border border-ink/12">
     </button>
     @if (open()) {
       <ul class="absolute right-0 top-[calc(100%+6px)] z-30 min-w-56 rounded-[11px] border border-ink/10 bg-surface p-1.5 shadow-lg" role="menu">
