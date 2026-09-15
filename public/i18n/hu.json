@@ -8,6 +8,7 @@
     "group": "csoport",
     "toggleRelationAriaLabel": "kapcsolat váltása",
     "resetParams": "alaphelyzet",
+    "categoryIngredientsLoading": "betöltés…",
     "laneRelation": {
       "or": "VAGY",
       "and": "ÉS"
@@ -25,7 +26,8 @@
   "common": {
     "delete": "törlés",
     "remove": "eltávolítás",
-    "add": "hozzáadás"
+    "add": "hozzáadás",
+    "close": "bezárás"
   },
   "languageSwitcher": {
     "ariaLabel": "nyelv váltása"

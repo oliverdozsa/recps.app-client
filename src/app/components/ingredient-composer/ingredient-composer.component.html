@@ -10,13 +10,19 @@
         <span class="inline-flex shrink-0 items-center gap-1 rounded-2xl border border-dashed border-accent/40 bg-accent/5 p-1">
           @for (chip of lane.chips; track chip.key) {
             <span
-              class="inline-flex items-center gap-1.5 rounded-full bg-accent px-2.5 py-1 text-[13px] font-medium text-white"
+              class="inline-flex max-w-[55vw] items-center gap-1.5 rounded-full bg-accent px-2.5 py-1 text-[13px] font-medium text-white sm:max-w-[240px]"
               [class.ring-2]="isConflicting(chip)"
               [class.ring-danger]="isConflicting(chip)">
-              {{ chip.label }}
+              <span
+                class="truncate"
+                [class.cursor-pointer]="chip.isCategory"
+                [title]="chip.isCategory ? null : chip.label"
+                (click)="openIngredientsDialog(chip)">
+                {{chip.isCategory ? "🏷️ " : ""}}{{ chip.label }}
+              </span>
               <button
                 type="button"
-                class="opacity-70 transition-opacity hover:opacity-100"
+                class="shrink-0 opacity-70 transition-opacity hover:opacity-100"
                 [attr.aria-label]="('common.remove' | translate) + ': ' + chip.label"
                 (click)="removeInclude(chip)">
                 ×
@@ -60,11 +66,17 @@
       </span>
 
       @for (chip of state.excludeChips(); track chip.key) {
-        <span class="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-danger-line bg-danger-tint px-2.75 py-1.5 text-[13px] font-medium text-danger">
-          <span class="line-through">{{ chip.label }}</span>
+        <span class="inline-flex max-w-[55vw] shrink-0 items-center gap-1.5 rounded-full border border-danger-line bg-danger-tint px-2.75 py-1.5 text-[13px] font-medium text-danger sm:max-w-[240px]">
+          <span
+            class="truncate line-through"
+            [class.cursor-pointer]="chip.isCategory"
+            [title]="chip.isCategory ? null : chip.label"
+            (click)="openIngredientsDialog(chip)">
+            {{chip.isCategory ? "🏷️ " : ""}}{{ chip.label }}
+          </span>
           <button
             type="button"
-            class="opacity-70 transition-opacity hover:opacity-100"
+            class="shrink-0 opacity-70 transition-opacity hover:opacity-100"
             [attr.aria-label]="('common.remove' | translate) + ': ' + chip.label"
             (click)="removeExclude(chip)">
             ×
@@ -80,3 +92,25 @@
     </div>
   </div>
 </div>
+
+@if (dialogChip(); as chip) {
+  <div class="fixed inset-0 z-50 flex items-center justify-center bg-ink/40 p-4" (click)="closeIngredientsDialog()">
+    <div class="w-full max-w-md rounded-[14px] bg-surface p-5 shadow-lg" (click)="$event.stopPropagation()">
+      <h2 class="mb-3 text-[16px] font-semibold text-ink">{{ chip.label }}</h2>
+      @if (isLoadingIngredientNames(chip)) {
+        <p class="py-4 text-center text-[13px] text-ink/60">{{ "recipeMainSearchParams.categoryIngredientsLoading" | translate }}</p>
+      } @else {
+        <ul class="mb-4 max-h-72 overflow-y-auto text-[13px] text-ink">
+          @for (name of categoryIngredientNames(chip); track name) {
+            <li class="border-b border-ink/6 py-1.5 last:border-b-0">{{ name }}</li>
+          }
+        </ul>
+      }
+      <div class="flex justify-end">
+        <button type="button" class="rounded-lg px-3 py-1.75 text-[13px] font-medium text-ink/65 hover:bg-ink/6" (click)="closeIngredientsDialog()">
+          {{ "common.close" | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

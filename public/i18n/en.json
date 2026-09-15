@@ -8,6 +8,7 @@
     "group": "group",
     "toggleRelationAriaLabel": "toggle relation",
     "resetParams": "reset",
+    "categoryIngredientsLoading": "loading…",
     "laneRelation": {
       "or": "OR",
       "and": "AND"
@@ -25,7 +26,8 @@
   "common": {
     "delete": "delete",
     "remove": "remove",
-    "add": "add"
+    "add": "add",
+    "close": "close"
   },
   "languageSwitcher": {
     "ariaLabel": "switch language"

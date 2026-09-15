@@ -171,10 +171,9 @@ export class HomeComponent implements OnInit {
     if (categoryIds.length > 0) {
       const categories = await firstValueFrom(this.ingredientsService.findCategoriesByIds(languageId, categoryIds));
       for (const category of categories) {
-        const names = await firstValueFrom(this.ingredientsService.findByIds(languageId, category.ingredientIds));
         chips.push({
           key: `c:${category.id}`,
-          label: names.map(n => n.name).join(' / ') || category.name,
+          label: category.name,
           ids: category.ingredientIds,
           isCategory: true,
           categoryId: category.id

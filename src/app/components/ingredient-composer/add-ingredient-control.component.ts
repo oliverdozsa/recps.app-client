@@ -69,8 +69,7 @@ export class AddIngredientControlComponent {
     const langId = this.languageService.selectedLanguage()?.id;
     if (chip.isCategory && langId) {
       this.ingredientsService.findByIds(langId, chip.ids).subscribe(list => {
-        const joined = list.map(i => i.name).join(' / ');
-        this.chipSelected.emit({...chip, label: joined || chip.label});
+        this.chipSelected.emit({...chip, label: chip.label});
       });
     } else {
       this.chipSelected.emit(chip);
