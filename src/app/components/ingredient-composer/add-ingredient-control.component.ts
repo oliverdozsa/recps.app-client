@@ -31,8 +31,10 @@ export class AddIngredientControlComponent {
   options = signal<Chip[]>([]);
   loading = signal(false);
   activeIndex = signal(-1);
+  menuStyle = signal({top: '0px', left: '0px', width: '0px'});
 
   private query$ = new Subject<string>();
+  private repositionMenu = () => this.updateMenuPosition();
 
   constructor() {
     this.query$.pipe(
@@ -57,12 +59,29 @@ export class AddIngredientControlComponent {
 
   startAdding() {
     this.open.set(true);
-    setTimeout(() => this.input_()?.nativeElement.focus());
+    setTimeout(() => {
+      this.input_()?.nativeElement.focus();
+      this.updateMenuPosition();
+    });
+    window.addEventListener('scroll', this.repositionMenu, {capture: true, passive: true});
+    window.addEventListener('resize', this.repositionMenu, {passive: true});
   }
 
   onInput(value: string) {
     this.query.set(value);
     this.query$.next(value);
+    this.updateMenuPosition();
+  }
+
+  private updateMenuPosition() {
+    const el = this.input_()?.nativeElement;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    this.menuStyle.set({
+      top: `${rect.bottom + 4}px`,
+      left: `${rect.left}px`,
+      width: `${Math.max(rect.width, 224)}px`
+    });
   }
 
   select(chip: Chip) {
@@ -119,5 +138,7 @@ export class AddIngredientControlComponent {
     this.query.set('');
     this.options.set([]);
     this.activeIndex.set(-1);
+    window.removeEventListener('scroll', this.repositionMenu, true);
+    window.removeEventListener('resize', this.repositionMenu);
   }
 }
