@@ -22,7 +22,12 @@ export class IngredientComposerComponent {
 
   private ingredientNamesCache = signal<Map<string, string[]>>(new Map());
   private loadingKeys = signal<Set<string>>(new Set());
-  dialogChip = signal<Chip | null>(null);
+  private dialogChipKey = signal<string | null>(null);
+  dialogChip = computed<Chip | null>(() => {
+    const key = this.dialogChipKey();
+    if (key === null) return null;
+    return [...this.state.includeChips(), ...this.state.excludeChips()].find(c => c.key === key) ?? null;
+  });
 
   includeKeys = computed(() => new Set(this.state.includeChips().map(c => c.key)));
   excludeKeys = computed(() => new Set(this.state.excludeChips().map(c => c.key)));
@@ -81,12 +86,49 @@ export class IngredientComposerComponent {
 
   openIngredientsDialog(chip: Chip) {
     if (!chip.isCategory) return;
-    this.dialogChip.set(chip);
+    this.dialogChipKey.set(chip.key);
     this.ensureIngredientNamesLoaded(chip);
   }
 
+  isIncludeChip(chip: Chip): boolean {
+    return this.includeKeys().has(chip.key);
+  }
+
+  effectiveMinMatch(chip: Chip): number {
+    return chip.minMatch ?? 1;
+  }
+
+  minMatchMax(chip: Chip): number {
+    return chip.asPercent ? 100 : chip.ids.length;
+  }
+
+  /** Approximate number of ingredients the current threshold requires, for the hint under the stepper. */
+  requiredCount(chip: Chip): number {
+    const min = this.effectiveMinMatch(chip);
+    return chip.asPercent ? Math.max(1, Math.ceil(min / 100 * chip.ids.length)) : min;
+  }
+
+  setMinMatch(chip: Chip, value: number) {
+    const clamped = Math.min(this.minMatchMax(chip), Math.max(1, Math.round(value) || 1));
+    this.state.updateIncludeChip(chip.key, {minMatch: clamped, asPercent: chip.asPercent ?? false});
+  }
+
+  stepMinMatch(chip: Chip, delta: number) {
+    this.setMinMatch(chip, this.effectiveMinMatch(chip) + delta);
+  }
+
+  setAsPercent(chip: Chip, asPercent: boolean) {
+    if (!!chip.asPercent === asPercent) return;
+    const total = Math.max(1, chip.ids.length);
+    const min = this.effectiveMinMatch(chip);
+    const converted = asPercent
+      ? Math.max(1, Math.round(min / total * 100))
+      : Math.min(total, Math.max(1, Math.round(min / 100 * total)));
+    this.state.updateIncludeChip(chip.key, {minMatch: converted, asPercent});
+  }
+
   closeIngredientsDialog() {
-    this.dialogChip.set(null);
+    this.dialogChipKey.set(null);
   }
 
   private ensureIngredientNamesLoaded(chip: Chip) {

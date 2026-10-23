@@ -9,6 +9,13 @@
     "toggleRelationAriaLabel": "kapcsolat váltása",
     "resetParams": "alaphelyzet",
     "categoryIngredientsLoading": "betöltés…",
+    "minMatch": {
+      "label": "Legalább egyezzen",
+      "count": "db",
+      "decrease": "csökkentés",
+      "increase": "növelés",
+      "hint": "≈ {{required}} / {{total}} hozzávaló"
+    },
     "laneRelation": {
       "or": "VAGY",
       "and": "ÉS"

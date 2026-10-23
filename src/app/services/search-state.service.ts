@@ -128,6 +128,13 @@ export class SearchStateService {
     this.page.set(0);
   }
 
+  updateIncludeChip(key: string, patch: Pick<Chip, 'minMatch' | 'asPercent'>) {
+    this.includeLanes.update(lanes => lanes.map(lane => ({
+      chips: lane.chips.map(c => c.key === key ? {...c, ...patch} : c)
+    })));
+    this.page.set(0);
+  }
+
   removeIncludeChip(chip: Chip) {
     const laneIndex = this.includeLanes().findIndex(lane => lane.chips.some(c => c.key === chip.key));
     if (laneIndex === -1) return;

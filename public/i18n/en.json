@@ -9,6 +9,13 @@
     "toggleRelationAriaLabel": "toggle relation",
     "resetParams": "reset",
     "categoryIngredientsLoading": "loading…",
+    "minMatch": {
+      "label": "Match at least",
+      "count": "count",
+      "decrease": "decrease",
+      "increase": "increase",
+      "hint": "≈ {{required}} of {{total}} ingredients"
+    },
     "laneRelation": {
       "or": "OR",
       "and": "AND"
