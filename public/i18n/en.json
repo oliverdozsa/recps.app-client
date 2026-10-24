@@ -10,11 +10,12 @@
     "resetParams": "reset",
     "categoryIngredientsLoading": "loading…",
     "minMatch": {
-      "label": "Match at least",
+      "label": "At least",
       "count": "count",
       "decrease": "decrease",
       "increase": "increase",
-      "hint": "≈ {{required}} of {{total}} ingredients"
+      "hint": "≈ {{required}} of {{total}} ingredients",
+      "hintPercent": "≈ {{percent}} % of the recipe's ingredients should be from these"
     },
     "laneRelation": {
       "or": "OR",

@@ -153,7 +153,11 @@
               [attr.aria-label]="'recipeMainSearchParams.minMatch.increase' | translate"
               (click)="stepMinMatch(chip, 1)">+</button>
             <span class="text-[12px] text-ink/60">
-              {{ "recipeMainSearchParams.minMatch.hint" | translate: {required: requiredCount(chip), total: chip.ids.length} }}
+              @if (chip.asPercent) {
+                {{ "recipeMainSearchParams.minMatch.hintPercent" | translate: {percent: chip.minMatch} }}
+              } @else {
+                {{ "recipeMainSearchParams.minMatch.hint" | translate: {required: requiredCount(chip), total: chip.ids.length} }}
+              }
             </span>
           </div>
         </div>

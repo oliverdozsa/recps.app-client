@@ -10,11 +10,12 @@
     "resetParams": "alaphelyzet",
     "categoryIngredientsLoading": "betöltés…",
     "minMatch": {
-      "label": "Legalább egyezzen",
+      "label": "Legalább legyen",
       "count": "db",
       "decrease": "csökkentés",
       "increase": "növelés",
-      "hint": "≈ {{required}} / {{total}} hozzávaló"
+      "hint": "≈ {{required}} / {{total}} hozzávalóból a receptekben",
+      "hintPercent": "≈ a receptek hozzávalóinak {{percent}} %-a ebből a hozzávalókból"
     },
     "laneRelation": {
       "or": "VAGY",
