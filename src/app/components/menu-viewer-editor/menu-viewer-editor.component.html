@@ -63,7 +63,7 @@
     }
 
     <div class="flex flex-1 gap-3 overflow-x-auto pb-2">
-      @for (day of menuDays(); track $index) {
+      @for (day of menuDays(); track $index; let di = $index) {
         <div
           class="w-64 shrink-0 rounded-[14px] border bg-surface p-3"
           [class]="selectedFromDay()?.dayIndex === $index ? 'border-accent ring-2 ring-accent/30' : (selectedRecipe() || selectedFromDay()) ? 'border-ink/20' : 'border-ink/10'"
@@ -74,12 +74,12 @@
 
           <div class="flex flex-col gap-1.5">
             @for (recipe of day; track recipe.id; let ri = $index) {
-              <div (click)="isEditMode() && selectFromDay(recipe, $index, ri); $event.stopPropagation()">
+              <div (click)="isEditMode() && selectFromDay(recipe, di, ri); $event.stopPropagation()">
                 <app-recipe-compact-card
                   [recipe]="recipe"
-                  [selected]="selectedFromDay()?.dayIndex === $index && selectedFromDay()?.recipeIndex === ri"
+                  [selected]="selectedFromDay()?.dayIndex === di && selectedFromDay()?.recipeIndex === ri"
                   [editMode]="isEditMode()"
-                  (backClicked)="moveBackToPool(recipe, $index, ri)" />
+                  (backClicked)="moveBackToPool(recipe, di, ri)" />
               </div>
             }
           </div>
