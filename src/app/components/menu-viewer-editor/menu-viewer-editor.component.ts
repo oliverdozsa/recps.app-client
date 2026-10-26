@@ -66,6 +66,9 @@ export class MenuViewerEditorComponent implements OnInit {
     });
     return Array.from(names).sort((a, b) => a.localeCompare(b));
   });
+  uncheckedIngredients = signal<Set<string>>(new Set());
+  checkedIngredients = computed(() =>
+    this.allIngredients().filter(name => !this.uncheckedIngredients().has(name)));
 
   constructor() {
     effect(() => {
@@ -201,11 +204,28 @@ export class MenuViewerEditorComponent implements OnInit {
   }
 
   toggleIngredientsModal() {
+    this.uncheckedIngredients.set(new Set());
     this.showIngredientsModal.update(v => !v);
   }
 
+  toggleIngredientChecked(name: string) {
+    this.uncheckedIngredients.update(set => {
+      const next = new Set(set);
+      if (!next.delete(name)) next.add(name);
+      return next;
+    });
+  }
+
+  selectAllIngredients() {
+    this.uncheckedIngredients.set(new Set());
+  }
+
+  deselectAllIngredients() {
+    this.uncheckedIngredients.set(new Set(this.allIngredients()));
+  }
+
   copyIngredients() {
-    navigator.clipboard.writeText(this.allIngredients().join('\n')).then(() => {
+    navigator.clipboard.writeText(this.checkedIngredients().join('\n')).then(() => {
       this.copied.set(true);
       setTimeout(() => this.copied.set(false), 2000);
     });

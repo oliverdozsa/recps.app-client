@@ -157,6 +157,10 @@
       "noIngredients": "még nincsenek hozzávalók",
       "copy": "másolás vágólapra",
       "copied": "másolva!",
+      "selectAll": "összes kijelölése",
+      "deselectAll": "kijelölés törlése",
+      "selected": "kijelölve",
+      "removeAriaLabel": "eltávolítás",
       "close": "bezárás"
     }
   },

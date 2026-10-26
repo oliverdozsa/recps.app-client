@@ -157,6 +157,10 @@
       "noIngredients": "no ingredients yet",
       "copy": "copy to clipboard",
       "copied": "copied!",
+      "selectAll": "select all",
+      "deselectAll": "deselect all",
+      "selected": "selected",
+      "removeAriaLabel": "remove",
       "close": "close"
     }
   },
