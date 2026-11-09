@@ -1,7 +1,7 @@
 import {computed, effect, inject, Injectable, signal, untracked} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Params} from '@angular/router';
-import {switchMap} from 'rxjs';
+import {forkJoin, of, switchMap} from 'rxjs';
 import {LanguageService} from './language.service';
 import {IngredientsService} from './ingredients.service';
 import {RecipeOrderBy, RecipeOrderDirection, RecipeSearchRequest} from './requests';
@@ -100,13 +100,24 @@ export class SearchStateService {
 
   private retranslateChips(languageId: number) {
     const allChips = [...this.includeLanes().flatMap(lane => lane.chips), ...this.excludeChips()];
-    const allIds = Array.from(new Set(allChips.flatMap(c => c.ids)));
-    if (allIds.length === 0) return;
+    const ingredientIds = Array.from(new Set(allChips.filter(c => !c.isCategory).flatMap(c => c.ids)));
+    const categoryIds = Array.from(new Set(
+      allChips.filter(c => c.isCategory && c.categoryId !== undefined).map(c => c.categoryId as number)
+    ));
+    if (ingredientIds.length === 0 && categoryIds.length === 0) return;
 
-    this.ingredientsService.findByIds(languageId, allIds).subscribe(results => {
-      const nameById = new Map(results.map(r => [r.ingredientId, r.name]));
+    forkJoin({
+      ingredients: ingredientIds.length > 0 ? this.ingredientsService.findByIds(languageId, ingredientIds) : of([]),
+      categories: categoryIds.length > 0 ? this.ingredientsService.findCategoriesByIds(languageId, categoryIds) : of([])
+    }).subscribe(({ingredients, categories}) => {
+      const ingredientNameById = new Map(ingredients.map(r => [r.ingredientId, r.name]));
+      const categoryNameById = new Map(categories.map(r => [r.id, r.name]));
       const relabel = (chip: Chip): Chip => {
-        const names = chip.ids.map(id => nameById.get(id)).filter((n): n is string => !!n);
+        if (chip.isCategory) {
+          const name = chip.categoryId !== undefined ? categoryNameById.get(chip.categoryId) : undefined;
+          return name ? {...chip, label: name} : chip;
+        }
+        const names = chip.ids.map(id => ingredientNameById.get(id)).filter((n): n is string => !!n);
         return names.length > 0 ? {...chip, label: names.join(' / ')} : chip;
       };
       this.includeLanes.update(lanes => lanes.map(lane => ({chips: lane.chips.map(relabel)})));
