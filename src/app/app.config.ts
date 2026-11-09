@@ -1,4 +1,4 @@
-import {ApplicationConfig, provideZoneChangeDetection} from '@angular/core';
+import {ApplicationConfig, provideZoneChangeDetection, isDevMode} from '@angular/core';
 import {provideRouter} from '@angular/router';
 import {provideHttpClient, withInterceptors, withInterceptorsFromDi} from '@angular/common/http';
 import {OAuthStorage, provideOAuthClient} from 'angular-oauth2-oidc';
@@ -8,6 +8,7 @@ import {provideTranslateHttpLoader} from '@ngx-translate/http-loader';
 import {routes} from './app.routes';
 import {environment} from '../environments/environment';
 import {authErrorInterceptor} from './services/auth.interceptor';
+import {provideServiceWorker} from '@angular/service-worker';
 
 export function storageFactory(): OAuthStorage {
   return localStorage;
@@ -27,6 +28,10 @@ export const appConfig: ApplicationConfig = {
       }),
       fallbackLang: 'en',
       lang: 'en'
+    }),
+    provideServiceWorker('ngsw-worker.js', {
+      enabled: !isDevMode(),
+      registrationStrategy: 'registerWhenStable:30000'
     })
   ]
 };
